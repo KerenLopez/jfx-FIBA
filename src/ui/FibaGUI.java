@@ -1,15 +1,19 @@
 package ui;
 
+import java.io.File;
 import java.io.IOException;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import model.Fiba;
 
 public class FibaGUI {
@@ -101,7 +105,25 @@ public class FibaGUI {
 
     @FXML
     public void btImportPlayers(ActionEvent event) {
-
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setTitle("Importante");
+        alert.setContentText("Esta accion puede tomar unos minutos...");
+        alert.showAndWait();
+    	FileChooser fileChooser = new FileChooser();
+    	fileChooser.setTitle("Abrir el archivo");
+    	File f=fileChooser.showOpenDialog(mainPane.getScene().getWindow());
+    	if(f!=null) {
+            alert.setTitle("Importar clientes");
+            try {
+                fiba.importPlayersData(f.getAbsolutePath());
+                alert.setContentText("Los clientes fueron importados exitosamente");
+                alert.showAndWait();
+            }catch(IOException e){
+                alert.setContentText("Los clientes no se importaron. Ocurrió un error");
+                alert.showAndWait();
+            }
+    	}
     }
 
     @FXML
