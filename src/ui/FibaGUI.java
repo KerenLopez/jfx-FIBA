@@ -2,6 +2,8 @@ package ui;
 
 import java.io.IOException;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,8 +11,10 @@ import javafx.scene.Parent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import model.Fiba;
+import model.Player;
 
 public class FibaGUI {
 	
@@ -44,35 +48,44 @@ public class FibaGUI {
     private TextField txtBlocks;
 
     @FXML
-    private TableView<?> tvOfPlayers;
+    private TableView<Player> tvOfPlayers;
 
     @FXML
-    private TableColumn<?, ?> tcName;
+    private TableColumn<Player, String> tcName;
 
     @FXML
-    private TableColumn<?, ?> tcAge;
+    private TableColumn<Player, Integer> tcAge;
 
     @FXML
-    private TableColumn<?, ?> tcTeam;
+    private TableColumn<Player, Integer> tcTeam;
 
     @FXML
-    private TableColumn<?, ?> tcPoints;
+    private TableColumn<Player, Integer> tcPoints;
 
     @FXML
-    private TableColumn<?, ?> tcBounces;
+    private TableColumn<Player, Integer> tcBounces;
 
     @FXML
-    private TableColumn<?, ?> tcAssists;
+    private TableColumn<Player, Integer> tcAssists;
 
     @FXML
-    private TableColumn<?, ?> tcSteals;
+    private TableColumn<Player, Integer> tcSteals;
 
     @FXML
-    private TableColumn<?, ?> tcBlocks;
+    private TableColumn<Player, Integer> tcBlocks;
     
     public FibaGUI(Fiba f) {
     	fiba = f;
     }
+    
+    public void showWelcomeWindow() throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui/WelcomePage.fxml"));
+		fxmlLoader.setController(this);
+		Parent menuPane = fxmlLoader.load();
+		mainPane.getChildren().clear();
+		mainPane.setCenter(menuPane);
+		mainPane.setStyle("-fx-background-image: url(/ui/logo.jpg)");
+	}
 
     @FXML
     public void addPlayer(ActionEvent event) {
@@ -93,11 +106,6 @@ public class FibaGUI {
     public void updatePlayer(ActionEvent event) {
 
     }
-    
-    @FXML
-    public void btExitProgram(ActionEvent event) {
-
-    }
 
     @FXML
     public void btImportPlayers(ActionEvent event) {
@@ -105,21 +113,32 @@ public class FibaGUI {
     }
 
     @FXML
-    public void btManagePlayers(ActionEvent event) {
-
-    }
-
-    @FXML
-    public void btSearchPlayers(ActionEvent event) {
-
-    }
-
-	public void showWelcomeWindow() throws IOException {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui/WelcomePage.fxml"));
+    public void btManagePlayers(ActionEvent event) throws IOException {
+    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui/manage-player.fxml"));
 		fxmlLoader.setController(this);
 		Parent menuPane = fxmlLoader.load();
 		mainPane.getChildren().clear();
 		mainPane.setCenter(menuPane);
-		//mainPane.setStyle("-fx-background-image: url(/ui/fondo1.jpg)");
+		mainPane.setStyle("-fx-background-image: url(/ui/fondo.jpg)");
+		initializeTableViewOfAddedPlayers();
+    }
+
+    private void initializeTableViewOfAddedPlayers() {
+    	ObservableList<Player> observableList;
+		observableList = FXCollections.observableArrayList(fiba.getPlayers());
+		tvOfPlayers.setItems(observableList);
+		tcName.setCellValueFactory(new PropertyValueFactory<Player, String>("Name"));
+		tcAge.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Age"));
+		tcTeam.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Team"));
+		tcPoints.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Points"));
+		tcBounces.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Bounces"));
+		tcAssists.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Assists"));
+		tcSteals.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Steals"));
+		tcBlocks.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Blocks"));
 	}
+
+	@FXML
+    public void btSearchPlayers(ActionEvent event) {
+
+    }
 }
