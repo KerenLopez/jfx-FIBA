@@ -74,7 +74,7 @@
                               <Insets left="25.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField>
+                        <TextField fx:id="txtName">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -91,7 +91,7 @@
                               <Insets left="25.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField prefHeight="25.0" prefWidth="159.0">
+                        <TextField fx:id="txtAge" prefHeight="25.0" prefWidth="159.0">
                            <HBox.margin>
                               <Insets left="15.0" />
                            </HBox.margin>
@@ -108,7 +108,7 @@
                               <Insets left="25.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField prefHeight="25.0" prefWidth="152.0">
+                        <TextField fx:id="txtTeam" prefHeight="25.0" prefWidth="152.0">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -125,7 +125,7 @@
                               <Insets left="25.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField prefHeight="25.0" prefWidth="128.0">
+                        <TextField fx:id="txtPoints" prefHeight="25.0" prefWidth="128.0">
                            <HBox.margin>
                               <Insets left="15.0" />
                            </HBox.margin>
@@ -142,7 +142,7 @@
                               <Insets left="25.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField prefHeight="25.0" prefWidth="123.0">
+                        <TextField fx:id="txtBounces" prefHeight="25.0" prefWidth="123.0">
                            <HBox.margin>
                               <Insets left="15.0" />
                            </HBox.margin>
@@ -159,7 +159,7 @@
                               <Insets left="25.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField prefHeight="25.0" prefWidth="97.0">
+                        <TextField fx:id="txtAssists" prefHeight="25.0" prefWidth="97.0">
                            <HBox.margin>
                               <Insets left="15.0" />
                            </HBox.margin>
@@ -176,7 +176,7 @@
                               <Insets left="25.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField prefHeight="25.0" prefWidth="136.0">
+                        <TextField fx:id="txtSteals" prefHeight="25.0" prefWidth="136.0">
                            <HBox.margin>
                               <Insets left="15.0" />
                            </HBox.margin>
@@ -193,7 +193,7 @@
                               <Insets left="25.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField prefHeight="25.0" prefWidth="120.0">
+                        <TextField fx:id="txtBlocks" prefHeight="25.0" prefWidth="120.0">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -204,7 +204,7 @@
                      <children>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Button mnemonicParsing="false" text="Actualizar">
+                              <Button mnemonicParsing="false" onAction="#updatePlayer" text="Actualizar">
                                  <font>
                                     <Font name="Impact" size="17.0" />
                                  </font>
@@ -212,7 +212,7 @@
                                     <Insets left="50.0" top="20.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button mnemonicParsing="false" text="Agregar">
+                              <Button mnemonicParsing="false" onAction="#addPlayer" text="Agregar">
                                  <font>
                                     <Font name="Impact" size="17.0" />
                                  </font>
@@ -225,7 +225,7 @@
                               <Insets top="60.0" />
                            </VBox.margin>
                         </HBox>
-                        <Button mnemonicParsing="false" text="Eliminar">
+                        <Button mnemonicParsing="false" onAction="#deletePlayer" text="Eliminar">
                            <font>
                               <Font name="Impact" size="17.0" />
                            </font>
@@ -242,16 +242,16 @@
             </GridPane>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
                <children>
-                  <TableView maxWidth="620.0" minWidth="620.0" prefHeight="460.0" prefWidth="620.0">
+                  <TableView fx:id="tvOfPlayers" maxWidth="620.0" minWidth="620.0" prefHeight="460.0" prefWidth="620.0">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="Nombre" />
-                      <TableColumn prefWidth="75.0" text="Edad" />
-                        <TableColumn prefWidth="75.0" text="Equipo" />
-                        <TableColumn prefWidth="75.0" text="Puntos p.p." />
-                        <TableColumn prefWidth="75.0" text="Rebotes p.p." />
-                        <TableColumn text="Asistencias" />
-                        <TableColumn prefWidth="70.0" text="Robos" />
-                        <TableColumn prefWidth="94.0" text="Bloqueos" />
+                      <TableColumn fx:id="tcName" prefWidth="75.0" text="Nombre" />
+                      <TableColumn fx:id="tcAge" prefWidth="75.0" text="Edad" />
+                        <TableColumn fx:id="tcTeam" prefWidth="75.0" text="Equipo" />
+                        <TableColumn fx:id="tcPoints" prefWidth="75.0" text="Puntos p.p." />
+                        <TableColumn fx:id="tcBounces" prefWidth="75.0" text="Rebotes p.p." />
+                        <TableColumn fx:id="tcAssists" text="Asistencias" />
+                        <TableColumn fx:id="tcSteals" prefWidth="70.0" text="Robos" />
+                        <TableColumn fx:id="tcBlocks" prefWidth="94.0" text="Bloqueos" />
                     </columns>
                   </TableView>
                   <Label text="*Seleccione un jugador de la tabla para actualizarlo o eliminarlo">
@@ -262,7 +262,7 @@
                         <Insets left="100.0" top="15.0" />
                      </VBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" text="Atrás">
+                  <Button mnemonicParsing="false" onAction="#returnToMenu" text="Atrás">
                      <font>
                         <Font name="Impact" size="17.0" />
                      </font>
