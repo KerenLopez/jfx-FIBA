@@ -7,6 +7,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -59,7 +60,7 @@
                            <children>
                               <VBox prefHeight="105.0" prefWidth="262.0">
                                  <children>
-                                    <RadioButton mnemonicParsing="false" text="Puntos por partido">
+                                    <RadioButton fx:id="rbPoints" mnemonicParsing="false" text="Puntos por partido">
                                        <padding>
                                           <Insets bottom="2.0" />
                                        </padding>
@@ -69,8 +70,11 @@
                                        <font>
                                           <Font name="Juice ITC" size="20.0" />
                                        </font>
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="searchCriteria" />
+                                       </toggleGroup>
                                     </RadioButton>
-                                    <RadioButton mnemonicParsing="false" text="Robos por partido">
+                                    <RadioButton fx:id="rbSteals" mnemonicParsing="false" text="Robos por partido" toggleGroup="$searchCriteria">
                                        <VBox.margin>
                                           <Insets bottom="2.0" left="10.0" />
                                        </VBox.margin>
@@ -78,7 +82,7 @@
                                           <Font name="Juice ITC" size="20.0" />
                                        </font>
                                     </RadioButton>
-                                    <RadioButton mnemonicParsing="false" text="Asistencias por partido">
+                                    <RadioButton fx:id="rbAssists" mnemonicParsing="false" text="Asistencias por partido" toggleGroup="$searchCriteria">
                                        <VBox.margin>
                                           <Insets bottom="2.0" left="10.0" />
                                        </VBox.margin>
@@ -90,7 +94,7 @@
                               </VBox>
                               <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
                                  <children>
-                                    <RadioButton mnemonicParsing="false" text="Bloqueos por partido">
+                                    <RadioButton fx:id="rbBlocks" mnemonicParsing="false" text="Bloqueos por partido" toggleGroup="$searchCriteria">
                                        <VBox.margin>
                                           <Insets bottom="2.0" left="10.0" />
                                        </VBox.margin>
@@ -98,7 +102,7 @@
                                           <Font name="Juice ITC" size="20.0" />
                                        </font>
                                     </RadioButton>
-                                    <RadioButton mnemonicParsing="false" text="Rebotes por partido">
+                                    <RadioButton fx:id="rbRebounds" mnemonicParsing="false" text="Rebotes por partido" toggleGroup="$searchCriteria">
                                        <VBox.margin>
                                           <Insets left="10.0" />
                                        </VBox.margin>
@@ -124,7 +128,7 @@
                                     <Font name="Juice ITC" size="20.0" />
                                  </font>
                               </Label>
-                              <TextField promptText="Ingrese un número" />
+                              <TextField fx:id="txtValue" promptText="Ingrese un número" />
                            </children>
                            <VBox.margin>
                               <Insets bottom="5.0" />
@@ -138,15 +142,18 @@
                               <Insets bottom="10.0" />
                            </VBox.margin>
                         </Label>
-                        <RadioButton mnemonicParsing="false" text="Iguales">
+                        <RadioButton fx:id="rbEqual" mnemonicParsing="false" text="Iguales">
                            <VBox.margin>
                               <Insets bottom="2.0" />
                            </VBox.margin>
                            <font>
                               <Font name="Juice ITC" size="20.0" />
                            </font>
+                           <toggleGroup>
+                              <ToggleGroup fx:id="comparison" />
+                           </toggleGroup>
                         </RadioButton>
-                        <RadioButton mnemonicParsing="false" text="Mayores">
+                        <RadioButton fx:id="rbGreater" mnemonicParsing="false" text="Mayores" toggleGroup="$comparison">
                            <VBox.margin>
                               <Insets bottom="5.0" />
                            </VBox.margin>
@@ -154,7 +161,7 @@
                               <Font name="Juice ITC" size="20.0" />
                            </font>
                         </RadioButton>
-                        <RadioButton mnemonicParsing="false" text="Menores">
+                        <RadioButton fx:id="rbLess" mnemonicParsing="false" text="Menores" toggleGroup="$comparison">
                            <font>
                               <Font name="Juice ITC" size="20.0" />
                            </font>
@@ -163,7 +170,7 @@
                   </VBox>
                   <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2">
                      <children>
-                        <Button mnemonicParsing="false" text="Buscar">
+                        <Button mnemonicParsing="false" onAction="#searchPlayers" text="Buscar">
                            <HBox.margin>
                               <Insets right="50.0" />
                            </HBox.margin>
@@ -175,16 +182,16 @@
                   </HBox>
                </children>
             </GridPane>
-            <TableView prefHeight="395.0" prefWidth="1000.0">
+            <TableView fx:id="tvSearchedPlayers" prefHeight="395.0" prefWidth="1000.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Nombre" />
-                <TableColumn prefWidth="75.0" text="Edad" />
-                  <TableColumn prefWidth="75.0" text="Equipo" />
-                  <TableColumn prefWidth="75.0" text="Puntos p.p" />
-                  <TableColumn prefWidth="75.0" text="Rebotes p.p" />
-                  <TableColumn prefWidth="75.0" text="Asistencias p.p" />
-                  <TableColumn prefWidth="75.0" text="Robos p.p" />
-                  <TableColumn prefWidth="75.0" text="Bloqueos p.p" />
+                <TableColumn fx:id="colName" prefWidth="75.0" text="Nombre" />
+                <TableColumn fx:id="colAge" prefWidth="75.0" text="Edad" />
+                  <TableColumn fx:id="colTeam" prefWidth="75.0" text="Equipo" />
+                  <TableColumn fx:id="colPoints" prefWidth="75.0" text="Puntos p.p" />
+                  <TableColumn fx:id="colRebounds" prefWidth="75.0" text="Rebotes p.p" />
+                  <TableColumn fx:id="colAssists" prefWidth="75.0" text="Asistencias p.p" />
+                  <TableColumn fx:id="colSteals" prefWidth="75.0" text="Robos p.p" />
+                  <TableColumn fx:id="colBlocks" prefWidth="75.0" text="Bloqueos p.p" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -193,7 +200,7 @@
                   <Insets top="15.0" />
                </VBox.margin>
             </TableView>
-            <Button mnemonicParsing="false" text="Atrás">
+            <Button mnemonicParsing="false" onAction="#returnToMenu" text="Atrás">
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin>
