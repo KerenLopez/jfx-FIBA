@@ -201,27 +201,27 @@ public class FibaGUI {
 	}
 
 	@FXML
-	public void btImportPlayers(ActionEvent event) {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setHeaderText(null);
-		alert.setTitle("Importante");
-		alert.setContentText("Esta accion puede tomar unos minutos...");
-		alert.showAndWait();
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Abrir el archivo");
-		File f=fileChooser.showOpenDialog(mainPane.getScene().getWindow());
-		if(f!=null) {
-			alert.setTitle("Importar clientes");
-			try {
-				fiba.importPlayersData(f.getAbsolutePath());
-				alert.setContentText("Los clientes fueron importados exitosamente");
-				alert.showAndWait();
-			}catch(IOException e){
-				alert.setContentText("Los clientes no se importaron. Ocurrió un error");
-				alert.showAndWait();
-			}
-		}
-	}
+    	public void btImportPlayers(ActionEvent event) {
+        	Alert alert = new Alert(AlertType.INFORMATION);
+        	alert.setHeaderText(null);
+        	alert.setTitle("Importante");
+        	alert.setContentText("Esta accion puede tomar unos minutos...");
+        	alert.showAndWait();
+    		FileChooser fileChooser = new FileChooser();
+    		fileChooser.setTitle("Abrir el archivo");
+    		File f=fileChooser.showOpenDialog(mainPane.getScene().getWindow());
+    		if(f!=null) {
+            		alert.setTitle("Importar clientes");
+            		try {
+                		fiba.importPlayersData(f.getAbsolutePath());
+                		alert.setContentText("Los jugadores fueron importados exitosamente");
+                		alert.showAndWait();
+            		}catch(IOException e){
+                		alert.setContentText("Los jugadores no se importaron. Ocurrió un error");
+                		alert.showAndWait();
+            		}
+    		}
+    	}
 
 	@FXML
 	public void btManagePlayers(ActionEvent event) throws IOException {
