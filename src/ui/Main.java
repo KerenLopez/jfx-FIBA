@@ -14,7 +14,7 @@ public class Main extends Application{
 	
 	public Main() {
 		fiba = new Fiba();
-		fibaGUI = new FibaGUI();
+		fibaGUI = new FibaGUI(fiba);
 	}
 	
 	public static void main(String[] args) {
