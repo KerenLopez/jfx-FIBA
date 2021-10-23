@@ -11,17 +11,17 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="130.0" layoutY="24.0" text="¡¡¡¡BIENVENIDOS!!!!">
+      <Label layoutX="176.0" layoutY="27.0" text="¡¡¡¡BIENVENIDOS!!!!">
          <font>
-            <Font size="40.0" />
+            <Font name="Juice ITC" size="50.0" />
          </font>
       </Label>
-      <Label layoutX="176.0" layoutY="104.0" text="Seleccione una opcion para continuar">
+      <Label layoutX="175.0" layoutY="104.0" text="Seleccione una opcion para continuar">
          <font>
-            <Font size="15.0" />
+            <Font name="Juice ITC" size="24.0" />
          </font>
       </Label>
-      <GridPane layoutX="201.0" layoutY="155.0" prefHeight="220.0" prefWidth="213.0">
+      <GridPane layoutX="224.0" layoutY="141.0" prefHeight="220.0" prefWidth="193.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
@@ -32,24 +32,24 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" onAction="#btManagePlayers" text="1. Gestionar Jugadores">
+            <Button mnemonicParsing="false" onAction="#btManagePlayers" style="-fx-background-color: #FA9000;" text="1. Gestionar Jugadores">
                <font>
-                  <Font name="Mongolian Baiti" size="20.0" />
+                  <Font name="Impact" size="17.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#btImportPlayers" text="2. Importar Jugadores" GridPane.rowIndex="1">
+            <Button mnemonicParsing="false" onAction="#btImportPlayers" style="-fx-background-color: #FA9000;" text="2. Importar Jugadores" GridPane.rowIndex="1">
                <font>
-                  <Font name="Mongolian Baiti" size="20.0" />
+                  <Font name="Impact" size="17.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#btSearchPlayers" text="3. Buscar Jugadores" GridPane.rowIndex="2">
+            <Button mnemonicParsing="false" onAction="#btSearchPlayers" style="-fx-background-color: #FA9000;" text="3. Buscar Jugadores" GridPane.rowIndex="2">
                <font>
-                  <Font name="Mongolian Baiti" size="20.0" />
+                  <Font name="Impact" size="17.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#btExitProgram" text="4. Salir del programa" GridPane.rowIndex="3">
+            <Button mnemonicParsing="false" onAction="#btExitProgram" style="-fx-background-color: #FA9000;" text="4. Salir del programa" GridPane.rowIndex="3">
                <font>
-                  <Font name="Mongolian Baiti" size="20.0" />
+                  <Font name="Impact" size="17.0" />
                </font>
             </Button>
          </children>
