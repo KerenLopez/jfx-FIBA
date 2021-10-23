@@ -1,7 +1,10 @@
 package ui;
 
+import java.io.File;
 import java.io.IOException;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,8 +16,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.PropertyValueFactory;
+
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import model.Fiba;
+import model.Player;
 
 public class FibaGUI {
 	
@@ -48,35 +55,105 @@ public class FibaGUI {
     private TextField txtBlocks;
 
     @FXML
-    private TableView<?> tvOfPlayers;
+    private TableView<Player> tvOfPlayers;
 
     @FXML
-    private TableColumn<?, ?> tcName;
+    private TableColumn<Player, String> tcName;
 
     @FXML
-    private TableColumn<?, ?> tcAge;
+    private TableColumn<Player, Integer> tcAge;
 
     @FXML
-    private TableColumn<?, ?> tcTeam;
+    private TableColumn<Player, Integer> tcTeam;
 
     @FXML
-    private TableColumn<?, ?> tcPoints;
+    private TableColumn<Player, Integer> tcPoints;
 
     @FXML
-    private TableColumn<?, ?> tcBounces;
+    private TableColumn<Player, Integer> tcBounces;
 
     @FXML
-    private TableColumn<?, ?> tcAssists;
+    private TableColumn<Player, Integer> tcAssists;
 
     @FXML
-    private TableColumn<?, ?> tcSteals;
+    private TableColumn<Player, Integer> tcSteals;
 
     @FXML
-    private TableColumn<?, ?> tcBlocks;
+    private TableColumn<Player, Integer> tcBlocks;
+    
+    @FXML
+    private RadioButton rbPoints;
+
+    @FXML
+    private ToggleGroup searchCriteria;
+
+    @FXML
+    private RadioButton rbSteals;
+
+    @FXML
+    private RadioButton rbAssists;
+
+    @FXML
+    private RadioButton rbBlocks;
+
+    @FXML
+    private RadioButton rbRebounds;
+
+    @FXML
+    private TextField txtValue;
+
+    @FXML
+    private RadioButton rbEqual;
+
+    @FXML
+    private ToggleGroup comparison;
+
+    @FXML
+    private RadioButton rbGreater;
+
+    @FXML
+    private RadioButton rbLess;
+
+    @FXML
+    private TableView<Player> tvSearchedPlayers;
+
+    @FXML
+    private TableColumn<Player, String> colName;
+
+    @FXML
+    private TableColumn<Player, Integer> colAge;
+
+    @FXML
+    private TableColumn<Player, String> colTeam;
+
+    @FXML
+    private TableColumn<Player, Integer> colPoints;
+
+    @FXML
+    private TableColumn<Player, Integer> colRebounds;
+
+    @FXML
+    private TableColumn<Player, Integer> colAssists;
+
+    @FXML
+    private TableColumn<Player, Integer> colSteals;
+
+    @FXML
+    private TableColumn<Player, Integer> colBlocks;
+
     
     public FibaGUI(Fiba f) {
     	fiba = f;
     }
+    
+    public void showWelcomeWindow() throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui/WelcomePage.fxml"));
+		fxmlLoader.setController(this);
+		Parent menuPane = fxmlLoader.load();
+		mainPane.getChildren().clear();
+		mainPane.setCenter(menuPane);
+		mainPane.setStyle("-fx-background-image: url(/ui/logo.jpg)");
+	}
 
     @FXML
     public void addPlayer(ActionEvent event) {
@@ -97,140 +174,57 @@ public class FibaGUI {
     public void updatePlayer(ActionEvent event) {
 
     }
-    
-    @FXML
-    public void btExitProgram(ActionEvent event) {
-
-    }
 
     @FXML
     public void btImportPlayers(ActionEvent event) {
-
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setTitle("Importante");
+        alert.setContentText("Esta accion puede tomar unos minutos...");
+        alert.showAndWait();
+    	FileChooser fileChooser = new FileChooser();
+    	fileChooser.setTitle("Abrir el archivo");
+    	File f=fileChooser.showOpenDialog(mainPane.getScene().getWindow());
+    	if(f!=null) {
+            alert.setTitle("Importar clientes");
+            try {
+                fiba.importPlayersData(f.getAbsolutePath());
+                alert.setContentText("Los clientes fueron importados exitosamente");
+                alert.showAndWait();
+            }catch(IOException e){
+                alert.setContentText("Los clientes no se importaron. Ocurrió un error");
+                alert.showAndWait();
+            }
+    	}
     }
 
     @FXML
-    public void btManagePlayers(ActionEvent event) {
+    public void btManagePlayers(ActionEvent event) throws IOException {
+    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui/manage-player.fxml"));
 
-    }
-
-    @FXML
-    public void btSearchPlayers(ActionEvent event) throws IOException {
-    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui/searchPlayer.fxml"));
 		fxmlLoader.setController(this);
 		Parent menuPane = fxmlLoader.load();
 		mainPane.getChildren().clear();
 		mainPane.setCenter(menuPane);
-		//mainPane.setStyle("-fx-background-image: url(/ui/fondo1.jpg)");
-    	
+		mainPane.setStyle("-fx-background-image: url(/ui/fondo.jpg)");
+		initializeTableViewOfAddedPlayers();
     }
 
-	public void showWelcomeWindow() throws IOException {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui/WelcomePage.fxml"));
-		fxmlLoader.setController(this);
-		Parent menuPane = fxmlLoader.load();
-		mainPane.getChildren().clear();
-		mainPane.setCenter(menuPane);
-		//mainPane.setStyle("-fx-background-image: url(/ui/fondo1.jpg)");
+    private void initializeTableViewOfAddedPlayers() {
+    	ObservableList<Player> observableList;
+		observableList = FXCollections.observableArrayList(fiba.getPlayers());
+		tvOfPlayers.setItems(observableList);
+		tcName.setCellValueFactory(new PropertyValueFactory<Player, String>("Name"));
+		tcAge.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Age"));
+		tcTeam.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Team"));
+		tcPoints.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Points"));
+		tcBounces.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Bounces"));
+		tcAssists.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Assists"));
+		tcSteals.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Steals"));
+		tcBlocks.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Blocks"));
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	  @FXML
-	    private RadioButton rbPoints;
 
-	    @FXML
-	    private ToggleGroup searchCriteria;
-
-	    @FXML
-	    private RadioButton rbSteals;
-
-	    @FXML
-	    private RadioButton rbAssists;
-
-	    @FXML
-	    private RadioButton rbBlocks;
-
-	    @FXML
-	    private RadioButton rbRebounds;
 	
-	    @FXML
-	    private TextField txtValue;
-
-	    @FXML
-	    private RadioButton rbEqual;
-
-	    @FXML
-	    private ToggleGroup comparison;
-
-	    @FXML
-	    private RadioButton rbGreater;
-
-	    @FXML
-	    private RadioButton rbLess;
-
-	    @FXML
-	    private TableView<Player> tvSearchedPlayers;
-
-	    @FXML
-	    private TableColumn<Player, String> colName;
-
-	    @FXML
-	    private TableColumn<Player, Integer> colAge;
-
-	    @FXML
-	    private TableColumn<Player, String> colTeam;
-
-	    @FXML
-	    private TableColumn<Player, Integer> colPoints;
-
-	    @FXML
-	    private TableColumn<Player, Integer> colRebounds;
-
-	    @FXML
-	    private TableColumn<Player, Integer> colAssists;
-
-	    @FXML
-	    private TableColumn<Player, Integer> colSteals;
-
-	    @FXML
-	    private TableColumn<Player, Integer> colBlocks;
-
 	  
 	    private void initializeTableViewSearchedPlayers() {
 	    	ObservableList<Player> observableList;
@@ -238,7 +232,7 @@ public class FibaGUI {
 			tvOfPlayers.setItems(observableList);
 			colName.setCellValueFactory(new PropertyValueFactory<Player, String>("Name"));
 			colAge.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Age"));
-			colTeam.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Team"));
+			colTeam.setCellValueFactory(new PropertyValueFactory<Player, String>("Team"));
 			colPoints.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Points"));
 			colRebounds.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Bounces"));
 			colAssists.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Assists"));
@@ -250,7 +244,7 @@ public class FibaGUI {
 	    @FXML
 	    public void searchPlayers(ActionEvent event) {
 	    	if(searchCriteria.getSelectedToggle()!=null && comparison.getSelectedToggle()!=null && !txtValue.getText().isEmpty()) {
-	    		//initializeTableViewSearchedPlayers();
+	    		initializeTableViewSearchedPlayers();
 	    		//searchCriteria.getSelectedToggle().setSelected(false);
 	    		//comparison.getSelectedToggle().setSelected(false);
 	    		
@@ -300,4 +294,5 @@ public class FibaGUI {
 			alert.showAndWait();
 		}
 	    
+
 }
