@@ -5,13 +5,13 @@ public class NodeRBT<K extends Comparable<K>,V> implements Comparable<NodeRBT<K,
 	 private V value;
      private NodeRBT<K,V> left;
      private NodeRBT<K,V> right;
-     private char colour;
+     private char color;
      private NodeRBT<K,V> parent;
      
      public NodeRBT(K k, V v) {
  		key=k;
  		value=v;
- 		colour= 'B';
+ 		color= 'B';
  		left=null;
  		right=null;
  		parent=null;
@@ -49,12 +49,12 @@ public class NodeRBT<K extends Comparable<K>,V> implements Comparable<NodeRBT<K,
 		this.right = right;
 	}
 	
-	public char getColour() {
-		return colour;
+	public char getColor() {
+		return color;
 	}
 	
-	public void setColour(char colour) {
-		this.colour = colour;
+	public void setColor(char color) {
+		this.color = color;
 	}
 	
 	public NodeRBT<K,V> getParent() {

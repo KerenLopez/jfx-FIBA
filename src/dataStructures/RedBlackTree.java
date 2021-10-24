@@ -40,10 +40,11 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 
 	@Override
 	public void rightRotate(NodeRBT<K,V> node) {
-		NodeRBT<K,V> n = node.getRight();
+		NodeRBT<K,V> n = node.getLeft();
 
-		node.setRight(n.getRight());
+		node.setLeft(n.getRight());
 		if (n.getRight() != null) {
+
 			n.getRight().setParent(node);
 		}
 		n.setParent(node.getParent());
@@ -52,7 +53,7 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 		} else if (node == node.getParent().getRight()) {
 			node.getParent().setRight(n);
 		} else {
-			node.getParent().setRight(n);
+			node.getParent().setLeft(n);
 		}
 		n.setRight(node);
 		node.setParent(n);
@@ -79,9 +80,51 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 	}
 
 	@Override
-	public boolean insert(K key, V value) {
-		insertABB(key,value);
-		return false;
+	public void insert(K key, V value) {
+		NodeRBT<K,V> node=insertABB(key,value);
+		NodeRBT<K,V> uncle=null;
+
+		while(node.getParent()!=null && node.getParent().getColor()=='R') {
+			if(node.getParent().getParent()!=null &&node.getParent()==node.getParent().getParent().getRight()) {
+				uncle=node.getParent().getParent().getLeft();
+				if(uncle.getColor()=='R') {
+					uncle.setColor('B');
+					node.getParent().setColor('B');
+					node.getParent().getParent().setColor('R');
+					node=node.getParent().getParent();
+				}else if(node==node.getParent().getLeft()) {
+					node= node.getParent();
+					leftRotate(node);
+
+					node.getParent().setColor('B');
+					node.getParent().getParent().setColor('R');
+
+					rightRotate(node.getParent().getParent());
+				}
+
+
+			}else if(node.getParent().getParent()!=null &&node.getParent()==node.getParent().getParent().getLeft()) {
+				uncle=node.getParent().getParent().getRight();
+				if(uncle.getColor()=='R') {
+					uncle.setColor('B');
+					node.getParent().setColor('B');
+					node.getParent().getParent().setColor('R');
+					node=node.getParent().getParent();
+				}else if(node==node.getParent().getRight()) {
+					node= node.getParent();
+					rightRotate(node);
+
+					node.getParent().setColor('B');
+					node.getParent().getParent().setColor('R');
+
+					leftRotate(node.getParent().getParent());
+				}
+
+
+			}
+		}
+		root.setColor('B');
+
 	}
 
 	@Override
@@ -90,31 +133,80 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 
 	}
 
-	private void insertABB(K key,V value) {
+	private NodeRBT<K,V> insertABB(K key,V value) {
 		NodeRBT<K,V> newNode = new NodeRBT<>(key,value);
 		NodeRBT<K,V> parent=null;
 		NodeRBT<K,V> aux= root;
 		while (aux != null) {
-	        parent = aux;
-	        if (newNode.compareTo(aux) < 0) {
-	            aux = aux.getLeft();
-	        }else
-	            aux = aux.getRight();
-	    }
+			parent = aux;
+			if (newNode.compareTo(aux) < 0) {
+				aux = aux.getLeft();
+			}else
+				aux = aux.getRight();
+		}
 		newNode.setParent(parent);
 		if (parent == null) {
-	        root = newNode;
+			root = newNode;
 		}else if (newNode.compareTo(parent) < 0) {
-	        parent.setLeft(newNode); 
-	    }else {
-	    	parent.setRight(newNode); 
-	    }
-
+			parent.setLeft(newNode); 
+		}else {
+			parent.setRight(newNode); 
+		}
+		return newNode;
 	}
 
 
 	private void deleteABB(K key) {
+		NodeRBT<K,V> node = search(root,key);
+		deleteNodeABB(node);
+	}
 
+	private void deleteNodeABB(NodeRBT<K,V> node) {
+		if(node!=null) {
+			//Case 1, The node is a leaf
+			if(node.getLeft()==null && node.getRight()==null){
+				if(node==root){
+					root=null;
+				}else if(node==node.getParent().getLeft()){
+					node.getParent().setLeft(null);		
+				}else{
+					node.getParent().setRight(null);;
+				}
+				node.setParent(null);
+			}else if(node.getLeft()==null || node.getRight()==null){
+				//Case 2, The node has a child
+				NodeRBT<K,V> onlyChild;
+				if(node.getLeft()!=null){
+					onlyChild=node.getLeft();
+					node.setLeft(null);;
+				}else{
+					onlyChild=node.getRight();
+					node.setRight(null);
+				}
+				onlyChild.setParent(node.getParent());
+				if(node==root){
+					root=onlyChild;
+				}else if(node==node.getParent().getLeft()){
+					node.getParent().setLeft(onlyChild);	
+				}else{
+					node.getParent().setRight(onlyChild);
+				}
+				node.setParent(null);
+			}else{ 
+				//Case 3, The node has two children
+				NodeRBT<K,V> sucesor =min(node.getRight());
+				node.setValue(sucesor.getValue());
+				deleteNodeABB(sucesor);
+			}
+		}
+	}
+
+	private NodeRBT<K,V> min(NodeRBT<K, V> nodeRBT){
+		if(nodeRBT.getLeft()!=null){
+			return min(nodeRBT.getLeft());
+		}else{
+			return nodeRBT;
+		}
 	}
 
 
