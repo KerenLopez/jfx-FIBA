@@ -200,14 +200,109 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 	}
 	
 	private NodeRBT<K,V> successor(NodeRBT<K,V> node){
-		return null;
+		NodeRBT<K,V> aux =null;
+		
+		if (node.getRight() != nil) {
+			return minimum(node.getRight());
+		}
+		
+		aux = node.getParent();
+		
+		while (aux != null && node == aux.getRight()) {
+			node = aux;
+			aux = aux.getParent();
+		}
+
+		return aux;
+		
+	}
+	
+	private NodeRBT<K,V> minimum(NodeRBT<K,V> node){
+		while (node.getLeft() != nil) {
+			node = node.getLeft();
+		}
+
+		return node;
 	}
 	
 	private void deleteFixup(NodeRBT<K,V> node) {
+		NodeRBT<K,V> aux=null;
 		
+		while (node != root && node.getColor() == 'B'){
+
+			if (node == node.getParent().getLeft()){
+
+				aux = node.getParent().getRight();
+
+				// Case 1, aux's color is red.
+				if (aux.getColor() == 'R'){
+					aux.setColor('B');
+					node.getParent().setColor('R');
+					leftRotate(node.getParent());
+					aux = node.getParent().getRight();
+				}
+
+				// Case 2, both of aux's children are black
+				if (aux.getLeft().getColor() == 'B' &&	aux.getRight().getColor() == 'B'){
+					aux.setColor('R');
+					node = node.getParent();
+				}
+				// Case 3 / Case 4
+				else{
+					// Case 3, aux's right child is black
+					if (aux.getRight().getColor() == 'B'){
+						aux.getLeft().setColor('B');
+						aux.setColor('R');
+						rightRotate(aux);
+						aux = node.getParent().getRight();
+					}
+					// Case 4, aux is black, aux.getRight() is red
+					aux.setColor(node.getParent().getColor());
+					node.getParent().setColor('B');
+					aux.getRight().setColor('B');
+					leftRotate(node.getParent());
+					node = root;
+				}
+			}
+			// exchange right and left
+			else{
+
+				aux = node.getParent().getLeft();
+
+				// Case 1, aux's color is red.
+				if (aux.getColor() == 'R'){
+					aux.setColor('B');
+					node.getParent().setColor('R');
+					rightRotate(node.getParent());
+					aux = node.getParent().getLeft();
+				}
+
+				// Case 2, both of aux's children are black
+				if (aux.getRight().getColor() == 'B' &&	aux.getLeft().getColor() == 'B'){
+					aux.setColor('R');
+					node = node.getParent();
+				}
+				// Case 3 / Case 4
+				else{
+					// Case 3, aux's left child is black
+					if (aux.getLeft().getColor() == 'B'){
+						aux.getRight().setColor('B');
+						aux.setColor('R');
+						leftRotate(aux);
+						aux = node.getParent().getLeft();
+					}
+					// Case 4, aux is black, aux.getLeft() is red
+					aux.setColor(node.getParent().getColor());
+					node.getParent().setColor('B');
+					aux.getLeft().setColor('B');
+					rightRotate(node.getParent());
+					node = root;
+				}
+			}
+		}
+		
+		node.setColor('B');
 	}
-
-
 
 	
 
