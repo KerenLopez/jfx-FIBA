@@ -1,6 +1,6 @@
 package dataStructures;
 
-public class NodeRBT<K,V> {
+public class NodeRBT<K extends Comparable<K>,V> implements Comparable<NodeRBT<K,V>> {
 	 private K key;
 	 private V value;
      private NodeRBT<K,V> left;
@@ -63,6 +63,12 @@ public class NodeRBT<K,V> {
 	
 	public void setParent(NodeRBT<K,V> parent) {
 		this.parent = parent;
+	}
+
+	@Override
+	public int compareTo(NodeRBT<K, V> n) {
+		
+		return key.compareTo(n.getKey());
 	}
 
 }
