@@ -1,61 +1,36 @@
 package dataStructures;
 
+import java.util.ArrayList;
 
-public class ABBTree <K extends Comparable<K>, V> implements ABBTreeI<K,V> {
+public class BSTtree <K extends Comparable<K>, V> implements BSTtreeI<K,V> {
 
-	private ABBNode<K,V> root;
-	private String treeStr;
-
-	//CrearArbol
-	public ABBTree() {
+	private BSTNode<K,V> root;
+	
+	//Create tree
+	public BSTtree() {
 
 	}
 
-	public ABBNode<K,V> getRoot() {
+	public BSTNode<K,V> getRoot() {
 		return root;
 	}
 
-	public void setRoot(ABBNode<K,V> root) {
+	public void setRoot(BSTNode<K,V> root) {
 		this.root = root;
 	}
 
-	public String SearchNodeString(K key) {
-		ABBNode<K,V> founded = searchNode(root,key);
-		String nodeStr = "null";
-		if(founded!=null) {
-			nodeStr = founded.toString();
-		}
-		return nodeStr;
-	}
-
 	@Override
-	public ABBNode<K,V> searchNode(ABBNode<K,V> node, K key) {
-		if(node==null || node.compareTo(key)==0) {
-			return node;
-		}else {
-			if(node.compareTo(key)>=0) {
-				return searchNode(node.getLeft(), key);
-			}else{
-				return searchNode(node.getRight(), key);
-			}
-		}
-	}
-
-	@Override
-	public boolean insertNode(K key, V value) {
-		ABBNode<K,V> newNode = new ABBNode<K,V>(key,value);
-		boolean inserted = false;
+	public void insertNode(K key, V value) {
+		BSTNode<K,V> newNode = new BSTNode<K,V>(key,value);
 		if(root==null) {
 			root = newNode;
 		}else {
 			insertNodeRecursive(root, newNode);
-			inserted = true;
 		}
-		return inserted;
 	}
 
-	private void insertNodeRecursive(ABBNode<K,V> node, ABBNode<K,V> newNode) {
-		if(newNode.compareTo(node.getKey())<0){
+	private void insertNodeRecursive(BSTNode<K,V> node, BSTNode<K,V> newNode) {
+		if(newNode.compareTo(node.getKey())<=0){
 			if(node.getLeft()==null){
 				node.setLeft(newNode);
 				newNode.setParent(node);
@@ -71,14 +46,37 @@ public class ABBTree <K extends Comparable<K>, V> implements ABBTreeI<K,V> {
 			}	
 		}
 	}
-
+	
 	@Override
-	public void deleteNode(K key){
-		ABBNode<K,V> node = searchNode(root,key);
-		deleteNodeRecursive(node);
+	public BSTNode<K,V> searchNode(K key) {
+		BSTNode<K,V> founded = searchNodeRecursive(root,key);
+		return founded;
 	}
 	
-	private void deleteNodeRecursive(ABBNode<K,V> node) {
+	private BSTNode<K,V> searchNodeRecursive(BSTNode<K,V> node, K key) {
+		if(node==null || node.compareTo(key)==0) {
+			return node;
+		}else {
+			if(node.compareTo(key)>=0) {
+				return searchNodeRecursive(node.getLeft(), key);
+			}else{
+				return searchNodeRecursive(node.getRight(), key);
+			}
+		}
+	}
+
+	@Override
+	public boolean deleteNode(K key){
+		Boolean deleted = false;
+		BSTNode<K,V> founded = searchNode(key);
+		if(founded!=null) {
+			deleteNodeRecursive(founded);
+			deleted = true;
+		}
+		return deleted;
+	}
+	
+	private void deleteNodeRecursive(BSTNode<K,V> node) {
 		if(node!=null) {
 				//Case 1, The node is a leaf
 				if(node.getLeft()==null && node.getRight()==null){
@@ -92,7 +90,7 @@ public class ABBTree <K extends Comparable<K>, V> implements ABBTreeI<K,V> {
 					node.setParent(null);
 				}else if(node.getLeft()==null || node.getRight()==null){
 					//Case 2, The node has a child
-					ABBNode<K,V> onlyChild;
+					BSTNode<K,V> onlyChild;
 					if(node.getLeft()!=null){
 						onlyChild=node.getLeft();
 						node.setLeft(null);;
@@ -111,14 +109,14 @@ public class ABBTree <K extends Comparable<K>, V> implements ABBTreeI<K,V> {
 					node.setParent(null);
 				}else{ 
 					//Case 3, The node has two children
-					ABBNode<K,V> sucesor =min(node.getRight());
+					BSTNode<K,V> sucesor =min(node.getRight());
 					node.setValue(sucesor.getValue());
 					deleteNodeRecursive(sucesor);
 				}
 			}
 	}
 
-	private ABBNode<K,V> min(ABBNode<K,V> node){
+	private BSTNode<K,V> min(BSTNode<K,V> node){
 		if(node.getLeft()!=null){
 			return min(node.getLeft());
 		}else{
@@ -127,19 +125,19 @@ public class ABBTree <K extends Comparable<K>, V> implements ABBTreeI<K,V> {
 	}
 
 	@Override
-	public String showTree() {
-		treeStr = "";
+	public ArrayList<BSTNode<K,V>> inorderTraversal() {
+		ArrayList<BSTNode<K,V>> nodes = new ArrayList<BSTNode<K,V>>();
 		if(root!=null) {
-			inorderTraversal(root);
+			inorderTraversal(root, nodes);
 		}
-		return treeStr;
+		return nodes;
 	}
 
-	private void inorderTraversal(ABBNode<K,V> node) {
+	private void inorderTraversal(BSTNode<K,V> node, ArrayList<BSTNode<K,V>> nodes) {
 		if(node!=null) {
-			inorderTraversal(node.getLeft());
-			treeStr+=node.toString()+" ";
-			inorderTraversal(node.getRight());
+			inorderTraversal(node.getLeft(), nodes);
+			nodes.add(node);
+			inorderTraversal(node.getRight(), nodes);
 		}
 	}
 }
