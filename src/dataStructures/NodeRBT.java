@@ -5,13 +5,13 @@ public class NodeRBT<K extends Comparable<K>,V> implements Comparable<NodeRBT<K,
 	 private V value;
      private NodeRBT<K,V> left;
      private NodeRBT<K,V> right;
-     private char color;
+     private char color;// Red or black
      private NodeRBT<K,V> parent;
      
      public NodeRBT(K k, V v) {
  		key=k;
  		value=v;
- 		color= 'B';
+ 		color= 'R';
  		left=null;
  		right=null;
  		parent=null;

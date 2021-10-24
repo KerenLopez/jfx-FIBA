@@ -3,9 +3,13 @@ package dataStructures;
 public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,V> {
 
 	private NodeRBT<K,V> root;
+	private NodeRBT<K,V> nil;
 
 	public RedBlackTree() {
-		root=null;
+		
+		nil= new NodeRBT<>(null, null);
+		nil.setColor('B');
+		root=nil;
 	}
 
 	public NodeRBT<K,V> getRoot() {
@@ -21,7 +25,7 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 		NodeRBT<K,V> n = node.getRight();
 
 		node.setRight(n.getLeft());
-		if (n.getLeft() != null) {
+		if (n.getLeft() != nil) {
 
 			n.getLeft().setParent(node);
 		}
@@ -37,13 +41,14 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 		node.setParent(n);
 
 	}
+	
 
 	@Override
 	public void rightRotate(NodeRBT<K,V> node) {
 		NodeRBT<K,V> n = node.getLeft();
 
 		node.setLeft(n.getRight());
-		if (n.getRight() != null) {
+		if (n.getRight() != nil) {
 
 			n.getRight().setParent(node);
 		}
@@ -127,17 +132,14 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 
 	}
 
-	@Override
-	public void delete(K key) {
-		deleteABB(key);
-
-	}
 
 	private NodeRBT<K,V> insertABB(K key,V value) {
 		NodeRBT<K,V> newNode = new NodeRBT<>(key,value);
+		newNode.setLeft(nil);
+		newNode.setRight(nil);
 		NodeRBT<K,V> parent=null;
 		NodeRBT<K,V> aux= root;
-		while (aux != null) {
+		while (aux != nil) {
 			parent = aux;
 			if (newNode.compareTo(aux) < 0) {
 				aux = aux.getLeft();
@@ -155,59 +157,59 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 		return newNode;
 	}
 
+	
 
-	private void deleteABB(K key) {
+	@Override
+	public void delete(K key) {
 		NodeRBT<K,V> node = search(root,key);
-		deleteNodeABB(node);
+		NodeRBT<K,V> aux=nil;
+		NodeRBT<K,V> temp=nil;
+		
+		if(node.getLeft()==nil || node.getRight()==nil) {
+			temp=node;
+		}else {
+			temp= successor(node);
+		}
+		
+		if(temp.getLeft()!=nil) {
+			aux=temp.getLeft();
+		}else {
+			aux=temp.getRight();
+		}
+		
+		if(temp.getParent()==null) {
+			root=aux;
+		}else if(temp.getParent().getLeft()!=nil && temp.getParent().getLeft()==temp) {
+			temp.getParent().setLeft(aux);
+		
+		}else if(temp.getParent().getRight()!=nil && temp.getParent().getRight()==temp) {
+			temp.getParent().setRight(aux);
+		}
+		
+		if(temp!=node) {
+			node.setKey(temp.getKey());
+			node.setValue(temp.getValue());
+		}
+		
+		if(temp.getColor()=='B') {
+			deleteFixup(aux);
+		}
+				
+		
+
+	}
+	
+	private NodeRBT<K,V> successor(NodeRBT<K,V> node){
+		return null;
+	}
+	
+	private void deleteFixup(NodeRBT<K,V> node) {
+		
 	}
 
-	private void deleteNodeABB(NodeRBT<K,V> node) {
-		if(node!=null) {
-			//Case 1, The node is a leaf
-			if(node.getLeft()==null && node.getRight()==null){
-				if(node==root){
-					root=null;
-				}else if(node==node.getParent().getLeft()){
-					node.getParent().setLeft(null);		
-				}else{
-					node.getParent().setRight(null);;
-				}
-				node.setParent(null);
-			}else if(node.getLeft()==null || node.getRight()==null){
-				//Case 2, The node has a child
-				NodeRBT<K,V> onlyChild;
-				if(node.getLeft()!=null){
-					onlyChild=node.getLeft();
-					node.setLeft(null);;
-				}else{
-					onlyChild=node.getRight();
-					node.setRight(null);
-				}
-				onlyChild.setParent(node.getParent());
-				if(node==root){
-					root=onlyChild;
-				}else if(node==node.getParent().getLeft()){
-					node.getParent().setLeft(onlyChild);	
-				}else{
-					node.getParent().setRight(onlyChild);
-				}
-				node.setParent(null);
-			}else{ 
-				//Case 3, The node has two children
-				NodeRBT<K,V> sucesor =min(node.getRight());
-				node.setValue(sucesor.getValue());
-				deleteNodeABB(sucesor);
-			}
-		}
-	}
 
-	private NodeRBT<K,V> min(NodeRBT<K, V> nodeRBT){
-		if(nodeRBT.getLeft()!=null){
-			return min(nodeRBT.getLeft());
-		}else{
-			return nodeRBT;
-		}
-	}
+
+	
 
 
 }
