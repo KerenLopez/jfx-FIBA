@@ -2,6 +2,8 @@ package dataStructures;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Test;
 
 import model.Player;
@@ -229,5 +231,220 @@ public class RedBlackTreeTest {
 		assertTrue(node.getRight()==rbt.getNil());
 	}
 	
+	@Test
+	public void testSearch1() {
+		setupScenary1();
+		
+		double key=7;
+		
+		NodeRBT<Double,Player> node= rbt.search(rbt.getRoot(),key);
+		
+		assertTrue(node==null);
+		
+	}
+	
+	@Test
+	public void testSearch2() {
+		setupScenary2();
+		
+		double key=10;
+		
+		NodeRBT<Double,Player> node= rbt.search(rbt.getRoot(),key);
+		
+		assertFalse(node==null);
+		assertTrue(node.getValue().getName().equals("Charles Barkley"));
+		assertTrue(node.getValue().getAge()==31);
+		assertTrue(node.getValue().getTeam().equals("Miami Heat"));
+		assertTrue(node.getValue().getPoints()==20);
+		assertTrue(node.getValue().getBounces()==16);
+		assertTrue(node.getValue().getAssists()==6);
+		assertTrue(node.getValue().getSteals()==10);
+		assertTrue(node.getValue().getBlocks()==7);
+			
+	}
+	
+	@Test
+	public void testSearch3() {
+		setupScenary3();
+		
+		double key=2;
+		
+		NodeRBT<Double,Player> node= rbt.search(rbt.getRoot(),key);
+		
+		assertFalse(node==null);
+		assertTrue(node.getValue().getName().equals("Charles Barkley"));
+		assertTrue(node.getValue().getAge()==31);
+		assertTrue(node.getValue().getTeam().equals("Miami Heat"));
+		assertTrue(node.getValue().getPoints()==20);
+		assertTrue(node.getValue().getBounces()==16);
+		assertTrue(node.getValue().getAssists()==6);
+		assertTrue(node.getValue().getSteals()==2);
+		assertTrue(node.getValue().getBlocks()==7);
+			
+	}
+	
+	@Test
+	public void testDelete1() {
+		setupScenary2();
+		double key=6;
+		
+		rbt.delete(key);
+		
+		assertTrue(rbt.getRoot().getKey()==8);
+		
+		assertTrue(rbt.getRoot().getLeft().getKey()==4);
+		assertTrue(rbt.getRoot().getLeft().getColor()=='B');
+		assertTrue(rbt.getRoot().getRight().getKey()==10);
+		assertTrue(rbt.getRoot().getRight().getColor()=='B');
+		
+		
+	}
+	
+	@Test
+	public void testDelete2() {
+		setupScenary2();
+		double key=8;
+		
+		rbt.delete(key);
+		
+		assertTrue(rbt.getRoot().getKey()==6);
+		
+		assertTrue(rbt.getRoot().getLeft().getKey()==4);
+		assertTrue(rbt.getRoot().getLeft().getColor()=='B');
+		assertTrue(rbt.getRoot().getRight().getKey()==10);
+		assertTrue(rbt.getRoot().getRight().getColor()=='B');
+		
+		
+	}
+	
+	@Test
+	public void testDelete3() {
+		setupScenary2();
+		double key=4;
+		
+		rbt.delete(key);
+		
+		assertTrue(rbt.getRoot().getKey()==8);
+		
+		assertTrue(rbt.getRoot().getLeft().getKey()==6);
+		assertTrue(rbt.getRoot().getLeft().getColor()=='B');
+		assertTrue(rbt.getRoot().getRight().getKey()==10);
+		assertTrue(rbt.getRoot().getRight().getColor()=='B');
+		
+		
+	}
+	
+	@Test
+	public void testDelete5() {
+		setupScenary2();
+		double key=10;
+		
+		rbt.delete(key);
+		
+		assertTrue(rbt.getRoot().getKey()==6);
+		
+		assertTrue(rbt.getRoot().getLeft().getKey()==4);
+		assertTrue(rbt.getRoot().getLeft().getColor()=='B');
+		assertTrue(rbt.getRoot().getRight().getKey()==8);
+		assertTrue(rbt.getRoot().getRight().getColor()=='B');
+		
+		
+	}
+	
+	@Test
+	public void testDelete7() {
+		setupScenary3();
+		double key=6;
+		
+		rbt.delete(key);
+		
+		assertTrue(rbt.getRoot().getKey()==4);
+		
+		assertTrue(rbt.getRoot().getLeft().getKey()==2);
+		assertTrue(rbt.getRoot().getLeft().getColor()=='B');
+		assertTrue(rbt.getRoot().getRight().getKey()==8);
+		assertTrue(rbt.getRoot().getRight().getColor()=='B');
+		
+		
+	}
+	
+	@Test
+	public void testDelete8() {
+		setupScenary3();
+		double key=4;
+		
+		rbt.delete(key);
+		
+		assertTrue(rbt.getRoot().getKey()==6);
+		
+		assertTrue(rbt.getRoot().getLeft().getKey()==2);
+		assertTrue(rbt.getRoot().getLeft().getColor()=='B');
+		assertTrue(rbt.getRoot().getRight().getKey()==8);
+		assertTrue(rbt.getRoot().getRight().getColor()=='B');
+		
+		
+	}
+	
+	@Test
+	public void testDelete9() {
+		setupScenary3();
+		double key=8;
+		
+		rbt.delete(key);
+		
+		assertTrue(rbt.getRoot().getKey()==4);
+		
+		assertTrue(rbt.getRoot().getLeft().getKey()==2);
+		assertTrue(rbt.getRoot().getLeft().getColor()=='B');
+		assertTrue(rbt.getRoot().getRight().getKey()==6);
+		assertTrue(rbt.getRoot().getRight().getColor()=='B');
+		
+		
+	}
+	
+	@Test
+	public void testDelete10() {
+		setupScenary3();
+		double key=2;
+		
+		rbt.delete(key);
+		
+		assertTrue(rbt.getRoot().getKey()==6);
+		
+		assertTrue(rbt.getRoot().getLeft().getKey()==4);
+		assertTrue(rbt.getRoot().getLeft().getColor()=='B');
+		assertTrue(rbt.getRoot().getRight().getKey()==8);
+		assertTrue(rbt.getRoot().getRight().getColor()=='B');
+		
+		
+	}
+	
+	@Test
+	public void testInorderTraversal1() {
+		setupScenary1();
+		assertTrue(rbt.inorderTraversal().isEmpty());
+	}
+	
+	@Test
+	public void testInorderTraversal2() {
+		setupScenary2();
+		ArrayList<NodeRBT<Double,Player>> nodes =rbt.inorderTraversal();
+		assertEquals(nodes.get(0).getKey(), 4.0);
+		assertEquals(nodes.get(1).getKey(), 6.0);
+		assertEquals(nodes.get(2).getKey(), 8.0);
+		assertEquals(nodes.get(3).getKey(), 10.0);
+
+	}
+	
+	@Test
+	public void testInorderTraversal3() {
+		setupScenary3();
+		ArrayList<NodeRBT<Double,Player>> nodes =rbt.inorderTraversal();
+		assertEquals(nodes.get(0).getKey(), 2.0);
+		assertEquals(nodes.get(1).getKey(), 4.0);
+		assertEquals(nodes.get(2).getKey(), 6.0);
+		assertEquals(nodes.get(3).getKey(), 8.0);
+
+	}
 
 }

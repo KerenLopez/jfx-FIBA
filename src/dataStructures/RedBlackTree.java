@@ -1,5 +1,7 @@
 package dataStructures;
 
+import java.util.ArrayList;
+
 public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,V> {
 
 	private NodeRBT<K,V> root;
@@ -33,7 +35,7 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 			n.getLeft().setParent(node);
 		}
 
-		
+
 
 		if (node.getParent() == null) {
 			root = n;
@@ -62,7 +64,7 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 			n.getRight().setParent(node);
 		}
 
-		
+
 		if (node.getParent() == null) {
 			root = n;
 		} else if (node == node.getParent().getRight()) {
@@ -72,8 +74,8 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 		}
 
 		n.setRight(node);
-		
-		
+
+
 		if(n!=nil) {
 			n.setParent(node.getParent());
 		}
@@ -85,12 +87,16 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 	@Override
 	public NodeRBT<K, V> search(NodeRBT<K, V> node, K key) {
 		NodeRBT<K,V> n= new NodeRBT<>(key,null);
-		return searchNode(node,n);
+		if(searchNode(node,n)==nil) {
+			return null;
+		}else {
+			return searchNode(node,n);
+		}
 
 	}
 
 	private NodeRBT<K, V> searchNode(NodeRBT<K, V> node, NodeRBT<K, V> nSearched){
-		if(node==null || node.compareTo(nSearched)==0) {
+		if(node==nil || node.compareTo(nSearched)==0) {
 			return node;
 		}else {
 			if(node.compareTo(nSearched)>=0) {
@@ -105,9 +111,9 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 	public void insert(K key, V value) {
 		NodeRBT<K,V> node=insertABB(key,value);
 		NodeRBT<K,V> uncle=null;
-		
-	
-		
+
+
+
 
 		while(node.getParent()!=null && node.getParent().getColor()=='R') {
 			if(node.getParent().getParent()!=null &&node.getParent()==node.getParent().getParent().getRight()) {
@@ -202,6 +208,8 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 		}else {
 			aux=temp.getRight();
 		}
+		
+		aux.setParent(temp.getParent());
 
 		if(temp.getParent()==null) {
 			root=aux;
@@ -216,6 +224,8 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 			node.setKey(temp.getKey());
 			node.setValue(temp.getValue());
 		}
+		
+		
 
 		if(temp.getColor()=='B') {
 			deleteFixup(aux);
@@ -329,7 +339,23 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 
 		node.setColor('B');
 	}
+	
+	@Override
+	public ArrayList<NodeRBT<K,V>> inorderTraversal() {
+		ArrayList<NodeRBT<K,V>> nodes = new ArrayList<>();
+		if(root!=nil) {
+			inorderTraversal(root, nodes);
+		}
+		return nodes;
+	}
 
+	private void inorderTraversal(NodeRBT<K,V> node, ArrayList<NodeRBT<K,V>> nodes) {
+		if(node!=nil) {
+			inorderTraversal(node.getLeft(), nodes);
+			nodes.add(node);
+			inorderTraversal(node.getRight(), nodes);
+		}
+	}
 
 
 
