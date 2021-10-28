@@ -40,6 +40,10 @@ public class BSTNode <K extends Comparable<K>, V> implements Comparable<K>{
 		return key;
 	}
 	
+	public void setKey(K key) {
+		this.key = key;
+	}
+	
 	@Override
 	public int compareTo(K k) {
 		return key.compareTo(k);

@@ -34,7 +34,7 @@ public class Player {
 		return team;
 	}
 
-	public double getPodoubles() {
+	public double getPoints() {
 		return points;
 	}
 
