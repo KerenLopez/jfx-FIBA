@@ -1,10 +1,10 @@
-package model;
+package dataStructures;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class FibaTest {
+class BSTtreeTest {
 
 	@Test
 	void test() {
