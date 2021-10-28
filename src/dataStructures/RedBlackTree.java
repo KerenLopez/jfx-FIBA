@@ -6,7 +6,7 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 	private NodeRBT<K,V> nil;
 
 	public RedBlackTree() {
-		
+
 		nil= new NodeRBT<>(null, null);
 		nil.setColor('B');
 		root=nil;
@@ -14,6 +14,9 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 
 	public NodeRBT<K,V> getRoot() {
 		return root;
+	}
+	public NodeRBT<K,V> getNil() {
+		return nil;
 	}
 
 	public void setRoot(NodeRBT<K,V> root) {
@@ -29,7 +32,9 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 
 			n.getLeft().setParent(node);
 		}
-		n.setParent(node.getParent());
+
+		
+
 		if (node.getParent() == null) {
 			root = n;
 		} else if (node == node.getParent().getLeft()) {
@@ -37,11 +42,15 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 		} else {
 			node.getParent().setRight(n);
 		}
+
 		n.setLeft(node);
+		if(n!=nil) {
+			n.setParent(node.getParent());
+		}
 		node.setParent(n);
 
 	}
-	
+
 
 	@Override
 	public void rightRotate(NodeRBT<K,V> node) {
@@ -52,7 +61,8 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 
 			n.getRight().setParent(node);
 		}
-		n.setParent(node.getParent());
+
+		
 		if (node.getParent() == null) {
 			root = n;
 		} else if (node == node.getParent().getRight()) {
@@ -60,8 +70,15 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 		} else {
 			node.getParent().setLeft(n);
 		}
+
 		n.setRight(node);
+		
+		
+		if(n!=nil) {
+			n.setParent(node.getParent());
+		}
 		node.setParent(n);
+
 
 	}
 
@@ -88,6 +105,9 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 	public void insert(K key, V value) {
 		NodeRBT<K,V> node=insertABB(key,value);
 		NodeRBT<K,V> uncle=null;
+		
+	
+		
 
 		while(node.getParent()!=null && node.getParent().getColor()=='R') {
 			if(node.getParent().getParent()!=null &&node.getParent()==node.getParent().getParent().getRight()) {
@@ -97,10 +117,31 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 					node.getParent().setColor('B');
 					node.getParent().getParent().setColor('R');
 					node=node.getParent().getParent();
-				}else if(node==node.getParent().getLeft()) {
-					node= node.getParent();
-					leftRotate(node);
+				}else { 
+					if(node==node.getParent().getLeft()) {
+						node= node.getParent();
+						rightRotate(node);
+					}
+					node.getParent().setColor('B');
+					node.getParent().getParent().setColor('R');
 
+					leftRotate(node.getParent().getParent());
+
+				}
+
+			}else if(node.getParent().getParent()!=null){
+				uncle=node.getParent().getParent().getRight();
+				if(uncle.getColor()=='R') {
+					uncle.setColor('B');
+					node.getParent().setColor('B');
+					node.getParent().getParent().setColor('R');
+					node=node.getParent().getParent();
+				}else {
+					if(node==node.getParent().getRight()) {
+
+						node= node.getParent();
+						leftRotate(node);
+					}
 					node.getParent().setColor('B');
 					node.getParent().getParent().setColor('R');
 
@@ -108,24 +149,9 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 				}
 
 
-			}else if(node.getParent().getParent()!=null &&node.getParent()==node.getParent().getParent().getLeft()) {
-				uncle=node.getParent().getParent().getRight();
-				if(uncle.getColor()=='R') {
-					uncle.setColor('B');
-					node.getParent().setColor('B');
-					node.getParent().getParent().setColor('R');
-					node=node.getParent().getParent();
-				}else if(node==node.getParent().getRight()) {
-					node= node.getParent();
-					rightRotate(node);
-
-					node.getParent().setColor('B');
-					node.getParent().getParent().setColor('R');
-
-					leftRotate(node.getParent().getParent());
-				}
-
-
+			}
+			if(node==root) {
+				break;
 			}
 		}
 		root.setColor('B');
@@ -157,66 +183,66 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 		return newNode;
 	}
 
-	
+
 
 	@Override
 	public void delete(K key) {
 		NodeRBT<K,V> node = search(root,key);
 		NodeRBT<K,V> aux=nil;
 		NodeRBT<K,V> temp=nil;
-		
+
 		if(node.getLeft()==nil || node.getRight()==nil) {
 			temp=node;
 		}else {
 			temp= successor(node);
 		}
-		
+
 		if(temp.getLeft()!=nil) {
 			aux=temp.getLeft();
 		}else {
 			aux=temp.getRight();
 		}
-		
+
 		if(temp.getParent()==null) {
 			root=aux;
 		}else if(temp.getParent().getLeft()!=nil && temp.getParent().getLeft()==temp) {
 			temp.getParent().setLeft(aux);
-		
+
 		}else if(temp.getParent().getRight()!=nil && temp.getParent().getRight()==temp) {
 			temp.getParent().setRight(aux);
 		}
-		
+
 		if(temp!=node) {
 			node.setKey(temp.getKey());
 			node.setValue(temp.getValue());
 		}
-		
+
 		if(temp.getColor()=='B') {
 			deleteFixup(aux);
 		}
-				
-		
+
+
 
 	}
-	
+
 	private NodeRBT<K,V> successor(NodeRBT<K,V> node){
 		NodeRBT<K,V> aux =null;
-		
+
 		if (node.getRight() != nil) {
 			return minimum(node.getRight());
 		}
-		
+
 		aux = node.getParent();
-		
+
 		while (aux != null && node == aux.getRight()) {
 			node = aux;
 			aux = aux.getParent();
 		}
 
 		return aux;
-		
+
 	}
-	
+
 	private NodeRBT<K,V> minimum(NodeRBT<K,V> node){
 		while (node.getLeft() != nil) {
 			node = node.getLeft();
@@ -224,10 +250,10 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 
 		return node;
 	}
-	
+
 	private void deleteFixup(NodeRBT<K,V> node) {
 		NodeRBT<K,V> aux=null;
-		
+
 		while (node != root && node.getColor() == 'B'){
 
 			if (node == node.getParent().getLeft()){
@@ -300,11 +326,11 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 				}
 			}
 		}
-		
+
 		node.setColor('B');
 	}
 
-	
+
 
 
 }
