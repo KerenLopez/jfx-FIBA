@@ -86,5 +86,148 @@ public class RedBlackTreeTest {
 		assertTrue(node.getLeft().getKey()==8);
 		assertTrue(node.getRight().getKey()==10);
 	}
+	
+	@Test
+	public void testInsert3() {
+		setupScenary2();
+		
+				
+		String name = "Rick Barry";
+		int age = 26;
+		String team = "Indiana Pacers";
+		double points = 40;
+		double bounces = 2;
+		double assists = 5;
+		double steals = 11;
+		double blocks = 9;
+		
+		Player player= new Player(name, age, team, points, bounces, assists, steals, blocks);
+
+		rbt.insert(player.getSteals(), player);
+		
+		NodeRBT<Double,Player> node= rbt.search(rbt.getRoot(),11.0);
+		assertTrue(node.getValue()==player);
+		assertTrue(node.getColor()=='R');
+		assertTrue(node.getParent().getKey()==10);
+		assertTrue(node.getParent().getColor()=='B');
+		assertTrue(node.getParent().getRight()==node);
+		assertTrue(node.getParent().getLeft().getKey()==8);
+		assertTrue(node.getParent().getLeft().getColor()=='R');
+		assertTrue(node.getLeft()==rbt.getNil());
+		assertTrue(node.getRight()==rbt.getNil());
+	}
+	
+	@Test
+	public void testInsert4() {
+		setupScenary2();
+		
+				
+		String name = "Rick Barry";
+		int age = 26;
+		String team = "Indiana Pacers";
+		double points = 40;
+		double bounces = 2;
+		double assists = 5;
+		double steals = 5;
+		double blocks = 9;
+		
+		Player player= new Player(name, age, team, points, bounces, assists, steals, blocks);
+
+		rbt.insert(player.getSteals(), player);
+		
+		NodeRBT<Double,Player> node= rbt.search(rbt.getRoot(),5.0);
+		assertTrue(node.getValue()==player);
+		assertTrue(node.getColor()=='R');
+		assertTrue(node.getParent().getKey()==4);
+		assertTrue(node.getParent().getColor()=='B');
+		assertTrue(node.getParent().getRight()==node);
+		assertTrue(node.getLeft()==rbt.getNil());
+		assertTrue(node.getRight()==rbt.getNil());
+	}
+	
+	@Test
+	public void testInsert5() {
+		setupScenary3();
+		
+				
+		String name = "Rick Barry";
+		int age = 26;
+		String team = "Indiana Pacers";
+		double points = 40;
+		double bounces = 2;
+		double assists = 5;
+		double steals = 1;
+		double blocks = 9;
+		
+		Player player= new Player(name, age, team, points, bounces, assists, steals, blocks);
+
+		rbt.insert(player.getSteals(), player);
+		
+		NodeRBT<Double,Player> node= rbt.search(rbt.getRoot(),1.0);
+		assertTrue(node.getValue()==player);
+		assertTrue(node.getColor()=='R');
+		assertTrue(node.getParent().getKey()==2);
+		assertTrue(node.getParent().getColor()=='B');
+		assertTrue(node.getParent().getLeft()==node);
+		assertTrue(node.getParent().getRight().getKey()==4);
+		assertTrue(node.getParent().getRight().getColor()=='R');
+		assertTrue(node.getLeft()==rbt.getNil());
+		assertTrue(node.getRight()==rbt.getNil());
+	}
+	
+	@Test
+	public void testInsert6() {
+		setupScenary3();
+		
+				
+		String name = "Rick Barry";
+		int age = 26;
+		String team = "Indiana Pacers";
+		double points = 40;
+		double bounces = 2;
+		double assists = 5;
+		double steals = 3;
+		double blocks = 9;
+		
+		Player player= new Player(name, age, team, points, bounces, assists, steals, blocks);
+
+		rbt.insert(player.getSteals(), player);
+		
+		NodeRBT<Double,Player> node= rbt.search(rbt.getRoot(),3.0);
+		assertTrue(node.getValue()==player);
+		assertTrue(node.getColor()=='B');
+		assertTrue(node.getParent().getKey()==6);
+		assertTrue(node.getParent().getLeft()==node);
+		assertTrue(node.getLeft().getKey()==2);
+		assertTrue(node.getRight().getKey()==4);
+	}
+	@Test
+	public void testInsert7() {
+		setupScenary3();
+		
+				
+		String name = "Rick Barry";
+		int age = 26;
+		String team = "Indiana Pacers";
+		double points = 40;
+		double bounces = 2;
+		double assists = 5;
+		double steals = 7;
+		double blocks = 9;
+		
+		Player player= new Player(name, age, team, points, bounces, assists, steals, blocks);
+
+		rbt.insert(player.getSteals(), player);
+		
+		NodeRBT<Double,Player> node= rbt.search(rbt.getRoot(),7.0);
+		assertTrue(node.getValue()==player);
+		assertTrue(node.getColor()=='R');
+		assertTrue(node.getParent().getKey()==8);
+		assertTrue(node.getParent().getColor()=='B');
+		assertTrue(node.getParent().getLeft()==node);
+		assertTrue(node.getLeft()==rbt.getNil());
+		assertTrue(node.getRight()==rbt.getNil());
+	}
+	
 
 }
