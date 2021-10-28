@@ -3,15 +3,15 @@ package model;
 public class Player {
 	
 	private String name;
-	private Integer age;
+	private int age;
 	private String team;
-	private Integer points;
-	private Integer bounces;
-	private Integer assists;
-	private Integer steals;
-	private Integer blocks;
+	private double points;
+	private double bounces;
+	private double assists;
+	private double steals;
+	private double blocks;
 	
-	public Player( String name, int age, String team, int points, int bounces, int assists, int steals, int blocks) {
+	public Player( String name, int age, String team, double points, double bounces, double assists, double steals, double blocks) {
 		this.name = name;
 		this.age = age;
 		this.team = team;
@@ -26,7 +26,7 @@ public class Player {
 		return name;
 	}
 
-	public Integer getAge() {
+	public int getAge() {
 		return age;
 	}
 
@@ -34,23 +34,23 @@ public class Player {
 		return team;
 	}
 
-	public Integer getPoints() {
+	public double getPodoubles() {
 		return points;
 	}
 
-	public Integer getBounces() {
+	public double getBounces() {
 		return bounces;
 	}
 
-	public Integer getAssists() {
+	public double getAssists() {
 		return assists;
 	}
 
-	public Integer getSteals() {
+	public double getSteals() {
 		return steals;
 	}
 
-	public Integer getBlocks() {
+	public double getBlocks() {
 		return blocks;
 	}
 }
