@@ -151,6 +151,7 @@ public class BSTtreeTest {
 		setupScenary2();
 		double key = 20.0;
 		assertTrue(pointsTree.deleteNode(key));
+		assertEquals(pointsTree.searchNode(30.0).getLeft(),null);
 	}
 	
 	@Test
@@ -158,6 +159,7 @@ public class BSTtreeTest {
 		setupScenary3();
 		double key = 30.0;
 		assertTrue(pointsTree.deleteNode(key));
+		assertEquals(pointsTree.getRoot().getLeft().getKey(),40.0); 
 	}
 	
 	@Test
@@ -165,6 +167,9 @@ public class BSTtreeTest {
 		setupScenary4();
 		double key = 50.0;
 		assertTrue(pointsTree.deleteNode(key));
+		assertEquals(pointsTree.getRoot().getKey(), 60.0);
+		assertEquals(pointsTree.getRoot().getLeft().getKey(), 40.0);
+		assertEquals(pointsTree.getRoot().getRight().getKey(), 70.0);
 	}
 	
 	@Test
@@ -178,18 +183,18 @@ public class BSTtreeTest {
 		setupScenary2();
 		ArrayList<BSTNode<Double,Player>> nodes =pointsTree.inorderTraversal();
 		assertEquals(nodes.get(0).getKey(), 20.0);
-		assertEquals(nodes.get(0), pointsTree.searchNode(20.0).getValue());
+		assertEquals(nodes.get(0), pointsTree.searchNode(20.0));
 		assertEquals(nodes.get(1).getKey(), 30.0);
-		assertEquals(nodes.get(1), pointsTree.searchNode(30.0).getValue());
+		assertEquals(nodes.get(1), pointsTree.searchNode(30.0));
 		assertEquals(nodes.get(2).getKey(), 40.0);
-		assertEquals(nodes.get(2), pointsTree.searchNode(40.0).getValue());
+		assertEquals(nodes.get(2), pointsTree.searchNode(40.0));
 		assertEquals(nodes.get(3).getKey(), 50.0);
-		assertEquals(nodes.get(3), pointsTree.searchNode(50.0).getValue());
+		assertEquals(nodes.get(3), pointsTree.searchNode(50.0));
 		assertEquals(nodes.get(4).getKey(), 60.0);
-		assertEquals(nodes.get(4), pointsTree.searchNode(60.0).getValue());
+		assertEquals(nodes.get(4), pointsTree.searchNode(60.0));
 		assertEquals(nodes.get(5).getKey(), 70.0);
-		assertEquals(nodes.get(5), pointsTree.searchNode(70.0).getValue());
+		assertEquals(nodes.get(5), pointsTree.searchNode(70.0));
 		assertEquals(nodes.get(6).getKey(), 80.0);
-		assertEquals(nodes.get(6), pointsTree.searchNode(80.0).getValue());
+		assertEquals(nodes.get(6), pointsTree.searchNode(80.0));
 	}
 }

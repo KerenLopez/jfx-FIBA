@@ -93,7 +93,7 @@ public class BSTtree <K extends Comparable<K>, V> implements BSTtreeI<K,V> {
 					BSTNode<K,V> onlyChild;
 					if(node.getLeft()!=null){
 						onlyChild=node.getLeft();
-						node.setLeft(null);;
+						node.setLeft(null);
 					}else{
 						onlyChild=node.getRight();
 						node.setRight(null);
@@ -111,6 +111,7 @@ public class BSTtree <K extends Comparable<K>, V> implements BSTtreeI<K,V> {
 					//Case 3, The node has two children
 					BSTNode<K,V> sucesor =min(node.getRight());
 					node.setValue(sucesor.getValue());
+					node.setKey(sucesor.getKey());
 					deleteNodeRecursive(sucesor);
 				}
 			}
