@@ -53,4 +53,37 @@ public class Player {
 	public double getBlocks() {
 		return blocks;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
+	}
+
+	public void setPoints(double points) {
+		this.points = points;
+	}
+
+	public void setBounces(double bounces) {
+		this.bounces = bounces;
+	}
+
+	public void setAssists(double assists) {
+		this.assists = assists;
+	}
+
+	public void setSteals(double steals) {
+		this.steals = steals;
+	}
+
+	public void setBlocks(double blocks) {
+		this.blocks = blocks;
+	}
+	
 }

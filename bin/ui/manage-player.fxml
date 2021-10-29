@@ -14,12 +14,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <HBox BorderPane.alignment="CENTER">
          <children>
-            <Label text="Gestionar jugador">
+            <Label text="Gestionar jugador" textFill="WHITE">
                <font>
                   <Font name="Juice ITC" size="24.0" />
                </font>
@@ -27,7 +26,7 @@
                   <Insets left="100.0" top="50.0" />
                </HBox.margin>
             </Label>
-            <Label text="Tabla de jugadores agregados">
+            <Label text="Tabla de jugadores agregados" textFill="WHITE">
                <font>
                   <Font name="Juice ITC" size="24.0" />
                </font>
@@ -66,7 +65,7 @@
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Nombre">
+                        <Label text="Nombre" textFill="WHITE">
                            <font>
                               <Font name="Juice ITC" size="23.0" />
                            </font>
@@ -83,7 +82,7 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <children>
-                        <Label text="Edad">
+                        <Label text="Edad" textFill="WHITE">
                            <font>
                               <Font name="Juice ITC" size="23.0" />
                            </font>
@@ -100,7 +99,7 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
                      <children>
-                        <Label text="Equipo">
+                        <Label text="Equipo" textFill="WHITE">
                            <font>
                               <Font name="Juice ITC" size="23.0" />
                            </font>
@@ -117,7 +116,7 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
                      <children>
-                        <Label text="Puntos por partido">
+                        <Label text="Puntos por partido" textFill="WHITE">
                            <font>
                               <Font name="Juice ITC" size="23.0" />
                            </font>
@@ -134,7 +133,7 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
                      <children>
-                        <Label text="Rebotes por partido">
+                        <Label text="Rebotes por partido" textFill="WHITE">
                            <font>
                               <Font name="Juice ITC" size="23.0" />
                            </font>
@@ -151,7 +150,7 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="5">
                      <children>
-                        <Label text="Asistencias por partido">
+                        <Label text="Asistencias por partido" textFill="WHITE">
                            <font>
                               <Font name="Juice ITC" size="23.0" />
                            </font>
@@ -168,7 +167,7 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="6">
                      <children>
-                        <Label text="Robos por partido">
+                        <Label text="Robos por partido" textFill="WHITE">
                            <font>
                               <Font name="Juice ITC" size="23.0" />
                            </font>
@@ -185,7 +184,7 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="7">
                      <children>
-                        <Label text="Bloqueos por partido">
+                        <Label text="Bloqueos por partido" textFill="WHITE">
                            <font>
                               <Font name="Juice ITC" size="23.0" />
                            </font>
@@ -204,7 +203,7 @@
                      <children>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Button mnemonicParsing="false" onAction="#updatePlayer" text="Actualizar">
+                              <Button disable="true" mnemonicParsing="false" onAction="#updatePlayer" style="-fx-background-color: #FA9000;" text="Actualizar" textFill="WHITE">
                                  <font>
                                     <Font name="Impact" size="17.0" />
                                  </font>
@@ -212,7 +211,7 @@
                                     <Insets left="50.0" top="20.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button mnemonicParsing="false" onAction="#addPlayer" text="Agregar">
+                              <Button fx:id="btAddPlayer" mnemonicParsing="false" onAction="#addPlayer" style="-fx-background-color: #FA9000;" text="Agregar" textFill="WHITE">
                                  <font>
                                     <Font name="Impact" size="17.0" />
                                  </font>
@@ -222,10 +221,10 @@
                               </Button>
                            </children>
                            <VBox.margin>
-                              <Insets top="60.0" />
+                              <Insets />
                            </VBox.margin>
                         </HBox>
-                        <Button mnemonicParsing="false" onAction="#deletePlayer" text="Eliminar">
+                        <Button fx:id="btDeletePlayer" disable="true" mnemonicParsing="false" onAction="#deletePlayer" style="-fx-background-color: #FA9000;" text="Eliminar" textFill="WHITE">
                            <font>
                               <Font name="Impact" size="17.0" />
                            </font>
@@ -234,6 +233,9 @@
                            </VBox.margin>
                         </Button>
                      </children>
+                     <GridPane.margin>
+                        <Insets top="50.0" />
+                     </GridPane.margin>
                   </VBox>
                </children>
                <GridPane.margin>
@@ -242,7 +244,7 @@
             </GridPane>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
                <children>
-                  <TableView fx:id="tvOfPlayers" maxWidth="620.0" minWidth="620.0" prefHeight="460.0" prefWidth="620.0">
+                  <TableView fx:id="tvOfPlayers" maxWidth="620.0" minWidth="620.0" onMouseClicked="#clickOnTableViewOfAddedPlayers" prefHeight="460.0" prefWidth="620.0">
                     <columns>
                       <TableColumn fx:id="tcName" prefWidth="75.0" text="Nombre" />
                       <TableColumn fx:id="tcAge" prefWidth="75.0" text="Edad" />
@@ -254,7 +256,7 @@
                         <TableColumn fx:id="tcBlocks" prefWidth="94.0" text="Bloqueos" />
                     </columns>
                   </TableView>
-                  <Label text="*Seleccione un jugador de la tabla para actualizarlo o eliminarlo">
+                  <Label text="*Seleccione un jugador de la tabla para actualizarlo o eliminarlo" textFill="WHITE">
                      <font>
                         <Font name="Juice ITC" size="23.0" />
                      </font>
@@ -262,7 +264,7 @@
                         <Insets left="100.0" top="15.0" />
                      </VBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" onAction="#returnToMenu" text="Atrás">
+                  <Button mnemonicParsing="false" onAction="#returnToMenu" style="-fx-background-color: #FA9000;" text="Atrás" textFill="WHITE">
                      <font>
                         <Font name="Impact" size="17.0" />
                      </font>
