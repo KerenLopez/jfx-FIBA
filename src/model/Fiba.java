@@ -147,25 +147,11 @@ public class Fiba implements Serializable{
 		return updated;
 	}
 	
-	/*public void importPlayersData(String fileName) throws IOException{
-		BufferedReader br = new BufferedReader(new FileReader(fileName));
-		String line = br.readLine();
-		while(line!=null){
-			String[] parts = line.split(";");
-			addPlayer(parts[0],parts[1],parts[2],parts[3],parts[4],parts[5],parts[6],parts[7]);
-			line = br.readLine();
-		}
-		br.close();
-	}*/
+	
 
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
-	
-	
-	
-	
-	
 	
 	
 	public void saveDataFIBA() throws IOException{
