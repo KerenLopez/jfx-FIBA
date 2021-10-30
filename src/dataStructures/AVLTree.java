@@ -83,27 +83,27 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
     }
 
     @Override
-    public boolean deleted(K key) {
-        Boolean deleted = false;
+    public boolean delete(K key) {
+        Boolean delete = false;
         NodeAVL<K,V> founded = search(key);
         if(founded!=null) {
-                deletedPrivate(root,key);
-                deleted = true;
+                deletePrivate(root,key);
+                delete = true;
         }
-        return deleted;
+        return delete;
     }
     
-    private NodeAVL<K, V> deletedPrivate(NodeAVL<K,V> currentNode, K key){
+    private NodeAVL<K, V> deletePrivate(NodeAVL<K,V> currentNode, K key){
         if (currentNode==null){
             return currentNode;
         }
  
         if (key.compareTo(currentNode.getKey())<0){
-            currentNode.setLeft(deletedPrivate(currentNode.getLeft(),key));
+            currentNode.setLeft(deletePrivate(currentNode.getLeft(),key));
         }
         
         else if (key.compareTo(currentNode.getKey())>0){
-            currentNode.setRight(deletedPrivate(currentNode.getRight(),key));
+            currentNode.setRight(deletePrivate(currentNode.getRight(),key));
         }
         
         else {
@@ -119,7 +119,7 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
             NodeAVL<K, V> temp = getNodoConValorMaximo(currentNode.getLeft());
             currentNode.setKey(temp.getKey());
             currentNode.setValue(temp.getValue());
-            currentNode.setLeft(deletedPrivate(currentNode.getLeft(),temp.getKey()));
+            currentNode.setLeft(deletePrivate(currentNode.getLeft(),temp.getKey()));
             
             
             currentNode.setHeight(1+Math.max(height(currentNode.getLeft()),height(currentNode.getRight())));

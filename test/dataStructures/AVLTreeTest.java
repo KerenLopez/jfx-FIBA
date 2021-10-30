@@ -172,4 +172,20 @@ public class AVLTreeTest {
             setupScenary1();
             assertTrue(treeAVL.preOrder().isEmpty());
     }*/
+    
+    
+    @Test
+	public void testDelete1() {
+		setupScenary2();
+		double key=6;
+		
+		treeAVL.delete(key);
+		
+		assertTrue(treeAVL.getRoot().getKey()==8);
+		
+		assertTrue(treeAVL.getRoot().getLeft().getKey()==4);
+		assertTrue(treeAVL.getRoot().getRight().getKey()==10);
+		
+		
+	}
 }
