@@ -6,7 +6,6 @@ import java.util.Hashtable;
 import dataStructures.BSTNode;
 import dataStructures.BSTtree;
 import exceptions.NegativeValueException;
-import javafx.util.Callback;
 
 public class Fiba {
 

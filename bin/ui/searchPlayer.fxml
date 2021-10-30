@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
@@ -40,7 +41,7 @@
                <children>
                   <VBox alignment="TOP_CENTER" prefHeight="289.0" prefWidth="500.0">
                      <children>
-                        <Label prefHeight="31.0" prefWidth="300.0" text="Seleccione el criterio de búsqueda a implementar:" textFill="WHITE">
+                        <Label prefHeight="31.0" prefWidth="314.0" text="Seleccione el criterio de búsqueda a implementar" textFill="WHITE">
                            <VBox.margin>
                               <Insets bottom="20.0" left="10.0" />
                            </VBox.margin>
@@ -147,30 +148,27 @@
                               <Insets bottom="10.0" />
                            </VBox.margin>
                         </Label>
-                        <RadioButton fx:id="rbEqual" mnemonicParsing="false" text="Iguales" textFill="WHITE">
+                        <CheckBox fx:id="cbxEqual" mnemonicParsing="false" text="Iguales" textFill="WHITE">
+                           <font>
+                              <Font name="Juice ITC" size="20.0" />
+                           </font>
+                        </CheckBox>
+                        <CheckBox fx:id="cbxGreater" mnemonicParsing="false" text="Mayores" textFill="WHITE">
+                           <font>
+                              <Font name="Juice ITC" size="20.0" />
+                           </font>
                            <VBox.margin>
-                              <Insets bottom="2.0" />
+                              <Insets top="5.0" />
                            </VBox.margin>
+                        </CheckBox>
+                        <CheckBox fx:id="cbxLess" mnemonicParsing="false" text="Menores" textFill="WHITE">
                            <font>
-                              <Font name="Juice ITC" size="22.0" />
+                              <Font name="Juice ITC" size="20.0" />
                            </font>
-                           <toggleGroup>
-                              <ToggleGroup fx:id="comparison" />
-                           </toggleGroup>
-                        </RadioButton>
-                        <RadioButton fx:id="rbGreater" mnemonicParsing="false" text="Mayores" textFill="WHITE" toggleGroup="$comparison">
                            <VBox.margin>
-                              <Insets bottom="5.0" />
+                              <Insets top="5.0" />
                            </VBox.margin>
-                           <font>
-                              <Font name="Juice ITC" size="22.0" />
-                           </font>
-                        </RadioButton>
-                        <RadioButton fx:id="rbLess" mnemonicParsing="false" text="Menores" textFill="WHITE" toggleGroup="$comparison">
-                           <font>
-                              <Font name="Juice ITC" size="22.0" />
-                           </font>
-                        </RadioButton>
+                        </CheckBox>
                      </children>
                   </VBox>
                   <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2">
