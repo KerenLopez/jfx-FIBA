@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -107,16 +108,13 @@ public class FibaGUI {
 	private TextField txtValue;
 
 	@FXML
-	private RadioButton rbEqual;
+	private CheckBox cbxEqual;
 
 	@FXML
-	private ToggleGroup comparison;
+	private CheckBox cbxGreater;
 
 	@FXML
-	private RadioButton rbGreater;
-
-	@FXML
-	private RadioButton rbLess;
+	private CheckBox cbxLess;
 
 	@FXML
 	private TableView<Player> tvSearchedPlayers;
@@ -147,9 +145,6 @@ public class FibaGUI {
 
 	@FXML
 	private Button btAddPlayer;
-	
-    @FXML
-    private Button btDeletePlayer;
 
 
 	public FibaGUI(Fiba f) {
@@ -166,7 +161,7 @@ public class FibaGUI {
 
 	private void initializeTableViewOfAddedPlayers() {
 		ObservableList<Player> observableList;
-		observableList = FXCollections.observableArrayList(fiba.getPlayers());
+		observableList = FXCollections.observableArrayList(fiba.returnPlayers());
 		tvOfPlayers.setItems(observableList);
 		tcName.setCellValueFactory(new PropertyValueFactory<Player, String>("Name"));
 		tcAge.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Age"));
@@ -255,8 +250,7 @@ public class FibaGUI {
 			txtBlocks.clear();
 			tvOfPlayers.getItems().clear();
 			initializeTableViewOfAddedPlayers();
-			btAddPlayer.setDisable(true);
-			btDeletePlayer.setDisable(true);
+			btAddPlayer.setDisable(false);
 		}
 	}
 
@@ -291,11 +285,20 @@ public class FibaGUI {
 				alert2.setContentText("El jugador elegido ha sido actualizado exitosamente");
 				alert2.showAndWait();
 			}
+			txtName.clear();
+			txtAge.clear();
+			txtTeam.clear();
+			txtPoints.clear();
+			txtBounces.clear();
+			txtAssists.clear();
+			txtSteals.clear();
+			txtBlocks.clear();
+			tvOfPlayers.getItems().clear();
+			initializeTableViewOfAddedPlayers();
+			btAddPlayer.setDisable(false);
 		}else {
 			showValidationErrorAlert();
 		}
-		btAddPlayer.setDisable(true);
-		btDeletePlayer.setDisable(true);
 	}
 
 	@FXML
@@ -333,14 +336,19 @@ public class FibaGUI {
 	}
 
 	@FXML
-	public void btSearchPlayers(ActionEvent event) {
-
+	public void btSearchPlayers(ActionEvent event) throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui/searchPlayer.fxml"));
+		fxmlLoader.setController(this);
+		Parent menuPane = fxmlLoader.load();
+		mainPane.getChildren().clear();
+		mainPane.setCenter(menuPane);
+		mainPane.setStyle("-fx-background-image: url(/ui/fondo.jpg)");
 	}
 
 
 	private void initializeTableViewSearchedPlayers() {
 		ObservableList<Player> observableList;
-		observableList = FXCollections.observableArrayList(fiba.getPlayers()); ///to change: get the players searched
+		observableList = FXCollections.observableArrayList(fiba.returnPlayersFounded()); ///to change: get the players searched
 		tvOfPlayers.setItems(observableList);
 		colName.setCellValueFactory(new PropertyValueFactory<Player, String>("Name"));
 		colAge.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Age"));
@@ -355,11 +363,23 @@ public class FibaGUI {
 
 	@FXML
 	public void searchPlayers(ActionEvent event) {
-		if(searchCriteria.getSelectedToggle()!=null && comparison.getSelectedToggle()!=null && !txtValue.getText().isEmpty()) {
+		if(searchCriteria.getSelectedToggle()!=null && !(cbxGreater.isSelected() && cbxLess.isSelected()) && !txtValue.getText().isEmpty()) {
+			if(getSearchCriteria().equals("POINTS")) {
+				fiba.searchPlayersByPoints(txtValue.getText(), getComparison());
+			}else if(getSearchCriteria().equals("ASSISTS")) {
+				fiba.searchPlayersByAssists(txtValue.getText(), getComparison());
+			}
 			initializeTableViewSearchedPlayers();
-			//searchCriteria.getSelectedToggle().setSelected(false);
-			//comparison.getSelectedToggle().setSelected(false);
-
+			searchCriteria.getSelectedToggle().setSelected(false);
+			cbxGreater.setSelected(false);
+			cbxLess.setSelected(false);
+			cbxEqual.setSelected(false);
+		}else if(cbxGreater.isSelected() && cbxLess.isSelected()){
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error de validacion");
+			alert.setHeaderText(null);
+			alert.setContentText("Solo se aceptan las sgts opciones: menores e iguales, mayores e iguales, mayores y menores.");
+			alert.showAndWait();
 		}else {
 			showValidationErrorAlert();
 		}
@@ -385,12 +405,12 @@ public class FibaGUI {
 
 	public String getComparison() {
 		String comparison = "";
-		if(rbEqual.isSelected()) {
+		if(cbxEqual.isSelected()) {
 			comparison = "EQUAL";
 		} 
-		else if (rbGreater.isSelected()) {
+		else if (cbxGreater.isSelected()) {
 			comparison = "GREATER";
-		} else if (rbLess.isSelected()) {
+		} else if (cbxLess.isSelected()) {
 			comparison = "LESS";
 		}
 		return comparison;

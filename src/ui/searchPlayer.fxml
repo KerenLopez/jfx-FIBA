@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
@@ -16,17 +17,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <Label contentDisplay="TOP" text="Buscar Jugador">
+            <Label contentDisplay="TOP" text="Buscar Jugador" textFill="WHITE">
                <font>
                   <Font name="Impact" size="24.0" />
                </font>
                <VBox.margin>
-                  <Insets bottom="20.0" top="10.0" />
+                  <Insets bottom="20.0" top="25.0" />
                </VBox.margin>
             </Label>
             <GridPane prefHeight="174.0" prefWidth="1000.0">
@@ -41,12 +41,12 @@
                <children>
                   <VBox alignment="TOP_CENTER" prefHeight="289.0" prefWidth="500.0">
                      <children>
-                        <Label prefHeight="31.0" prefWidth="300.0" text="Seleccione el criterio de búsqueda a implementar:">
+                        <Label prefHeight="31.0" prefWidth="314.0" text="Seleccione el criterio de búsqueda a implementar" textFill="WHITE">
                            <VBox.margin>
                               <Insets bottom="20.0" left="10.0" />
                            </VBox.margin>
                            <font>
-                              <Font name="Juice ITC" size="20.0" />
+                              <Font name="Juice ITC" size="22.0" />
                            </font>
                         </Label>
                         <GridPane prefHeight="51.0" prefWidth="500.0">
@@ -60,7 +60,7 @@
                            <children>
                               <VBox prefHeight="105.0" prefWidth="262.0">
                                  <children>
-                                    <RadioButton fx:id="rbPoints" mnemonicParsing="false" text="Puntos por partido">
+                                    <RadioButton fx:id="rbPoints" mnemonicParsing="false" text="Puntos por partido" textFill="WHITE">
                                        <padding>
                                           <Insets bottom="2.0" />
                                        </padding>
@@ -68,46 +68,49 @@
                                           <Insets left="10.0" />
                                        </VBox.margin>
                                        <font>
-                                          <Font name="Juice ITC" size="20.0" />
+                                          <Font name="Juice ITC" size="22.0" />
                                        </font>
                                        <toggleGroup>
                                           <ToggleGroup fx:id="searchCriteria" />
                                        </toggleGroup>
                                     </RadioButton>
-                                    <RadioButton fx:id="rbSteals" mnemonicParsing="false" text="Robos por partido" toggleGroup="$searchCriteria">
+                                    <RadioButton fx:id="rbSteals" mnemonicParsing="false" text="Robos por partido" textFill="WHITE" toggleGroup="$searchCriteria">
                                        <VBox.margin>
                                           <Insets bottom="2.0" left="10.0" />
                                        </VBox.margin>
                                        <font>
-                                          <Font name="Juice ITC" size="20.0" />
+                                          <Font name="Juice ITC" size="22.0" />
                                        </font>
                                     </RadioButton>
-                                    <RadioButton fx:id="rbAssists" mnemonicParsing="false" text="Asistencias por partido" toggleGroup="$searchCriteria">
+                                    <RadioButton fx:id="rbAssists" mnemonicParsing="false" text="Asistencias por partido" textFill="WHITE" toggleGroup="$searchCriteria">
                                        <VBox.margin>
                                           <Insets bottom="2.0" left="10.0" />
                                        </VBox.margin>
                                        <font>
-                                          <Font name="Juice ITC" size="20.0" />
+                                          <Font name="Juice ITC" size="22.0" />
                                        </font>
                                     </RadioButton>
                                  </children>
+                                 <GridPane.margin>
+                                    <Insets left="25.0" />
+                                 </GridPane.margin>
                               </VBox>
                               <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
                                  <children>
-                                    <RadioButton fx:id="rbBlocks" mnemonicParsing="false" text="Bloqueos por partido" toggleGroup="$searchCriteria">
+                                    <RadioButton fx:id="rbBlocks" mnemonicParsing="false" text="Bloqueos por partido" textFill="WHITE" toggleGroup="$searchCriteria">
                                        <VBox.margin>
                                           <Insets bottom="2.0" left="10.0" />
                                        </VBox.margin>
                                        <font>
-                                          <Font name="Juice ITC" size="20.0" />
+                                          <Font name="Juice ITC" size="22.0" />
                                        </font>
                                     </RadioButton>
-                                    <RadioButton fx:id="rbRebounds" mnemonicParsing="false" text="Rebotes por partido" toggleGroup="$searchCriteria">
+                                    <RadioButton fx:id="rbRebounds" mnemonicParsing="false" text="Rebotes por partido" textFill="WHITE" toggleGroup="$searchCriteria">
                                        <VBox.margin>
                                           <Insets left="10.0" />
                                        </VBox.margin>
                                        <font>
-                                          <Font name="Juice ITC" size="20.0" />
+                                          <Font name="Juice ITC" size="22.0" />
                                        </font>
                                     </RadioButton>
                                  </children>
@@ -123,54 +126,54 @@
                      <children>
                         <HBox alignment="CENTER" prefHeight="40.0" prefWidth="450.0">
                            <children>
-                              <Label text="Valor del criterio:  ">
+                              <Label text="Valor del criterio:  " textFill="WHITE">
                                  <font>
-                                    <Font name="Juice ITC" size="20.0" />
+                                    <Font name="Juice ITC" size="24.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="txtValue" promptText="Ingrese un número" />
+                              <TextField fx:id="txtValue" promptText="Ingrese un número">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font></TextField>
                            </children>
                            <VBox.margin>
                               <Insets bottom="5.0" />
                            </VBox.margin>
                         </HBox>
-                        <Label alignment="CENTER" prefHeight="25.0" prefWidth="355.0" text="Desea que los resultados encontrados sean...">
+                        <Label alignment="CENTER" prefHeight="25.0" prefWidth="355.0" text="Desea que los resultados encontrados sean..." textFill="WHITE">
                            <font>
-                              <Font name="Juice ITC" size="20.0" />
+                              <Font name="Juice ITC" size="22.0" />
                            </font>
                            <VBox.margin>
                               <Insets bottom="10.0" />
                            </VBox.margin>
                         </Label>
-                        <RadioButton fx:id="rbEqual" mnemonicParsing="false" text="Iguales">
+                        <CheckBox fx:id="cbxEqual" mnemonicParsing="false" text="Iguales" textFill="WHITE">
+                           <font>
+                              <Font name="Juice ITC" size="20.0" />
+                           </font>
+                        </CheckBox>
+                        <CheckBox fx:id="cbxGreater" mnemonicParsing="false" text="Mayores" textFill="WHITE">
+                           <font>
+                              <Font name="Juice ITC" size="20.0" />
+                           </font>
                            <VBox.margin>
-                              <Insets bottom="2.0" />
+                              <Insets top="5.0" />
                            </VBox.margin>
+                        </CheckBox>
+                        <CheckBox fx:id="cbxLess" mnemonicParsing="false" text="Menores" textFill="WHITE">
                            <font>
                               <Font name="Juice ITC" size="20.0" />
                            </font>
-                           <toggleGroup>
-                              <ToggleGroup fx:id="comparison" />
-                           </toggleGroup>
-                        </RadioButton>
-                        <RadioButton fx:id="rbGreater" mnemonicParsing="false" text="Mayores" toggleGroup="$comparison">
                            <VBox.margin>
-                              <Insets bottom="5.0" />
+                              <Insets top="5.0" />
                            </VBox.margin>
-                           <font>
-                              <Font name="Juice ITC" size="20.0" />
-                           </font>
-                        </RadioButton>
-                        <RadioButton fx:id="rbLess" mnemonicParsing="false" text="Menores" toggleGroup="$comparison">
-                           <font>
-                              <Font name="Juice ITC" size="20.0" />
-                           </font>
-                        </RadioButton>
+                        </CheckBox>
                      </children>
                   </VBox>
                   <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#searchPlayers" text="Buscar">
+                        <Button mnemonicParsing="false" onAction="#searchPlayers" style="-fx-background-color: #FA9000;" text="Buscar" textFill="WHITE">
                            <HBox.margin>
                               <Insets right="50.0" />
                            </HBox.margin>
@@ -182,7 +185,7 @@
                   </HBox>
                </children>
             </GridPane>
-            <TableView fx:id="tvSearchedPlayers" prefHeight="395.0" prefWidth="1000.0">
+            <TableView fx:id="tvSearchedPlayers" prefHeight="379.0" prefWidth="950.0">
               <columns>
                 <TableColumn fx:id="colName" prefWidth="75.0" text="Nombre" />
                 <TableColumn fx:id="colAge" prefWidth="75.0" text="Edad" />
@@ -197,12 +200,12 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
                <VBox.margin>
-                  <Insets top="15.0" />
+                  <Insets left="25.0" right="25.0" top="15.0" />
                </VBox.margin>
             </TableView>
-            <Button mnemonicParsing="false" onAction="#returnToMenu" text="Atrás">
+            <Button mnemonicParsing="false" onAction="#returnToMenu" style="-fx-background-color: #FA9000;" text="Atrás" textFill="WHITE">
                <VBox.margin>
-                  <Insets top="15.0" />
+                  <Insets top="10.0" />
                </VBox.margin>
                <font>
                   <Font name="Impact" size="18.0" />

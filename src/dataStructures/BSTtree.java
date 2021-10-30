@@ -76,7 +76,7 @@ public class BSTtree <K extends Comparable<K>, V> implements BSTtreeI<K,V> {
 		return deleted;
 	}
 	
-	private void deleteNodeRecursive(BSTNode<K,V> node) {
+	public void deleteNodeRecursive(BSTNode<K,V> node) {
 		if(node!=null) {
 				//Case 1, The node is a leaf
 				if(node.getLeft()==null && node.getRight()==null){
