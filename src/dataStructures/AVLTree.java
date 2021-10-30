@@ -215,6 +215,9 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
             node.setRight(rotateRight(node.getRight()));
             rotateLeft(node);
         }
+        if(node.getParent()!=null){
+            reBalance(node.getParent());
+        }
     }
     
     private NodeAVL<K, V> getNodoConValorMaximo(NodeAVL<K, V> node) {
