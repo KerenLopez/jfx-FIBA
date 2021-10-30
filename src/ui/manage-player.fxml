@@ -203,7 +203,7 @@
                      <children>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Button disable="true" mnemonicParsing="false" onAction="#updatePlayer" style="-fx-background-color: #FA9000;" text="Actualizar" textFill="WHITE">
+                              <Button mnemonicParsing="false" onAction="#updatePlayer" style="-fx-background-color: #FA9000;" text="Actualizar" textFill="WHITE">
                                  <font>
                                     <Font name="Impact" size="17.0" />
                                  </font>
@@ -224,7 +224,7 @@
                               <Insets />
                            </VBox.margin>
                         </HBox>
-                        <Button fx:id="btDeletePlayer" disable="true" mnemonicParsing="false" onAction="#deletePlayer" style="-fx-background-color: #FA9000;" text="Eliminar" textFill="WHITE">
+                        <Button mnemonicParsing="false" onAction="#deletePlayer" style="-fx-background-color: #FA9000;" text="Eliminar" textFill="WHITE">
                            <font>
                               <Font name="Impact" size="17.0" />
                            </font>

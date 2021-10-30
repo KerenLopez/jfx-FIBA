@@ -1,31 +1,20 @@
 package model;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
-
+import java.util.Enumeration;
+import java.util.Hashtable;
+import dataStructures.BSTNode;
 import dataStructures.BSTtree;
 import exceptions.NegativeValueException;
 
-public class Fiba implements Serializable{
+public class Fiba {
 
-	private static final long serialVersionUID = 1;
-	
-	private ArrayList<Player> players;
-	//private ArrayList<Player> playersByBounces;
+	private Hashtable<Player, Player> players;
 	private BSTtree<Double, Player> ABBofPointsByGame;
 	private BSTtree<Double, Player> ABBofAssists;
-	
-	public final static String FIBA_SAVE_PATH_FILE="data/fiba.ackldo";
 
 	public Fiba() {
-		players = new ArrayList<Player>();
-		//playersByBounces=new ArrayList<Player>();
+		players = new Hashtable<Player, Player>();
 		ABBofPointsByGame = new BSTtree<Double, Player>(); 
 		ABBofAssists = new BSTtree<Double, Player>();
 	}
@@ -63,10 +52,9 @@ public class Fiba implements Serializable{
 			correct = false;
 			throw new NegativeValueException(blocks);
 		}
-		Player founded = searchPlayer(n);
-		if(correct && founded==null) {
+		if(correct) {
 			Player player = new Player(n, age, t, points, bounces, assists, steals, blocks);
-			players.add(player);
+			players.put(player, player);
 			ABBofPointsByGame.insertNode(player.getPoints(), player);
 			ABBofAssists.insertNode(player.getPoints(), player);
 			added=true;
@@ -74,103 +62,117 @@ public class Fiba implements Serializable{
 		return added;
 	}
 
-	private Player searchPlayer(String name) {
-		Player p = null;
-		for(int k=0;k<players.size();k++) {
-			if(players.get(k).getName().equalsIgnoreCase(name)) {
-				p = players.get(k);
-			}
+	public void deletePlayer(Player player) {
+		BSTNode<Double,Player> foundedPP = ABBofPointsByGame.searchNode(player.getPoints());
+		BSTNode<Double,Player> foundedPA = ABBofAssists.searchNode(player.getAssists());
+		boolean founded = false;
+		if(foundedPP.getValue()!=player && foundedPA.getValue()!=player) {
+			while(!founded) {
+				foundedPP = foundedPP.getLeft();
+				foundedPA = foundedPA.getLeft();
+				Player points = foundedPP.getValue();
+				Player assists = foundedPA.getValue();	
+				if(points==player && assists==player) {
+					founded = true;
+				}
+			}	
 		}
-		return p;
+		ABBofPointsByGame.deleteNodeRecursive(foundedPP);
+		ABBofAssists.deleteNodeRecursive(foundedPA);
+		players.remove(player, player);
 	}
 
-	public void deletePlayer(Player player) {
-		ABBofPointsByGame.deleteNode(player.getPoints());
-		ABBofAssists.deleteNode(player.getAssists());
-		int i = players.indexOf(player);
-		players.remove(i);
-	}
-	
 	public boolean updatePlayer(Player py, String n, String ag, String t, String p, String bo, String a, String st, String bl) throws NegativeValueException {
-		Player player = searchPlayer(n);
 		boolean updated=false;
-		boolean findPlayer = false;
-		if(py!= player) {
-			if(player!=null) {
-				findPlayer =true;
-			}
+		Integer age = Integer.parseInt(ag);
+		Double points = Double.parseDouble(p);
+		Double bounces = Double.parseDouble(bo);
+		Double assists = Double.parseDouble(a);
+		Double steals = Double.parseDouble(st);
+		Double blocks = Double.parseDouble(bl);
+		boolean correct = true;
+		if(age<0) {
+			correct = false;
+			throw new NegativeValueException(age);
 		}
-		if(!findPlayer) {
-			Integer age = Integer.parseInt(ag);
-			Double points = Double.parseDouble(p);
-			Double bounces = Double.parseDouble(bo);
-			Double assists = Double.parseDouble(a);
-			Double steals = Double.parseDouble(st);
-			Double blocks = Double.parseDouble(bl);
-			boolean correct = true;
-			if(age<0) {
-				correct = false;
-				throw new NegativeValueException(age);
-			}
-			if(points<0) {
-				correct = false;
-				throw new NegativeValueException(points);
-			}
-			if(bounces<0) {
-				correct = false;
-				throw new NegativeValueException(bounces);
-			}
-			if(assists<0) {
-				correct = false;
-				throw new NegativeValueException(assists);
-			}
-			if(steals<0) {
-				correct = false;
-				throw new NegativeValueException(steals);
-			}
-			if(blocks<0) {
-				correct = false;
-				throw new NegativeValueException(blocks);
-			}
-			if(correct) {
-				py.setName(n);
-				py.setAge(age);
+		if(points<0) {
+			correct = false;
+			throw new NegativeValueException(points);
+		}
+		if(bounces<0) {
+			correct = false;
+			throw new NegativeValueException(bounces);
+		}
+		if(assists<0) {
+			correct = false;
+			throw new NegativeValueException(assists);
+		}
+		if(steals<0) {
+			correct = false;
+			throw new NegativeValueException(steals);
+		}
+		if(blocks<0) {
+			correct = false;
+			throw new NegativeValueException(blocks);
+		}
+		if(correct) {
+			py.setName(n);
+			py.setAge(age);
+			py.setBlocks(blocks);
+			py.setBounces(bounces);
+			py.setSteals(steals);
+			py.setTeam(t);
+			if(py.getAssists()!=assists) {
+				BSTNode<Double,Player> foundedPA = ABBofAssists.searchNode(py.getAssists());
 				py.setAssists(assists);
-				py.setBlocks(blocks);
-				py.setBounces(bounces);
-				py.setPoints(points);
-				py.setSteals(steals);
-				py.setTeam(t);
-				updated=true;	
+				ABBofAssists.deleteNodeRecursive(foundedPA);
+				ABBofAssists.insertNode(py.getAssists(),py);
 			}
+			if(py.getPoints()!=points) {
+				BSTNode<Double,Player> foundedPP = ABBofPointsByGame.searchNode(py.getPoints());
+				py.setPoints(points);
+				ABBofPointsByGame.deleteNodeRecursive(foundedPP);
+				ABBofPointsByGame.insertNode(py.getPoints(), py);
+			}
+			updated=true;	
 		}
 		return updated;
 	}
-	
-	
 
-	public ArrayList<Player> getPlayers() {
-		return players;
-	}
-	
-	
-	public void saveDataFIBA() throws IOException{
-		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FIBA_SAVE_PATH_FILE));
-		oos.writeObject(this);
-		oos.close();
-	}
-	
-	public Fiba loadDataFIBA(Fiba fiba) throws IOException, ClassNotFoundException{
-		File f = new File(FIBA_SAVE_PATH_FILE);
-		if(f.exists()){
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
-			fiba = (Fiba)ois.readObject();
-			ois.close();
-
+	public ArrayList<Player> returnPlayers(){
+		ArrayList<Player> listOfPlayers=new ArrayList<Player>();
+		Enumeration<Player> elems = players.elements();
+		while (elems.hasMoreElements()) {
+			listOfPlayers.add(elems.nextElement());
 		}
-		return fiba;
-	}
-	
+		return listOfPlayers;
 
+	}
+
+	public void searchPlayersByPoints(String text, String comparison) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void searchPlayersByAssists(String text, String comparison) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public ArrayList<Player> returnPlayersFounded() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*public void importPlayersData(String fileName) throws IOException{
+		BufferedReader br = new BufferedReader(new FileReader(fileName));
+		String line = br.readLine();
+		while(line!=null){
+			String[] parts = line.split(";");
+			addPlayer(parts[0],parts[1],parts[2],parts[3],parts[4],parts[5],parts[6],parts[7]);
+			line = br.readLine();
+		}
+		br.close();
+	}*/
 
 }
