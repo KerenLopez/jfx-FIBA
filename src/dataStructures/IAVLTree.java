@@ -11,5 +11,5 @@ public interface IAVLTree<K extends Comparable<K>, V> {
     public NodeAVL<K,V> rotateRight(NodeAVL<K,V> node);
     public int height(NodeAVL<K,V> node);
     public int GetBalancingFactor(NodeAVL<K,V> node);
-    public ArrayList<V> showTree();
+    public ArrayList<NodeAVL<K,V>> preOrder();
 }

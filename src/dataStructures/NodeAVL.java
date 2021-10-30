@@ -18,7 +18,7 @@ public class NodeAVL <K extends Comparable<K>,V> implements Comparable<K>{
         parent=null;
         height=1;
     }
-
+    
     public K getKey() {
         return key;
     }
