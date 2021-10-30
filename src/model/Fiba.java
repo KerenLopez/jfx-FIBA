@@ -1,16 +1,27 @@
 package model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import dataStructures.BSTtree;
 import exceptions.NegativeValueException;
 
-public class Fiba {
+public class Fiba implements Serializable{
 
+	private static final long serialVersionUID = 1;
+	
 	private ArrayList<Player> players;
 	//private ArrayList<Player> playersByBounces;
 	private BSTtree<Double, Player> ABBofPointsByGame;
 	private BSTtree<Double, Player> ABBofAssists;
+	
+	public final static String FIBA_SAVE_PATH_FILE="data/fiba.ackldo";
 
 	public Fiba() {
 		players = new ArrayList<Player>();
@@ -150,5 +161,30 @@ public class Fiba {
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
+	
+	
+	
+	
+	
+	
+	
+	public void saveDataFIBA() throws IOException{
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FIBA_SAVE_PATH_FILE));
+		oos.writeObject(this);
+		oos.close();
+	}
+	
+	public Fiba loadDataFIBA(Fiba fiba) throws IOException, ClassNotFoundException{
+		File f = new File(FIBA_SAVE_PATH_FILE);
+		if(f.exists()){
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
+			fiba = (Fiba)ois.readObject();
+			ois.close();
+
+		}
+		return fiba;
+	}
+	
+
 
 }

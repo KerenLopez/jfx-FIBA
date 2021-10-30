@@ -1,9 +1,13 @@
 package ui;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import model.Fiba;
 
@@ -13,8 +17,35 @@ public class Main extends Application{
 	private FibaGUI fibaGUI;
 	
 	public Main() {
-		fiba = new Fiba();
+		Fiba fibaData = new Fiba();
+		
+		try {
+			fiba = fiba.loadDataFIBA(fibaData);
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("FIBA");
+			alert.setHeaderText(null);
+			if(!fiba.getPlayers().isEmpty()) {
+				alert.setContentText("Se cargaron datos de archivo");
+				alert.showAndWait();
+			}
+			
+			
+		
+		} catch (ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("FIBA");
+			alert.setHeaderText(null);
+			alert.setContentText("Error al cargar datos de archivo");
+			alert.showAndWait();
+		} 
+		
+		
 		fibaGUI = new FibaGUI(fiba);
+		
+		
+		
+		
 	}
 	
 	public static void main(String[] args) {
