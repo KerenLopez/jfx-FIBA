@@ -320,8 +320,8 @@ public class FibaGUI {
 				importDataThread.start();
 
 				importDataThread.join();
-				
-				
+
+
 				alert.setContentText("Los jugadores fueron importados exitosamente");
 				alert.showAndWait();
 			}catch(IOException | InterruptedException e){
@@ -353,10 +353,9 @@ public class FibaGUI {
 	}
 
 
-	private void initializeTableViewSearchedPlayers() {
-		ObservableList<Player> observableList;
-		observableList = FXCollections.observableArrayList(fiba.returnPlayersFounded()); ///to change: get the players searched
-		tvOfPlayers.setItems(observableList);
+	private void initializeTableViewSearchedPlayers(ObservableList<Player> observableList) {
+		tvSearchedPlayers.getItems().clear();
+		tvSearchedPlayers.setItems(observableList);
 		colName.setCellValueFactory(new PropertyValueFactory<Player, String>("Name"));
 		colAge.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Age"));
 		colTeam.setCellValueFactory(new PropertyValueFactory<Player, String>("Team"));
@@ -371,25 +370,56 @@ public class FibaGUI {
 	@FXML
 	public void searchPlayers(ActionEvent event) {
 		if(searchCriteria.getSelectedToggle()!=null && !(cbxGreater.isSelected() && cbxLess.isSelected()) && !txtValue.getText().isEmpty()) {
+    		Alert alert1 = new Alert(AlertType.INFORMATION);
+		    alert1.setTitle("Jugador(es) encontrado(s)");
+		    alert1.setHeaderText(null);
 			if(getSearchCriteria().equals("POINTS")) {
-				fiba.searchPlayersByPoints(txtValue.getText(), getComparison());
+				long startABB= System.nanoTime();
+				ObservableList<Player> playersList = FXCollections.observableArrayList(fiba.searchPlayersABB(txtValue.getText(), getSearchCriteria()+getComparison()));
+				long endABB = System.nanoTime();
+		    	long timeABB = endABB-startABB;
+		    	initializeTableViewSearchedPlayers(playersList);
+		    	long startAVL= System.nanoTime();
+		    	//
+				fiba.searchPlayersAVL(txtValue.getText(), getComparison());
+				long endAVL = System.nanoTime();
+		    	long timeAVL = endAVL-startAVL;
+		    	alert1.setContentText("Tiempo que tardó la búsqueda en ABB: "+timeABB+" nanosegundos\n Tiempo que tardó la búsqueda en AVL: "+timeAVL+" nanosegundos");
+			    alert1.showAndWait();
 			}else if(getSearchCriteria().equals("ASSISTS")) {
-				fiba.searchPlayersByAssists(txtValue.getText(), getComparison());
+				long startABB= System.nanoTime();
+				ObservableList<Player> playersList = FXCollections.observableArrayList(fiba.searchPlayersABB(txtValue.getText(), getSearchCriteria()+getComparison()));
+				long endABB = System.nanoTime();
+		    	long timeABB = endABB-startABB;
+		    	initializeTableViewSearchedPlayers(playersList);
+		    	long startAVL= System.nanoTime();
+		    	//
+				fiba.searchPlayersAVL(txtValue.getText(), getComparison());
+				long endAVL = System.nanoTime();
+		    	long timeAVL = endAVL-startAVL;
+		    	alert1.setContentText("Tiempo que tardó la búsqueda en ABB: "+timeABB+" nanosegundos\n"+"Tiempo que tardó la búsqueda en AVL: "+timeAVL+" nanosegundos");
+			    alert1.showAndWait();
+			}else if(getSearchCriteria().equals("STEALS")) {
+				
+			}else if(getSearchCriteria().equals("BLOCKS")){
+				
+			}else {
+				
 			}
-			initializeTableViewSearchedPlayers();
-			searchCriteria.getSelectedToggle().setSelected(false);
-			cbxGreater.setSelected(false);
-			cbxLess.setSelected(false);
-			cbxEqual.setSelected(false);
 		}else if(cbxGreater.isSelected() && cbxLess.isSelected()){
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Error de validacion");
 			alert.setHeaderText(null);
-			alert.setContentText("Solo se aceptan las sgts opciones: menores e iguales, mayores e iguales, mayores y menores.");
+			alert.setContentText("Solo se aceptan las sgts opciones: menores e iguales, mayores e iguales, mayores, menores. No mayores y menores a la vez");
 			alert.showAndWait();
 		}else {
 			showValidationErrorAlert();
 		}
+		txtValue.clear();
+		searchCriteria.getSelectedToggle().setSelected(false);
+		cbxGreater.setSelected(false);
+		cbxLess.setSelected(false);
+		cbxEqual.setSelected(false);
 	}
 
 	public String getSearchCriteria() {
@@ -413,12 +443,13 @@ public class FibaGUI {
 	public String getComparison() {
 		String comparison = "";
 		if(cbxEqual.isSelected()) {
-			comparison = "EQUAL";
+			comparison += "EQUAL";
 		} 
-		else if (cbxGreater.isSelected()) {
-			comparison = "GREATER";
-		} else if (cbxLess.isSelected()) {
-			comparison = "LESS";
+		if (cbxGreater.isSelected()) {
+			comparison += "GREATER";
+		}
+		if (cbxLess.isSelected()) {
+			comparison += "LESS";
 		}
 		return comparison;
 	}
