@@ -71,8 +71,4 @@ public class NodeAVL <K extends Comparable<K>,V> implements Comparable<K>{
     public int compareTo(K k) {
         return key.compareTo(k);
     }
-    
-    public String toString() {
-        return value.toString();
-    }
 }

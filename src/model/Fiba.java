@@ -1,5 +1,12 @@
 package model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -7,16 +14,22 @@ import dataStructures.BSTNode;
 import dataStructures.BSTtree;
 import exceptions.NegativeValueException;
 
-public class Fiba {
+public class Fiba implements Serializable {
+
+	private static final long serialVersionUID = 1;
 
 	private Hashtable<Player, Player> players;
 	private BSTtree<Double, Player> ABBofPointsByGame;
 	private BSTtree<Double, Player> ABBofAssists;
 
+
+	public final static String FIBA_SAVE_PATH_FILE="data/fiba.ackldo";
+
 	public Fiba() {
 		players = new Hashtable<Player, Player>();
 		ABBofPointsByGame = new BSTtree<Double, Player>(); 
 		ABBofAssists = new BSTtree<Double, Player>();
+
 	}
 
 	public boolean addPlayer(String n, String ag, String t, String p, String bo, String a, String st, String bl) throws NegativeValueException{
@@ -149,30 +162,112 @@ public class Fiba {
 
 	}
 
-	public void searchPlayersByPoints(String text, String comparison) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void searchPlayersByAssists(String text, String comparison) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public ArrayList<Player> returnPlayersFounded() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/*public void importPlayersData(String fileName) throws IOException{
-		BufferedReader br = new BufferedReader(new FileReader(fileName));
-		String line = br.readLine();
-		while(line!=null){
-			String[] parts = line.split(";");
-			addPlayer(parts[0],parts[1],parts[2],parts[3],parts[4],parts[5],parts[6],parts[7]);
-			line = br.readLine();
+	public ArrayList<Player> searchPlayersABB(String value, String criteria) {
+		ArrayList<Player> listOfPlayers=new ArrayList<Player>();
+		Double v = Double.parseDouble(value);
+		switch(criteria) {
+		case "POINTSEQUAL":
+			BSTNode<Double, Player> foundedPP = ABBofPointsByGame.searchNode(v);
+			searchEqualNodes(listOfPlayers, foundedPP, v);
+			break;
+		case "POINTSGREATER":
+			searchGreaterNodes(listOfPlayers, ABBofPointsByGame.getRoot(), v);
+			break;
+		case "POINTSLESS":
+			searchLessNodes(listOfPlayers, ABBofPointsByGame.getRoot(), v);
+			break;
+		case "POINTSEQUALGREATER":
+			BSTNode<Double, Player> foundedPP1 = ABBofPointsByGame.searchNode(v);
+			searchEqualNodes(listOfPlayers, foundedPP1, v);
+			searchGreaterNodes(listOfPlayers, ABBofPointsByGame.getRoot(), v);
+			break;
+		case "POINTSEQUALLESS":
+			BSTNode<Double, Player> foundedPP2 = ABBofPointsByGame.searchNode(v);
+			searchEqualNodes(listOfPlayers, foundedPP2, v);
+			searchLessNodes(listOfPlayers, ABBofPointsByGame.getRoot(), v);
+			break;
+		case "ASSISTSEQUAL":
+			BSTNode<Double, Player> foundedPA = ABBofAssists.searchNode(v);
+			searchEqualNodes(listOfPlayers, foundedPA, v);
+			break;
+		case "ASSISTSGREATER":
+			searchGreaterNodes(listOfPlayers, ABBofAssists.getRoot(), v);
+			break;
+		case "ASSISTSLESS":
+			searchLessNodes(listOfPlayers, ABBofAssists.getRoot(), v);
+			break;
+		case "ASSISTSEQUALGREATER":
+			BSTNode<Double, Player> foundedPA1 = ABBofAssists.searchNode(v);
+			searchEqualNodes(listOfPlayers, foundedPA1, v);
+			searchGreaterNodes(listOfPlayers, ABBofAssists.getRoot(), v);
+			break;
+		case "ASSISTSEQUALLESS":
+			BSTNode<Double, Player> foundedPA2 = ABBofAssists.searchNode(v);
+			searchEqualNodes(listOfPlayers, foundedPA2, v);
+			searchLessNodes(listOfPlayers, ABBofAssists.getRoot(), v);
+			break;	
 		}
-		br.close();
-	}*/
+		return listOfPlayers;
+	}
+	
+	private ArrayList<Player> searchEqualNodes(ArrayList<Player> list, BSTNode<Double, Player> node, double v) {
+		if(node!=null) {
+			list.add(node.getValue());
+			while(node.getLeft().getKey()==v) {
+				list.add(node.getValue());
+				node = node.getLeft();
+			}	
+		}
+		return list;
+	}
+
+	private ArrayList<Player> searchGreaterNodes(ArrayList<Player> list, BSTNode<Double,Player> node, double key) {
+		if(node==null) {
+			return list;
+		}else if(node.compareTo(key)<0){
+			list.add(node.getValue());
+			return list;
+		}else if(node.getLeft()!=null && node.getLeft().compareTo(key)<0){
+			list.add(node.getLeft().getValue());
+			return list;
+		}else {
+			return searchGreaterNodes(list, node.getRight(), key);
+		}
+	}
+	
+	private ArrayList<Player> searchLessNodes(ArrayList<Player> list, BSTNode<Double,Player> node, double key) {
+		if(node==null) {
+			return list;
+		}else if(node.compareTo(key)>0){
+			list.add(node.getValue());
+			return list;
+		}else if(node.getRight()!=null && node.getRight().compareTo(key)>0){
+			list.add(node.getRight().getValue());
+			return list;
+		}else {
+			return searchGreaterNodes(list, node.getLeft(), key);
+		}
+	}
+
+	public void searchPlayersAVL(String text, String comparison) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void saveDataFIBA() throws IOException{
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FIBA_SAVE_PATH_FILE));
+		oos.writeObject(this);
+		oos.close();
+	}
+
+	public Fiba loadDataFIBA(Fiba fiba) throws IOException, ClassNotFoundException{
+		File f = new File(FIBA_SAVE_PATH_FILE);
+		if(f.exists()){
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
+			fiba = (Fiba)ois.readObject();
+			ois.close();
+		}
+		return fiba;
+	}
 
 }
