@@ -335,7 +335,7 @@ public class RedBlackTreeTest {
 	}
 	
 	@Test
-	public void testDelete5() {
+	public void testDelete4() {
 		setupScenary2();
 		double key=10;
 		
@@ -352,7 +352,7 @@ public class RedBlackTreeTest {
 	}
 	
 	@Test
-	public void testDelete7() {
+	public void testDelete5() {
 		setupScenary3();
 		double key=6;
 		
@@ -369,7 +369,7 @@ public class RedBlackTreeTest {
 	}
 	
 	@Test
-	public void testDelete8() {
+	public void testDelete6() {
 		setupScenary3();
 		double key=4;
 		
@@ -386,7 +386,7 @@ public class RedBlackTreeTest {
 	}
 	
 	@Test
-	public void testDelete9() {
+	public void testDelete7() {
 		setupScenary3();
 		double key=8;
 		
@@ -403,7 +403,7 @@ public class RedBlackTreeTest {
 	}
 	
 	@Test
-	public void testDelete10() {
+	public void testDelete8() {
 		setupScenary3();
 		double key=2;
 		

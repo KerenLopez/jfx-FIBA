@@ -109,58 +109,72 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 
 	@Override
 	public void insert(K key, V value) {
-		NodeRBT<K,V> node=insertABB(key,value);
-		NodeRBT<K,V> uncle=null;
+
+		NodeRBT<K,V> node=search(root,key);
+		if(node!=null) {
+			//modification of the structure, due to the requirements of the problem
+			NodeRBT<K,V> newNode = new NodeRBT<>(key,value);
+			newNode.setLeft(node.getLeft());
+			newNode.setRight(node.getRight());
+			newNode.setParent(node.getParent());
+			newNode.setColor(node.getColor());
+
+			node.getSameKeyNodes().add(newNode);
+
+		}else {
 
 
+			node=insertABB(key,value);
+			NodeRBT<K,V> uncle=null;
 
 
-		while(node.getParent()!=null && node.getParent().getColor()=='R') {
-			if(node.getParent().getParent()!=null &&node.getParent()==node.getParent().getParent().getRight()) {
-				uncle=node.getParent().getParent().getLeft();
-				if(uncle.getColor()=='R') {
-					uncle.setColor('B');
-					node.getParent().setColor('B');
-					node.getParent().getParent().setColor('R');
-					node=node.getParent().getParent();
-				}else { 
-					if(node==node.getParent().getLeft()) {
-						node= node.getParent();
-						rightRotate(node);
+			while(node.getParent()!=null && node.getParent().getColor()=='R') {
+				if(node.getParent().getParent()!=null &&node.getParent()==node.getParent().getParent().getRight()) {
+					uncle=node.getParent().getParent().getLeft();
+					if(uncle.getColor()=='R') {
+						uncle.setColor('B');
+						node.getParent().setColor('B');
+						node.getParent().getParent().setColor('R');
+						node=node.getParent().getParent();
+					}else { 
+						if(node==node.getParent().getLeft()) {
+							node= node.getParent();
+							rightRotate(node);
+						}
+						node.getParent().setColor('B');
+						node.getParent().getParent().setColor('R');
+
+						leftRotate(node.getParent().getParent());
+
 					}
-					node.getParent().setColor('B');
-					node.getParent().getParent().setColor('R');
 
-					leftRotate(node.getParent().getParent());
+				}else if(node.getParent().getParent()!=null){
+					uncle=node.getParent().getParent().getRight();
+					if(uncle.getColor()=='R') {
+						uncle.setColor('B');
+						node.getParent().setColor('B');
+						node.getParent().getParent().setColor('R');
+						node=node.getParent().getParent();
+					}else {
+						if(node==node.getParent().getRight()) {
+
+							node= node.getParent();
+							leftRotate(node);
+						}
+						node.getParent().setColor('B');
+						node.getParent().getParent().setColor('R');
+
+						rightRotate(node.getParent().getParent());
+					}
+
 
 				}
-
-			}else if(node.getParent().getParent()!=null){
-				uncle=node.getParent().getParent().getRight();
-				if(uncle.getColor()=='R') {
-					uncle.setColor('B');
-					node.getParent().setColor('B');
-					node.getParent().getParent().setColor('R');
-					node=node.getParent().getParent();
-				}else {
-					if(node==node.getParent().getRight()) {
-
-						node= node.getParent();
-						leftRotate(node);
-					}
-					node.getParent().setColor('B');
-					node.getParent().getParent().setColor('R');
-
-					rightRotate(node.getParent().getParent());
+				if(node==root) {
+					break;
 				}
-
-
 			}
-			if(node==root) {
-				break;
-			}
+			root.setColor('B');
 		}
-		root.setColor('B');
 
 	}
 
@@ -175,8 +189,9 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 			parent = aux;
 			if (newNode.compareTo(aux) < 0) {
 				aux = aux.getLeft();
-			}else
+			}else {
 				aux = aux.getRight();
+			}
 		}
 		newNode.setParent(parent);
 		if (parent == null) {
@@ -197,40 +212,65 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 		NodeRBT<K,V> aux=nil;
 		NodeRBT<K,V> temp=nil;
 
-		if(node.getLeft()==nil || node.getRight()==nil) {
-			temp=node;
+		if(!node.getSameKeyNodes().isEmpty()) {
+			//modification of the structure, due to the requirements of the problem
+			NodeRBT<K,V> newHead=node.getSameKeyNodes().get(0);
+			if(node.getParent()!=null ) {
+				if(node.getParent().getLeft()==node) {
+					node.getParent().setLeft(newHead);
+				}else {
+					node.getParent().setRight(newHead);
+				}
+			}
+			
+			if(node.getLeft()!=null) {
+				node.getLeft().setParent(newHead);
+			}
+			
+			if(node.getRight()!=null) {
+				node.getLeft().setParent(newHead);
+			}
+			
+			node.getSameKeyNodes().remove(0);
+			newHead.setSameKeyNodes(node.getSameKeyNodes());
+			
+			
 		}else {
-			temp= successor(node);
+
+			if(node.getLeft()==nil || node.getRight()==nil) {
+				temp=node;
+			}else {
+				temp= successor(node);
+			}
+
+			if(temp.getLeft()!=nil) {
+				aux=temp.getLeft();
+			}else {
+				aux=temp.getRight();
+			}
+
+			aux.setParent(temp.getParent());
+
+			if(temp.getParent()==null) {
+				root=aux;
+			}else if(temp.getParent().getLeft()!=nil && temp.getParent().getLeft()==temp) {
+				temp.getParent().setLeft(aux);
+
+			}else if(temp.getParent().getRight()!=nil && temp.getParent().getRight()==temp) {
+				temp.getParent().setRight(aux);
+			}
+
+			if(temp!=node) {
+				node.setKey(temp.getKey());
+				node.setValue(temp.getValue());
+			}
+
+
+
+			if(temp.getColor()=='B') {
+				deleteFixup(aux);
+			}
 		}
-
-		if(temp.getLeft()!=nil) {
-			aux=temp.getLeft();
-		}else {
-			aux=temp.getRight();
-		}
-		
-		aux.setParent(temp.getParent());
-
-		if(temp.getParent()==null) {
-			root=aux;
-		}else if(temp.getParent().getLeft()!=nil && temp.getParent().getLeft()==temp) {
-			temp.getParent().setLeft(aux);
-
-		}else if(temp.getParent().getRight()!=nil && temp.getParent().getRight()==temp) {
-			temp.getParent().setRight(aux);
-		}
-
-		if(temp!=node) {
-			node.setKey(temp.getKey());
-			node.setValue(temp.getValue());
-		}
-		
-		
-
-		if(temp.getColor()=='B') {
-			deleteFixup(aux);
-		}
-
 
 
 	}
@@ -339,7 +379,7 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 
 		node.setColor('B');
 	}
-	
+
 	@Override
 	public ArrayList<NodeRBT<K,V>> inorderTraversal() {
 		ArrayList<NodeRBT<K,V>> nodes = new ArrayList<>();

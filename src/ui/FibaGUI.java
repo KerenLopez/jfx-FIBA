@@ -194,13 +194,15 @@ public class FibaGUI {
 
 	@FXML
 	public void addPlayer(ActionEvent event) {
-		boolean added = false;
+		
 		if(!txtName.getText().equals("") && !txtAge.getText().equals("") && !txtTeam.getText().equals("") && !txtPoints.getText().equals("") && !txtBounces.getText().equals("") && !txtAssists.getText().equals("") && !txtSteals.getText().equals("") && !txtBlocks.getText().equals("")) {
 			Alert alert1 = new Alert(AlertType.INFORMATION);
 			alert1.setTitle("Error de validacion");
 			alert1.setHeaderText(null);
 			try {
-				added = fiba.addPlayer(txtName.getText(), txtAge.getText(), txtTeam.getText(), txtPoints.getText(), txtBounces.getText(), txtAssists.getText(), txtSteals.getText(), txtBlocks.getText());
+				fiba.addPlayer(txtName.getText(), txtAge.getText(), txtTeam.getText(), txtPoints.getText(), txtBounces.getText(), txtAssists.getText(), txtSteals.getText(), txtBlocks.getText());
+				alert1.setContentText("El jugador ha sido agregado exitosamente");
+				alert1.showAndWait();
 			}catch(NumberFormatException num) {
 				alert1.setContentText("Debe ingresar un numero dentro de los campos presentados que asi lo requieran");
 				alert1.showAndWait();
@@ -208,13 +210,7 @@ public class FibaGUI {
 				alert1.setContentText(value.getMessage());
 				alert1.showAndWait();
 			}
-			if(added==false) {
-				alert1.setContentText("Ya existe un jugador agregado con dicho nombre, intentelo nuevamente");
-				alert1.showAndWait();
-			}else {
-				alert1.setContentText("El jugador ha sido agregado exitosamente");
-				alert1.showAndWait();
-			}
+			
 			initializeTableViewOfAddedPlayers();
 			txtName.clear();
 			txtAge.clear();
