@@ -7,9 +7,11 @@ public interface IAVLTree<K extends Comparable<K>, V> {
     public NodeAVL<K,V> search(K key);
     public boolean insert(K key,V value);
     public boolean delete(K key);
-    public NodeAVL<K,V> rotateLeft(NodeAVL<K,V> node);
-    public NodeAVL<K,V> rotateRight(NodeAVL<K,V> node);
-    public int height(NodeAVL<K,V> node);
-    public int GetBalancingFactor(NodeAVL<K,V> node);
+    public NodeAVL<K,V> leftRotate(NodeAVL<K,V> node);
+    public NodeAVL<K,V> rightRotate(NodeAVL<K,V> node);
+    //public int getHeight(NodeAVL<K,V> node);
+    //public int getBalancingFactor(NodeAVL<K,V> node);
+    //public void reBalance(NodeAVL<K,V> node);
+    //public NodeAVL<K, V> getnodeMaximumValue(NodeAVL<K, V> node);
     public ArrayList<NodeAVL<K,V>> preOrder();
 }
