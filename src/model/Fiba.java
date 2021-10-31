@@ -15,6 +15,8 @@ import java.util.Hashtable;
 
 import dataStructures.BSTNode;
 import dataStructures.BSTtree;
+import dataStructures.NodeRBT;
+import dataStructures.RedBlackTree;
 import exceptions.NegativeValueException;
 
 public class Fiba implements Serializable {
@@ -25,6 +27,7 @@ public class Fiba implements Serializable {
 	private BSTtree<Double, Player> ABBofPointsByGame;
 	private BSTtree<Double, Player> ABBofAssists;
 	private ArrayList<Player> playersByBounces;
+	private RedBlackTree<Double, Player> rbtSteals;
 
 	public final static String FIBA_SAVE_PATH_FILE="data/fiba.ackldo";
 
@@ -329,8 +332,42 @@ public class Fiba implements Serializable {
 		return fiba;
 	}
 
-	public void searchPlayersRedBlackTree(String value, String comparison) {
+	public ArrayList<Player> searchPlayersRedBlackTree(String value, String comparison) {
+		ArrayList<Player> listOfPlayers=new ArrayList<Player>();
+		Double v = Double.parseDouble(value);
+		switch(comparison) {
+		case "STEALSEQUAL":
+			NodeRBT<Double, Player> foundedPP = rbtSteals.search(v);
+			searchEqualNodes(listOfPlayers, foundedPP, v);
+			break;
+		case "STEALSGREATER":
+			searchGreaterNodes(listOfPlayers, rbtSteals.getRoot(), v);
+			break;
+		case "STEALSLESS":
+			searchLessNodes(listOfPlayers, rbtSteals.getRoot(), v);
+			break;
+		case "STEALSEQUALGREATER":
+			NodeRBT<Double, Player> foundedPP1 = rbtSteals.search(v);
+			searchEqualNodes(listOfPlayers, foundedPP1, v);
+			searchGreaterNodes(listOfPlayers, rbtSteals.getRoot(), v);
+			break;
+		case "STEALSEQUALLESS":
+			NodeRBT<Double, Player> foundedPP2 = rbtSteals.search(v);
+			searchEqualNodes(listOfPlayers, foundedPP2, v);
+			searchLessNodes(listOfPlayers, rbtSteals.getRoot(), v);
+			break;
+		}
+		return listOfPlayers;
 		
+	}
+	
+
+	public RedBlackTree<Double, Player> getRbtSteals() {
+		return rbtSteals;
+	}
+
+	public void setRbtSteals(RedBlackTree<Double, Player> rbtSteals) {
+		this.rbtSteals = rbtSteals;
 	}
 
 }

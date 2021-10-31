@@ -1,5 +1,7 @@
 package dataStructures;
 
+import java.util.ArrayList;
+
 public class NodeRBT<K extends Comparable<K>,V> implements Comparable<NodeRBT<K,V>> {
 	 private K key;
 	 private V value;
@@ -7,6 +9,7 @@ public class NodeRBT<K extends Comparable<K>,V> implements Comparable<NodeRBT<K,
      private NodeRBT<K,V> right;
      private char color;// Red or black
      private NodeRBT<K,V> parent;
+     private ArrayList<NodeRBT<K,V>> sameKeyNodes;
      
      public NodeRBT(K k, V v) {
  		key=k;
@@ -69,6 +72,14 @@ public class NodeRBT<K extends Comparable<K>,V> implements Comparable<NodeRBT<K,
 	public int compareTo(NodeRBT<K, V> n) {
 		
 		return key.compareTo(n.getKey());
+	}
+
+	public ArrayList<NodeRBT<K,V>> getSameKeyNodes() {
+		return sameKeyNodes;
+	}
+
+	public void setSameKeyNodes(ArrayList<NodeRBT<K,V>> sameKeyNodes) {
+		this.sameKeyNodes = sameKeyNodes;
 	}
 
 }
