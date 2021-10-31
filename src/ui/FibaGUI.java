@@ -380,7 +380,6 @@ public class FibaGUI {
 		    	long timeABB = endABB-startABB;
 		    	initializeTableViewSearchedPlayers(playersList);
 		    	long startAVL= System.nanoTime();
-		    	//
 				fiba.searchPlayersAVL(txtValue.getText(), getComparison());
 				long endAVL = System.nanoTime();
 		    	long timeAVL = endAVL-startAVL;
@@ -393,18 +392,18 @@ public class FibaGUI {
 		    	long timeABB = endABB-startABB;
 		    	initializeTableViewSearchedPlayers(playersList);
 		    	long startAVL= System.nanoTime();
-		    	//
 				fiba.searchPlayersAVL(txtValue.getText(), getComparison());
 				long endAVL = System.nanoTime();
 		    	long timeAVL = endAVL-startAVL;
 		    	alert1.setContentText("Tiempo que tardó la búsqueda en ABB: "+timeABB+" nanosegundos\n"+"Tiempo que tardó la búsqueda en AVL: "+timeAVL+" nanosegundos");
 			    alert1.showAndWait();
 			}else if(getSearchCriteria().equals("STEALS")) {
-				
+				fiba.searchPlayersRedBlackTree(txtValue.getText(), getSearchCriteria()+getComparison());
 			}else if(getSearchCriteria().equals("BLOCKS")){
-				
+				fiba.searchPlayersAVL(txtValue.getText(), getSearchCriteria()+getComparison());
 			}else {
-				
+				ObservableList<Player> playersList = FXCollections.observableArrayList(fiba.searchPlayersLinearly(txtValue.getText(), getComparison()));
+				initializeTableViewSearchedPlayers(playersList);
 			}
 		}else if(cbxGreater.isSelected() && cbxLess.isSelected()){
 			Alert alert = new Alert(AlertType.ERROR);

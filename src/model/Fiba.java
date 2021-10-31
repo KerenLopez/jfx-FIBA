@@ -8,8 +8,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Hashtable;
+
 import dataStructures.BSTNode;
 import dataStructures.BSTtree;
 import exceptions.NegativeValueException;
@@ -21,7 +24,7 @@ public class Fiba implements Serializable {
 	private Hashtable<Player, Player> players;
 	private BSTtree<Double, Player> ABBofPointsByGame;
 	private BSTtree<Double, Player> ABBofAssists;
-
+	private ArrayList<Player> playersByBounces;
 
 	public final static String FIBA_SAVE_PATH_FILE="data/fiba.ackldo";
 
@@ -29,7 +32,7 @@ public class Fiba implements Serializable {
 		players = new Hashtable<Player, Player>();
 		ABBofPointsByGame = new BSTtree<Double, Player>(); 
 		ABBofAssists = new BSTtree<Double, Player>();
-
+		playersByBounces = new ArrayList<Player>();
 	}
 
 	public boolean addPlayer(String n, String ag, String t, String p, String bo, String a, String st, String bl) throws NegativeValueException{
@@ -70,6 +73,7 @@ public class Fiba implements Serializable {
 			players.put(player, player);
 			ABBofPointsByGame.insertNode(player.getPoints(), player);
 			ABBofAssists.insertNode(player.getPoints(), player);
+			playersByBounces.add(player);
 			added=true;
 		}
 		return added;
@@ -161,6 +165,61 @@ public class Fiba implements Serializable {
 		return listOfPlayers;
 
 	}
+	
+	public ArrayList<Player> searchPlayersLinearly(String value, String comparison){
+		ArrayList<Player> listOfPlayers=new ArrayList<>();
+		Double v = Double.parseDouble(value);
+		Collections.sort(playersByBounces, new Comparator<Player>(){
+			@Override
+			public int compare(Player player1, Player player2) {
+				 if(player1.getBounces()>player2.getBounces()){
+			            return -1;
+			        }else if(player1.getBounces()>player2.getBounces()){
+			            return 0;
+			        }else{
+			            return 1;
+			        }
+			}
+		});
+		switch(comparison) {
+		case "EQUAL":
+			for(int k=0;k<playersByBounces.size();k++) {
+				if(playersByBounces.get(k).getBounces()==v) {
+					listOfPlayers.add(playersByBounces.get(k));
+				}
+			}
+			break;
+		case "GREATER":
+			for(int k=0;k<playersByBounces.size();k++) {
+				if(playersByBounces.get(k).getBounces()>v) {
+					listOfPlayers.add(playersByBounces.get(k));
+				}
+			}
+			break;
+		case "LESS":
+			for(int k=0;k<playersByBounces.size();k++) {
+				if(playersByBounces.get(k).getBounces()<v) {
+					listOfPlayers.add(playersByBounces.get(k));
+				}
+			}
+			break;
+		case "EQUALGREATER":
+			for(int k=0;k<playersByBounces.size();k++) {
+				if(playersByBounces.get(k).getBounces()>=v) {
+					listOfPlayers.add(playersByBounces.get(k));
+				}
+			}
+			break;
+		case "EQUALLESS":
+			for(int k=0;k<playersByBounces.size();k++) {
+				if(playersByBounces.get(k).getBounces()<=v) {
+					listOfPlayers.add(playersByBounces.get(k));
+				}
+			}
+			break;	
+		}	
+		return listOfPlayers;
+	}
 
 	public ArrayList<Player> searchPlayersABB(String value, String criteria) {
 		ArrayList<Player> listOfPlayers=new ArrayList<Player>();
@@ -249,7 +308,7 @@ public class Fiba implements Serializable {
 		}
 	}
 
-	public void searchPlayersAVL(String text, String comparison) {
+	public void searchPlayersAVL(String value, String comparison) {
 		// TODO Auto-generated method stub
 
 	}
@@ -268,6 +327,10 @@ public class Fiba implements Serializable {
 			ois.close();
 		}
 		return fiba;
+	}
+
+	public void searchPlayersRedBlackTree(String value, String comparison) {
+		
 	}
 
 }
