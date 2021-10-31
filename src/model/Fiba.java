@@ -20,7 +20,7 @@ import exceptions.NegativeValueException;
 public class Fiba implements Serializable {
 
 	private static final long serialVersionUID = 1;
-	
+
 	private BSTtree<Double, Player> ABBofPointsByGame;
 	private BSTtree<Double, Player> ABBofAssists;
 	private ArrayList<Player> playersByBounces;
@@ -71,6 +71,7 @@ public class Fiba implements Serializable {
 			Player player = new Player(n, age, t, points, bounces, assists, steals, blocks);
 			ABBofPointsByGame.insertNode(player.getPoints(), player);
 			ABBofAssists.insertNode(player.getPoints(), player);
+			rbtSteals.insert(player.getSteals(), player);
 			playersByBounces.add(player);
 			sortPlayers();
 			added=true;
@@ -96,6 +97,24 @@ public class Fiba implements Serializable {
 		ABBofPointsByGame.deleteNodeRecursive(foundedPP);
 		ABBofAssists.deleteNodeRecursive(foundedPA);
 		playersByBounces.remove(player);
+
+		deletePlayerRedBlackTree(player);
+
+	}
+
+	private void deletePlayerRedBlackTree(Player player) {
+		NodeRBT<Double,Player> nodeSteal=rbtSteals.search(rbtSteals.getRoot(), player.getSteals());
+		if(nodeSteal.getValue()==player) {
+			rbtSteals.delete(player.getSteals());
+		}else {
+			boolean exit=false;
+			for(int i=0;i<nodeSteal.getSameKeyNodes().size() && !exit;i++) {
+				if(nodeSteal.getSameKeyNodes().get(i).getValue()==player) {
+					nodeSteal.getSameKeyNodes().remove(i);
+					exit=true;
+				}
+			}
+		}
 	}
 
 	public boolean updatePlayer(Player py, String n, String ag, String t, String p, String bo, String a, String st, String bl) throws NegativeValueException {
@@ -135,27 +154,42 @@ public class Fiba implements Serializable {
 			py.setName(n);
 			py.setAge(age);
 			py.setBlocks(blocks);
-			py.setBounces(bounces);
-			py.setSteals(steals);
 			py.setTeam(t);
+			
 			if(py.getAssists()!=assists) {
 				BSTNode<Double,Player> foundedPA = ABBofAssists.searchNode(py.getAssists());
 				py.setAssists(assists);
 				ABBofAssists.deleteNodeRecursive(foundedPA);
 				ABBofAssists.insertNode(py.getAssists(),py);
 			}
+			
 			if(py.getPoints()!=points) {
 				BSTNode<Double,Player> foundedPP = ABBofPointsByGame.searchNode(py.getPoints());
 				py.setPoints(points);
 				ABBofPointsByGame.deleteNodeRecursive(foundedPP);
 				ABBofPointsByGame.insertNode(py.getPoints(), py);
 			}
+			
+			if(py.getSteals()!=steals) {
+
+				deletePlayerRedBlackTree(py);				
+				py.setSteals(steals);
+				rbtSteals.insert(py.getSteals(), py);
+
+			}
+			
+			if(py.getBounces()!=bounces) {
+						
+				py.setBounces(bounces);
+				sortPlayers();
+			}
+			
 			updated=true;	
 		}
 		return updated;
 	}
 
-	
+
 	public void sortPlayers() {
 
 		Collections.sort(playersByBounces, new Comparator<Player>(){
@@ -171,7 +205,7 @@ public class Fiba implements Serializable {
 			}
 		});
 	}
-	
+
 	public ArrayList<Player> searchPlayersLinearly(String value, String comparison){
 		ArrayList<Player> listOfPlayers=new ArrayList<>();
 		Double v = Double.parseDouble(value);
@@ -379,7 +413,7 @@ public class Fiba implements Serializable {
 		}
 
 	}
-	
+
 	private void searchEqualLessSteals(ArrayList<Player> list, NodeRBT<Double,Player> node, NodeRBT<Double,Player> nSearched) {
 
 		while(node!=rbtSteals.getNil()) {
@@ -418,7 +452,7 @@ public class Fiba implements Serializable {
 		}
 
 	}
-	
+
 	private void searchEqualGreaterSteals(ArrayList<Player> list, NodeRBT<Double,Player> node, NodeRBT<Double,Player> nSearched) {
 
 		while(node!=rbtSteals.getNil()) {
@@ -427,7 +461,7 @@ public class Fiba implements Serializable {
 				for(int i=0;i<node.getSameKeyNodes().size();i++) {
 					list.add(node.getSameKeyNodes().get(i).getValue());
 				}
-				
+
 				inorderRedBlackTree(node.getRight(), list);
 
 				node=node.getLeft();
