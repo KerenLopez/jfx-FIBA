@@ -61,7 +61,7 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
             NodeAVL<K,V> newNode = new NodeAVL<>(key, value);
             currentNode.setLeft(newNode);
             newNode.setParent(currentNode);
-            reBalance(newNode);
+            reBalance(newNode, newNode);
         }
         else if(key.compareTo(currentNode.getKey())<0 && currentNode.getLeft()!=null){
             privateInsert(currentNode.getLeft(),key,value);
@@ -70,7 +70,7 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
             NodeAVL<K,V> newNode = new NodeAVL<>(key, value);
             currentNode.setRight(newNode);
             newNode.setParent(currentNode);
-            reBalance(newNode);
+            reBalance(newNode, newNode);
         }
         else if (key.compareTo(currentNode.getKey())>0 && currentNode.getRight()!=null) {
             privateInsert(currentNode.getRight(),key,value);
@@ -171,7 +171,7 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
         newRoot.setHeight(Math.max(getHeight(newRoot.getLeft()),getHeight(newRoot.getRight())) + 1);
         
         if(newRoot.getParent()!=null) {
-            newRoot.getParent().setHeight(Math.max(getHeight( node.getParent().getLeft()),getHeight( node.getParent().getRight())) + 1);
+            newRoot.getParent().setHeight(Math.max(getHeight( newRoot.getParent().getLeft()),getHeight( newRoot.getParent().getRight())) + 1);
         }
         
         return newRoot;
@@ -208,7 +208,7 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
         newRoot.setHeight(Math.max(getHeight(newRoot.getLeft()),getHeight(newRoot.getRight())) + 1);
         
         if(newRoot.getParent()!=null) {
-            newRoot.getParent().setHeight(Math.max(getHeight( node.getParent().getLeft()),getHeight( node.getParent().getRight())) + 1);
+            newRoot.getParent().setHeight(Math.max(getHeight( newRoot.getParent().getLeft()),getHeight( newRoot.getParent().getRight())) + 1);
         }
         
         return newRoot;
@@ -230,30 +230,25 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
         return getHeight(node.getLeft()) - getHeight(node.getRight());
     }
     
-    public void reBalance(NodeAVL<K, V> node) {
+    public void reBalance(NodeAVL<K, V> node, NodeAVL<K, V> nodeKey) {
         node.setHeight(1+Math.max(getHeight(node.getLeft()),getHeight(node.getRight())));
  
         int fe=getBalancingFactor(node);
         
-        if (fe>1 && node.getKey().compareTo(node.getLeft().getKey())<0) {
+        if (fe>1 && nodeKey.getKey().compareTo(node.getLeft().getKey())<0) {
             rightRotate(node);
-        }
- 
-        if (fe<-1 && node.getKey().compareTo(node.getRight().getKey())>0) {
+        }else if (fe<-1 && nodeKey.getKey().compareTo(node.getRight().getKey())>0) {
             leftRotate(node);
-        }
- 
-        if (fe>1 && node.getKey().compareTo(node.getLeft().getKey())>0) {
+        }else if (fe>1 && nodeKey.getKey().compareTo(node.getLeft().getKey())>0) {
             leftRotate(node.getLeft());
             rightRotate(node);
-        }
- 
-        if (fe<-1 && node.getKey().compareTo(node.getRight().getKey())<0) {
+        }else if (fe<-1 && nodeKey.getKey().compareTo(node.getRight().getKey())<0) {
             rightRotate(node.getRight());
             leftRotate(node);
         }
+        
         if(node.getParent()!=null){
-            reBalance(node.getParent());
+            reBalance(node.getParent(), nodeKey);
         }
     }
     
