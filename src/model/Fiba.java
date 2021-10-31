@@ -168,20 +168,20 @@ public class Fiba implements Serializable {
 		return listOfPlayers;
 
 	}
-	
+
 	public ArrayList<Player> searchPlayersLinearly(String value, String comparison){
 		ArrayList<Player> listOfPlayers=new ArrayList<>();
 		Double v = Double.parseDouble(value);
 		Collections.sort(playersByBounces, new Comparator<Player>(){
 			@Override
 			public int compare(Player player1, Player player2) {
-				 if(player1.getBounces()>player2.getBounces()){
-			            return -1;
-			        }else if(player1.getBounces()>player2.getBounces()){
-			            return 0;
-			        }else{
-			            return 1;
-			        }
+				if(player1.getBounces()>player2.getBounces()){
+					return -1;
+				}else if(player1.getBounces()>player2.getBounces()){
+					return 0;
+				}else{
+					return 1;
+				}
 			}
 		});
 		switch(comparison) {
@@ -271,7 +271,7 @@ public class Fiba implements Serializable {
 		}
 		return listOfPlayers;
 	}
-	
+
 	private ArrayList<Player> searchEqualNodes(ArrayList<Player> list, BSTNode<Double, Player> node, double v) {
 		if(node!=null) {
 			list.add(node.getValue());
@@ -296,7 +296,7 @@ public class Fiba implements Serializable {
 			return searchGreaterNodes(list, node.getRight(), key);
 		}
 	}
-	
+
 	private ArrayList<Player> searchLessNodes(ArrayList<Player> list, BSTNode<Double,Player> node, double key) {
 		if(node==null) {
 			return list;
@@ -333,34 +333,131 @@ public class Fiba implements Serializable {
 	}
 
 	public ArrayList<Player> searchPlayersRedBlackTree(String value, String comparison) {
-		ArrayList<Player> listOfPlayers=new ArrayList<Player>();
+		ArrayList<Player> list=new ArrayList<Player>();
 		Double v = Double.parseDouble(value);
+		NodeRBT<Double,Player> n= new NodeRBT<>(v,null);
 		switch(comparison) {
 		case "STEALSEQUAL":
-			NodeRBT<Double, Player> foundedPP = rbtSteals.search(v);
-			searchEqualNodes(listOfPlayers, foundedPP, v);
+			NodeRBT<Double, Player> founded = rbtSteals.search(rbtSteals.getRoot(),v);
+			searchEqualSteals(list, founded);
 			break;
 		case "STEALSGREATER":
-			searchGreaterNodes(listOfPlayers, rbtSteals.getRoot(), v);
+			searchGreaterSteals(list, rbtSteals.getRoot(),n);
 			break;
 		case "STEALSLESS":
-			searchLessNodes(listOfPlayers, rbtSteals.getRoot(), v);
+
+			searchLessSteals(list, rbtSteals.getRoot(),n);
 			break;
 		case "STEALSEQUALGREATER":
-			NodeRBT<Double, Player> foundedPP1 = rbtSteals.search(v);
-			searchEqualNodes(listOfPlayers, foundedPP1, v);
-			searchGreaterNodes(listOfPlayers, rbtSteals.getRoot(), v);
+
+			searchEqualGreaterSteals(list, rbtSteals.getRoot(),n);
 			break;
 		case "STEALSEQUALLESS":
-			NodeRBT<Double, Player> foundedPP2 = rbtSteals.search(v);
-			searchEqualNodes(listOfPlayers, foundedPP2, v);
-			searchLessNodes(listOfPlayers, rbtSteals.getRoot(), v);
+
+			searchEqualLessSteals(list, rbtSteals.getRoot(),n);
 			break;
 		}
-		return listOfPlayers;
-		
+		return list;
+
+	}
+
+	private void searchEqualSteals(ArrayList<Player> list, NodeRBT<Double,Player> founded) {
+		list.add(founded.getValue());
+
+		for(int i=0;i<founded.getSameKeyNodes().size();i++) {
+			list.add(founded.getSameKeyNodes().get(i).getValue());
+		}
+	}
+
+	private void searchLessSteals(ArrayList<Player> list, NodeRBT<Double,Player> node, NodeRBT<Double,Player> nSearched) {
+
+		while(node!=rbtSteals.getNil()) {
+			if( node.compareTo(nSearched)<0) {
+
+				inorderRedBlackTree(node.getLeft(), list);
+
+				list.add(node.getValue());
+				for(int i=0;i<node.getSameKeyNodes().size();i++) {
+					list.add(node.getSameKeyNodes().get(i).getValue());
+				}
+
+				node=node.getRight();
+			}else {
+				node=node.getLeft();
+			}
+		}
+
 	}
 	
+	private void searchEqualLessSteals(ArrayList<Player> list, NodeRBT<Double,Player> node, NodeRBT<Double,Player> nSearched) {
+
+		while(node!=rbtSteals.getNil()) {
+			if( node.compareTo(nSearched)<=0) {
+
+				inorderRedBlackTree(node.getLeft(), list);
+
+				list.add(node.getValue());
+				for(int i=0;i<node.getSameKeyNodes().size();i++) {
+					list.add(node.getSameKeyNodes().get(i).getValue());
+				}
+
+				node=node.getRight();
+			}else {
+				node=node.getLeft();
+			}
+		}
+
+	}
+
+	private void searchGreaterSteals(ArrayList<Player> list, NodeRBT<Double,Player> node, NodeRBT<Double,Player> nSearched) {
+
+		while(node!=rbtSteals.getNil()) {
+			if( node.compareTo(nSearched)>0) {
+
+				list.add(node.getValue());
+				for(int i=0;i<node.getSameKeyNodes().size();i++) {
+					list.add(node.getSameKeyNodes().get(i).getValue());
+				}
+				inorderRedBlackTree(node.getRight(), list);
+
+				node=node.getLeft();
+			}else {
+				node=node.getRight();
+			}
+		}
+
+	}
+	
+	private void searchEqualGreaterSteals(ArrayList<Player> list, NodeRBT<Double,Player> node, NodeRBT<Double,Player> nSearched) {
+
+		while(node!=rbtSteals.getNil()) {
+			if(node.compareTo(nSearched)>=0 ) {
+				list.add(node.getValue());
+				for(int i=0;i<node.getSameKeyNodes().size();i++) {
+					list.add(node.getSameKeyNodes().get(i).getValue());
+				}
+				
+				inorderRedBlackTree(node.getRight(), list);
+
+				node=node.getLeft();
+			}else {
+				node=node.getRight();
+			}
+		}
+
+	}
+
+	private void inorderRedBlackTree(NodeRBT<Double,Player> node, ArrayList<Player> players) {
+		if(node!=rbtSteals.getNil()) {
+			inorderRedBlackTree(node.getLeft(), players);
+			players.add(node.getValue());
+			for(int i=0;i<node.getSameKeyNodes().size();i++) {
+				players.add(node.getSameKeyNodes().get(i).getValue());
+			}
+			inorderRedBlackTree(node.getRight(), players);
+		}
+	}
+
 
 	public RedBlackTree<Double, Player> getRbtSteals() {
 		return rbtSteals;
