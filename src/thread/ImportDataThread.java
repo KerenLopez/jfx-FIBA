@@ -31,14 +31,15 @@ public class ImportDataThread extends Thread{
 						
 						try {
 							String[] parts = line.split(";");
-			//addPlayer(String n, String ag, String t, String p, String bo, String a, String st, String bl)
+			
+							//addPlayer(String n, String ag, String t, String p, String bo, String a, String st, String bl)
 				
-							//addPlayer(parts[1],parts[2],parts[0],parts[3],parts[5],parts[6],parts[7],parts[7]);
+							fiba.addPlayer(parts[1],parts[2],parts[0],parts[3],parts[4],parts[5],parts[6],parts[7]);
 							
 							
 							line = br.readLine();
 							
-						} catch (NumberFormatException e) {
+						} catch (NumberFormatException | NegativeValueException e) {
 							line = br.readLine();
 						}
 					}

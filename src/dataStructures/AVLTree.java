@@ -57,16 +57,11 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
     }
     
     private void privateInsert(NodeAVL<K,V> currentNode, K key, V value) {
-        
-        /*if (currentNode==null) {
-            return (new NodeAVL<>(key,value));
-        }*/
-        
         if(key.compareTo(currentNode.getKey())<0 && currentNode.getLeft()==null){
             NodeAVL<K,V> newNode = new NodeAVL<>(key, value);
             currentNode.setLeft(newNode);
             newNode.setParent(currentNode);
-            reBalance(newNode);
+            reBalance(newNode, newNode);
         }
         else if(key.compareTo(currentNode.getKey())<0 && currentNode.getLeft()!=null){
             privateInsert(currentNode.getLeft(),key,value);
@@ -75,7 +70,7 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
             NodeAVL<K,V> newNode = new NodeAVL<>(key, value);
             currentNode.setRight(newNode);
             newNode.setParent(currentNode);
-            reBalance(newNode);
+            reBalance(newNode, newNode);
         }
         else if (key.compareTo(currentNode.getKey())>0 && currentNode.getRight()!=null) {
             privateInsert(currentNode.getRight(),key,value);
@@ -87,8 +82,8 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
         Boolean delete = false;
         NodeAVL<K,V> founded = search(key);
         if(founded!=null) {
-                deletePrivate(root,key);
-                delete = true;
+            deletePrivate(root,key);
+            delete = true;
         }
         return delete;
     }
@@ -116,111 +111,110 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
                 currentNode.getLeft();
             }
                
-            NodeAVL<K, V> temp = getNodoConValorMaximo(currentNode.getLeft());
+            NodeAVL<K, V> temp = getnodeMaximumValue(currentNode.getLeft());
             currentNode.setKey(temp.getKey());
             currentNode.setValue(temp.getValue());
             currentNode.setLeft(deletePrivate(currentNode.getLeft(),temp.getKey()));
             
-            
-            currentNode.setHeight(1+Math.max(height(currentNode.getLeft()),height(currentNode.getRight())));
+            currentNode.setHeight(1+Math.max(getHeight(currentNode.getLeft()),getHeight(currentNode.getRight())));
  
-            int fe=GetBalancingFactor(currentNode);
+            int fe=getBalancingFactor(currentNode);
 
-            if (fe>1 && GetBalancingFactor(currentNode.getLeft())>=0) {
-                rotateRight(currentNode);
+            if (fe>1 && getBalancingFactor(currentNode.getLeft())>=0) {
+                rightRotate(currentNode);
             }
 
-            if (fe<-1 && GetBalancingFactor(currentNode.getRight())<=0) {
-                rotateLeft(currentNode);
+            if (fe<-1 && getBalancingFactor(currentNode.getRight())<=0) {
+                leftRotate(currentNode);
             }
 
-            if (fe>1 && GetBalancingFactor(currentNode.getLeft())<0) {
-                currentNode.setLeft(rotateLeft(currentNode.getLeft()));
-                rotateRight(currentNode);
+            if (fe>1 && getBalancingFactor(currentNode.getLeft())<0) {
+                currentNode.setLeft(leftRotate(currentNode.getLeft()));
+                rightRotate(currentNode);
             }
 
-            if (fe<-1 && GetBalancingFactor(currentNode.getRight())>0) {
-                currentNode.setRight(rotateRight(currentNode.getRight()));
-                rotateLeft(currentNode);
+            if (fe<-1 && getBalancingFactor(currentNode.getRight())>0) {
+                currentNode.setRight(rightRotate(currentNode.getRight()));
+                leftRotate(currentNode);
             }
         }
         return currentNode;
     }
 
     @Override
-    public NodeAVL<K, V> rotateLeft(NodeAVL<K, V> node) {
-        NodeAVL<K, V>  nuevaRaiz = node.getRight();
-        NodeAVL<K, V> temp = nuevaRaiz.getLeft();
+    public NodeAVL<K, V> leftRotate(NodeAVL<K, V> node) {
+        NodeAVL<K, V>  newRoot = node.getRight();
+        NodeAVL<K, V> temp = newRoot.getLeft();
  
-        nuevaRaiz.setLeft(node);
+        newRoot.setLeft(node);
         node.setRight(temp);
         
         if (temp != null) {
+            temp.setParent(node);
+        }
+        if (node.getParent() == null) {
+            root = newRoot;
+        } 
+        else if (node == node.getParent().getLeft()) {
+            node.getParent().setLeft(newRoot);
+        } 
+        else {
+            node.getParent().setRight(newRoot);
+        }
 
-			temp.setParent(node);
-		}
-
-
-		if (node.getParent() == null) {
-			root = nuevaRaiz;
-		} else if (node == node.getParent().getLeft()) {
-			node.getParent().setLeft(nuevaRaiz);
-		} else {
-			node.getParent().setRight(nuevaRaiz);
-		}
-		
-		if(nuevaRaiz!=null) {
-			nuevaRaiz.setParent(node.getParent());
-		}
-		node.setParent(nuevaRaiz);
+        if(newRoot!=null) {
+            newRoot.setParent(node.getParent());
+        }
+        node.setParent(newRoot);
  
-        node.setHeight(Math.max(height(node.getLeft()),height(node.getRight())) + 1);
-        nuevaRaiz.setHeight(Math.max(height(nuevaRaiz.getLeft()),height(nuevaRaiz.getRight())) + 1);
-        if(nuevaRaiz.getParent()!=null) {
-        	nuevaRaiz.getParent().setHeight(Math.max(height( node.getParent().getLeft()),height( node.getParent().getRight())) + 1);
+        node.setHeight(Math.max(getHeight(node.getLeft()),getHeight(node.getRight())) + 1);
+        newRoot.setHeight(Math.max(getHeight(newRoot.getLeft()),getHeight(newRoot.getRight())) + 1);
+        
+        if(newRoot.getParent()!=null) {
+            newRoot.getParent().setHeight(Math.max(getHeight( newRoot.getParent().getLeft()),getHeight( newRoot.getParent().getRight())) + 1);
         }
         
-        return nuevaRaiz;
+        return newRoot;
     }
 
     @Override
-    public NodeAVL<K, V> rotateRight(NodeAVL<K, V> node) {
-        NodeAVL<K, V>  nuevaRaiz = node.getLeft();
-        NodeAVL<K, V> temp = nuevaRaiz.getRight();
+    public NodeAVL<K, V> rightRotate(NodeAVL<K, V> node) {
+        NodeAVL<K, V>  newRoot = node.getLeft();
+        NodeAVL<K, V> temp = newRoot.getRight();
  
-        nuevaRaiz.setRight(node);
+        newRoot.setRight(node);
         node.setLeft(temp);
         
         if (temp != null) {
+            temp.setParent(node);
+        }
 
-			temp.setParent(node);
-		}
+        if (node.getParent() == null) {
+            root = newRoot;
+        } 
+        else if (node == node.getParent().getRight()) {
+            node.getParent().setRight(newRoot);
+        } 
+        else {
+            node.getParent().setLeft(newRoot);
+        }
 
-
-		if (node.getParent() == null) {
-			root = nuevaRaiz;
-		} else if (node == node.getParent().getRight()) {
-			node.getParent().setRight(nuevaRaiz);
-		} else {
-			node.getParent().setLeft(nuevaRaiz);
-		}
-		
-		if(nuevaRaiz!=null) {
-			nuevaRaiz.setParent(node.getParent());
-		}
-		node.setParent(nuevaRaiz);
+        if(newRoot!=null) {
+            newRoot.setParent(node.getParent());
+        }
+        node.setParent(newRoot);
  
-        node.setHeight(Math.max(height(node.getLeft()),height(node.getRight())) + 1);
-        nuevaRaiz.setHeight(Math.max(height(nuevaRaiz.getLeft()),height(nuevaRaiz.getRight())) + 1);
-        if(nuevaRaiz.getParent()!=null) {
-            nuevaRaiz.getParent().setHeight(Math.max(height( node.getParent().getLeft()),height( node.getParent().getRight())) + 1);
+        node.setHeight(Math.max(getHeight(node.getLeft()),getHeight(node.getRight())) + 1);
+        newRoot.setHeight(Math.max(getHeight(newRoot.getLeft()),getHeight(newRoot.getRight())) + 1);
+        
+        if(newRoot.getParent()!=null) {
+            newRoot.getParent().setHeight(Math.max(getHeight( newRoot.getParent().getLeft()),getHeight( newRoot.getParent().getRight())) + 1);
         }
         
-        return nuevaRaiz;
+        return newRoot;
     }
 
-    @Override
-    public int height(NodeAVL<K, V> node) {
+    public int getHeight(NodeAVL<K, V> node) {
         if (node == null){
             return 0;
         }
@@ -229,42 +223,36 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
         }
     }
 
-    @Override
-    public int GetBalancingFactor(NodeAVL<K, V> node) {
+    public int getBalancingFactor(NodeAVL<K, V> node) {
         if(node == null) {
             return 0;
         }
-        return height(node.getLeft()) - height(node.getRight());
+        return getHeight(node.getLeft()) - getHeight(node.getRight());
     }
     
-     private void reBalance(NodeAVL<K, V> node) {
-        node.setHeight(1+Math.max(height(node.getLeft()),height(node.getRight())));
+    public void reBalance(NodeAVL<K, V> node, NodeAVL<K, V> nodeKey) {
+        node.setHeight(1+Math.max(getHeight(node.getLeft()),getHeight(node.getRight())));
  
-        int fe=GetBalancingFactor(node);
+        int fe=getBalancingFactor(node);
         
-        if (fe>1 && node.getKey().compareTo(node.getLeft().getKey())<0) {
-            rotateRight(node);
+        if (fe>1 && nodeKey.getKey().compareTo(node.getLeft().getKey())<0) {
+            rightRotate(node);
+        }else if (fe<-1 && nodeKey.getKey().compareTo(node.getRight().getKey())>0) {
+            leftRotate(node);
+        }else if (fe>1 && nodeKey.getKey().compareTo(node.getLeft().getKey())>0) {
+            leftRotate(node.getLeft());
+            rightRotate(node);
+        }else if (fe<-1 && nodeKey.getKey().compareTo(node.getRight().getKey())<0) {
+            rightRotate(node.getRight());
+            leftRotate(node);
         }
- 
-        if (fe<-1 && node.getKey().compareTo(node.getRight().getKey())>0) {
-            rotateLeft(node);
-        }
- 
-        if (fe>1 && node.getKey().compareTo(node.getLeft().getKey())>0) {
-            rotateLeft(node.getLeft());
-            rotateRight(node);
-        }
- 
-        if (fe<-1 && node.getKey().compareTo(node.getRight().getKey())<0) {
-            rotateRight(node.getRight());
-            rotateLeft(node);
-        }
+        
         if(node.getParent()!=null){
-            reBalance(node.getParent());
+            reBalance(node.getParent(), nodeKey);
         }
     }
     
-    private NodeAVL<K, V> getNodoConValorMaximo(NodeAVL<K, V> node) {
+    public NodeAVL<K, V> getnodeMaximumValue(NodeAVL<K, V> node) {
         NodeAVL<K, V> current = node;
         
         while (current.getRight()!=null){
