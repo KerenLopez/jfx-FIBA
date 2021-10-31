@@ -18,6 +18,7 @@ public class NodeRBT<K extends Comparable<K>,V> implements Comparable<NodeRBT<K,
  		left=null;
  		right=null;
  		parent=null;
+ 		sameKeyNodes=new ArrayList<>();
  	}
      
 	public K getKey() {
