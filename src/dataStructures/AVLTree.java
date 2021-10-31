@@ -33,7 +33,7 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
             return node;
         }
         else {
-            if(node.compareTo(key)<0) {
+            if(node.compareTo(key)>=0) {
                 return privateSearch(node.getLeft(),key);
             }
             else{
@@ -83,27 +83,27 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
     }
 
     @Override
-    public boolean deleted(K key) {
-        Boolean deleted = false;
+    public boolean delete(K key) {
+        Boolean delete = false;
         NodeAVL<K,V> founded = search(key);
         if(founded!=null) {
-                deletedPrivate(root,key);
-                deleted = true;
+                deletePrivate(root,key);
+                delete = true;
         }
-        return deleted;
+        return delete;
     }
     
-    private NodeAVL<K, V> deletedPrivate(NodeAVL<K,V> currentNode, K key){
+    private NodeAVL<K, V> deletePrivate(NodeAVL<K,V> currentNode, K key){
         if (currentNode==null){
             return currentNode;
         }
  
         if (key.compareTo(currentNode.getKey())<0){
-            currentNode.setLeft(deletedPrivate(currentNode.getLeft(),key));
+            currentNode.setLeft(deletePrivate(currentNode.getLeft(),key));
         }
         
         else if (key.compareTo(currentNode.getKey())>0){
-            currentNode.setRight(deletedPrivate(currentNode.getRight(),key));
+            currentNode.setRight(deletePrivate(currentNode.getRight(),key));
         }
         
         else {
@@ -119,7 +119,7 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
             NodeAVL<K, V> temp = getNodoConValorMaximo(currentNode.getLeft());
             currentNode.setKey(temp.getKey());
             currentNode.setValue(temp.getValue());
-            currentNode.setLeft(deletedPrivate(currentNode.getLeft(),temp.getKey()));
+            currentNode.setLeft(deletePrivate(currentNode.getLeft(),temp.getKey()));
             
             
             currentNode.setHeight(1+Math.max(height(currentNode.getLeft()),height(currentNode.getRight())));
@@ -154,9 +154,31 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
  
         nuevaRaiz.setLeft(node);
         node.setRight(temp);
+        
+        if (temp != null) {
+
+			temp.setParent(node);
+		}
+
+
+		if (node.getParent() == null) {
+			root = nuevaRaiz;
+		} else if (node == node.getParent().getLeft()) {
+			node.getParent().setLeft(nuevaRaiz);
+		} else {
+			node.getParent().setRight(nuevaRaiz);
+		}
+		
+		if(nuevaRaiz!=null) {
+			nuevaRaiz.setParent(node.getParent());
+		}
+		node.setParent(nuevaRaiz);
  
         node.setHeight(Math.max(height(node.getLeft()),height(node.getRight())) + 1);
         nuevaRaiz.setHeight(Math.max(height(nuevaRaiz.getLeft()),height(nuevaRaiz.getRight())) + 1);
+        if(nuevaRaiz.getParent()!=null) {
+        	nuevaRaiz.getParent().setHeight(Math.max(height( node.getParent().getLeft()),height( node.getParent().getRight())) + 1);
+        }
         
         return nuevaRaiz;
     }
@@ -168,9 +190,31 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
  
         nuevaRaiz.setRight(node);
         node.setLeft(temp);
+        
+        if (temp != null) {
+
+			temp.setParent(node);
+		}
+
+
+		if (node.getParent() == null) {
+			root = nuevaRaiz;
+		} else if (node == node.getParent().getRight()) {
+			node.getParent().setRight(nuevaRaiz);
+		} else {
+			node.getParent().setLeft(nuevaRaiz);
+		}
+		
+		if(nuevaRaiz!=null) {
+			nuevaRaiz.setParent(node.getParent());
+		}
+		node.setParent(nuevaRaiz);
  
         node.setHeight(Math.max(height(node.getLeft()),height(node.getRight())) + 1);
         nuevaRaiz.setHeight(Math.max(height(nuevaRaiz.getLeft()),height(nuevaRaiz.getRight())) + 1);
+        if(nuevaRaiz.getParent()!=null) {
+            nuevaRaiz.getParent().setHeight(Math.max(height( node.getParent().getLeft()),height( node.getParent().getRight())) + 1);
+        }
         
         return nuevaRaiz;
     }
@@ -207,12 +251,12 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
         }
  
         if (fe>1 && node.getKey().compareTo(node.getLeft().getKey())>0) {
-            node.setLeft(rotateLeft(node.getLeft()));
+            rotateLeft(node.getLeft());
             rotateRight(node);
         }
  
         if (fe<-1 && node.getKey().compareTo(node.getRight().getKey())<0) {
-            node.setRight(rotateRight(node.getRight()));
+            rotateRight(node.getRight());
             rotateLeft(node);
         }
         if(node.getParent()!=null){
