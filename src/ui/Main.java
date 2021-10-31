@@ -24,7 +24,7 @@ public class Main extends Application{
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("FIBA");
 			alert.setHeaderText(null);
-			if(!fiba.returnPlayers().isEmpty()) {
+			if(!fiba.getPlayersByBounces().isEmpty()) {
 				alert.setContentText("Se cargaron datos de archivo");
 				alert.showAndWait();
 			}

@@ -164,7 +164,7 @@ public class FibaGUI {
 
 	private void initializeTableViewOfAddedPlayers() {
 		ObservableList<Player> observableList;
-		observableList = FXCollections.observableArrayList(fiba.returnPlayers());
+		observableList = FXCollections.observableArrayList(fiba.getPlayersByBounces());
 		tvOfPlayers.setItems(observableList);
 		tcName.setCellValueFactory(new PropertyValueFactory<Player, String>("Name"));
 		tcAge.setCellValueFactory(new PropertyValueFactory<Player, Integer>("Age"));

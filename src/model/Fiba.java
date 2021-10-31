@@ -10,8 +10,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Enumeration;
-import java.util.Hashtable;
 
 import dataStructures.BSTNode;
 import dataStructures.BSTtree;
@@ -22,8 +20,7 @@ import exceptions.NegativeValueException;
 public class Fiba implements Serializable {
 
 	private static final long serialVersionUID = 1;
-
-	private Hashtable<Player, Player> players;
+	
 	private BSTtree<Double, Player> ABBofPointsByGame;
 	private BSTtree<Double, Player> ABBofAssists;
 	private ArrayList<Player> playersByBounces;
@@ -32,7 +29,6 @@ public class Fiba implements Serializable {
 	public final static String FIBA_SAVE_PATH_FILE="data/fiba.ackldo";
 
 	public Fiba() {
-		players = new Hashtable<Player, Player>();
 		ABBofPointsByGame = new BSTtree<Double, Player>(); 
 		ABBofAssists = new BSTtree<Double, Player>();
 		playersByBounces = new ArrayList<Player>();
@@ -73,10 +69,10 @@ public class Fiba implements Serializable {
 		}
 		if(correct) {
 			Player player = new Player(n, age, t, points, bounces, assists, steals, blocks);
-			players.put(player, player);
 			ABBofPointsByGame.insertNode(player.getPoints(), player);
 			ABBofAssists.insertNode(player.getPoints(), player);
 			playersByBounces.add(player);
+			sortPlayers();
 			added=true;
 		}
 		return added;
@@ -99,7 +95,7 @@ public class Fiba implements Serializable {
 		}
 		ABBofPointsByGame.deleteNodeRecursive(foundedPP);
 		ABBofAssists.deleteNodeRecursive(foundedPA);
-		players.remove(player, player);
+		playersByBounces.remove(player);
 	}
 
 	public boolean updatePlayer(Player py, String n, String ag, String t, String p, String bo, String a, String st, String bl) throws NegativeValueException {
@@ -159,19 +155,9 @@ public class Fiba implements Serializable {
 		return updated;
 	}
 
-	public ArrayList<Player> returnPlayers(){
-		ArrayList<Player> listOfPlayers=new ArrayList<Player>();
-		Enumeration<Player> elems = players.elements();
-		while (elems.hasMoreElements()) {
-			listOfPlayers.add(elems.nextElement());
-		}
-		return listOfPlayers;
+	
+	public void sortPlayers() {
 
-	}
-
-	public ArrayList<Player> searchPlayersLinearly(String value, String comparison){
-		ArrayList<Player> listOfPlayers=new ArrayList<>();
-		Double v = Double.parseDouble(value);
 		Collections.sort(playersByBounces, new Comparator<Player>(){
 			@Override
 			public int compare(Player player1, Player player2) {
@@ -184,6 +170,11 @@ public class Fiba implements Serializable {
 				}
 			}
 		});
+	}
+	
+	public ArrayList<Player> searchPlayersLinearly(String value, String comparison){
+		ArrayList<Player> listOfPlayers=new ArrayList<>();
+		Double v = Double.parseDouble(value);
 		switch(comparison) {
 		case "EQUAL":
 			for(int k=0;k<playersByBounces.size();k++) {
@@ -465,6 +456,10 @@ public class Fiba implements Serializable {
 
 	public void setRbtSteals(RedBlackTree<Double, Player> rbtSteals) {
 		this.rbtSteals = rbtSteals;
+	}
+
+	public ArrayList<Player> getPlayersByBounces() {
+		return playersByBounces;
 	}
 
 }
