@@ -32,6 +32,7 @@ public class Fiba implements Serializable {
 		ABBofPointsByGame = new BSTtree<Double, Player>(); 
 		ABBofAssists = new BSTtree<Double, Player>();
 		playersByBounces = new ArrayList<Player>();
+		rbtSteals = new RedBlackTree<Double, Player>();
 	}
 
 	public boolean addPlayer(String n, String ag, String t, String p, String bo, String a, String st, String bl) throws NegativeValueException{
@@ -70,7 +71,7 @@ public class Fiba implements Serializable {
 		if(correct) {
 			Player player = new Player(n, age, t, points, bounces, assists, steals, blocks);
 			ABBofPointsByGame.insertNode(player.getPoints(), player);
-			ABBofAssists.insertNode(player.getPoints(), player);
+			ABBofAssists.insertNode(player.getAssists(), player);
 			rbtSteals.insert(player.getSteals(), player);
 			playersByBounces.add(player);
 			sortPlayers();
@@ -494,6 +495,14 @@ public class Fiba implements Serializable {
 
 	public ArrayList<Player> getPlayersByBounces() {
 		return playersByBounces;
+	}
+
+	public BSTtree<Double, Player> getABBofPointsByGame() {
+		return ABBofPointsByGame;
+	}
+
+	public BSTtree<Double, Player> getABBofAssists() {
+		return ABBofAssists;
 	}
 
 }
