@@ -194,7 +194,7 @@ public class FibaGUI {
 
 	@FXML
 	public void addPlayer(ActionEvent event) {
-		
+
 		if(!txtName.getText().equals("") && !txtAge.getText().equals("") && !txtTeam.getText().equals("") && !txtPoints.getText().equals("") && !txtBounces.getText().equals("") && !txtAssists.getText().equals("") && !txtSteals.getText().equals("") && !txtBlocks.getText().equals("")) {
 			Alert alert1 = new Alert(AlertType.INFORMATION);
 			alert1.setTitle("Error de validacion");
@@ -210,7 +210,7 @@ public class FibaGUI {
 				alert1.setContentText(value.getMessage());
 				alert1.showAndWait();
 			}
-			
+
 			initializeTableViewOfAddedPlayers();
 			txtName.clear();
 			txtAge.clear();
@@ -366,68 +366,65 @@ public class FibaGUI {
 	@FXML
 	public void searchPlayers(ActionEvent event) {
 		if(searchCriteria.getSelectedToggle()!=null && !(cbxGreater.isSelected() && cbxLess.isSelected()) && !txtValue.getText().isEmpty()) {
-    		Alert alert1 = new Alert(AlertType.INFORMATION);
-		    alert1.setTitle("Jugador(es) encontrado(s)");
-		    alert1.setHeaderText(null);
-			if(getSearchCriteria().equals("POINTS")) {
-				long startABB= System.nanoTime();
-				ObservableList<Player> playersList;
-				try {
+			Alert alert1 = new Alert(AlertType.INFORMATION);
+			alert1.setTitle("Jugador(es) encontrado(s)");
+			alert1.setHeaderText(null);
+
+			try {
+				if(getSearchCriteria().equals("POINTS")) {
+					long startABB= System.nanoTime();
+					ObservableList<Player> playersList;
 					playersList = FXCollections.observableArrayList(fiba.searchPlayersABB(txtValue.getText(), getSearchCriteria()+getComparison()));
 					initializeTableViewSearchedPlayers(playersList);
-				} catch (NegativeValueException e) {
-					alert1.setContentText(e.getMessage());
+
+					long endABB = System.nanoTime();
+					long timeABB = endABB-startABB;
+					long startAVL= System.nanoTime();
+					fiba.searchPlayersAVL(txtValue.getText(), getComparison());
+					long endAVL = System.nanoTime();
+					long timeAVL = endAVL-startAVL;
+					alert1.setContentText("Tiempo que tardó la búsqueda en ABB: "+timeABB+" nanosegundos\n Tiempo que tardó la búsqueda en AVL: "+timeAVL+" nanosegundos");
 					alert1.showAndWait();
-				}catch(NumberFormatException num) {
-					alert1.setContentText("Debe ingresar un numero dentro de los campos presentados que asi lo requieran");
-					alert1.showAndWait();
-				}
-				long endABB = System.nanoTime();
-		    	long timeABB = endABB-startABB;
-		    	long startAVL= System.nanoTime();
-				fiba.searchPlayersAVL(txtValue.getText(), getComparison());
-				long endAVL = System.nanoTime();
-		    	long timeAVL = endAVL-startAVL;
-		    	alert1.setContentText("Tiempo que tardó la búsqueda en ABB: "+timeABB+" nanosegundos\n Tiempo que tardó la búsqueda en AVL: "+timeAVL+" nanosegundos");
-			    alert1.showAndWait();
-			}else if(getSearchCriteria().equals("ASSISTS")) {
-				long startABB= System.nanoTime();
-				ObservableList<Player> playersList;
-				try {
+					
+				}else if(getSearchCriteria().equals("ASSISTS")) {
+					long startABB= System.nanoTime();
+					ObservableList<Player> playersList;
+
 					playersList = FXCollections.observableArrayList(fiba.searchPlayersABB(txtValue.getText(), getSearchCriteria()+getComparison()));
 					initializeTableViewSearchedPlayers(playersList);
-				} catch (NegativeValueException e) {
-					alert1.setContentText(e.getMessage());
+
+					long endABB = System.nanoTime();
+					long timeABB = endABB-startABB;
+					long startAVL= System.nanoTime();
+					fiba.searchPlayersAVL(txtValue.getText(), getComparison());
+					long endAVL = System.nanoTime();
+					long timeAVL = endAVL-startAVL;
+					alert1.setContentText("Tiempo que tardó la búsqueda en ABB: "+timeABB+" nanosegundos\n"+"Tiempo que tardó la búsqueda en AVL: "+timeAVL+" nanosegundos");
 					alert1.showAndWait();
-				}catch(NumberFormatException num) {
-					alert1.setContentText("Debe ingresar un numero dentro de los campos presentados que asi lo requieran");
-					alert1.showAndWait();
-				}
-				long endABB = System.nanoTime();
-		    	long timeABB = endABB-startABB;
-		    	long startAVL= System.nanoTime();
-				fiba.searchPlayersAVL(txtValue.getText(), getComparison());
-				long endAVL = System.nanoTime();
-		    	long timeAVL = endAVL-startAVL;
-		    	alert1.setContentText("Tiempo que tardó la búsqueda en ABB: "+timeABB+" nanosegundos\n"+"Tiempo que tardó la búsqueda en AVL: "+timeAVL+" nanosegundos");
-			    alert1.showAndWait();
-			}else if(getSearchCriteria().equals("STEALS")) {
-				fiba.searchPlayersRedBlackTree(txtValue.getText(), getSearchCriteria()+getComparison());
-			}else if(getSearchCriteria().equals("BLOCKS")){
-				fiba.searchPlayersAVL(txtValue.getText(), getSearchCriteria()+getComparison());
-			}else {
-				ObservableList<Player> playersList;
-				try {
+					
+				}else if(getSearchCriteria().equals("STEALS")) {
+
+					fiba.searchPlayersRedBlackTree(txtValue.getText(), getSearchCriteria()+getComparison());
+
+				}else if(getSearchCriteria().equals("BLOCKS")){
+					fiba.searchPlayersAVL(txtValue.getText(), getSearchCriteria()+getComparison());
+				
+				}else {
+					ObservableList<Player> playersList;
+
 					playersList = FXCollections.observableArrayList(fiba.searchPlayersLinearly(txtValue.getText(), getComparison()));
 					initializeTableViewSearchedPlayers(playersList);
-				} catch (NegativeValueException e) {
-					alert1.setContentText(e.getMessage());
-					alert1.showAndWait();
-				}catch(NumberFormatException num) {
-					alert1.setContentText("Debe ingresar un numero dentro de los campos presentados que asi lo requieran");
-					alert1.showAndWait();
+
 				}
+			} catch (NegativeValueException e) {
+				alert1.setContentText(e.getMessage());
+				alert1.showAndWait();
+			}catch(NumberFormatException num) {
+				alert1.setContentText("Debe ingresar un numero dentro de los campos presentados que asi lo requieran");
+				alert1.showAndWait();
 			}
+
+
 		}else if(cbxGreater.isSelected() && cbxLess.isSelected()){
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Error de validacion");

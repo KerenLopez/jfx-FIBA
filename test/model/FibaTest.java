@@ -107,6 +107,12 @@ public class FibaTest {
         assertEquals(fiba.getABBofAssists().searchNode(18.0).getSameKeyNodes().get(1).getValue().getName(),"Joe Harris");
         assertEquals(fiba.getPlayersByBounces().get(3).getBounces(), 10);
         assertEquals(fiba.getPlayersByBounces().size(), 6);
+	
+       
+        assertEquals(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),6.0).getValue().getName(), "Devin Booker");
+        assertEquals(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),6.0).getSameKeyNodes().get(0).getValue().getName(),"Joe Harris");
+
+        
 	}
 
 	@Test
@@ -164,6 +170,12 @@ public class FibaTest {
 		assertTrue(fiba.getABBofAssists().searchNode(18.0).getSameKeyNodes().isEmpty());
 		assertTrue(fiba.getPlayersByBounces().size()==4);
 		assertEquals(fiba.getPlayersByBounces().get(3).getName(), "Dave Bing");
+	
+	
+		assertTrue(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),3.0)==null);
+		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getKey()==6.0);
+		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getColor()=='B');
+		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getLeft().getKey()==2.0);
 	}
 	
 	
@@ -178,7 +190,7 @@ public class FibaTest {
 	    String points = "21";
 		String bounces = "5";
 		String assists = "5";
-		String steals = "3";
+		String steals = "7";
 		String blocks = "7";
 		boolean updated = false;
 		try {
@@ -202,6 +214,12 @@ public class FibaTest {
         assertEquals(fiba.getPlayersByBounces().get(2).getBounces(),6.0);
         assertEquals(fiba.getPlayersByBounces().get(3).getBounces(),10.0);
         assertEquals(fiba.getPlayersByBounces().get(4).getBounces(),15.0);
+	
+        assertTrue(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),7.0).getValue()==player);
+		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getKey()==6.0);
+		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getColor()=='B');
+		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getRight().getKey()==7.0);
+	
 	}
 	
 	@Test
@@ -419,7 +437,7 @@ public class FibaTest {
 		String comparison = "POINTSLESS";
 		ArrayList<Player> listOfPlayers=new ArrayList<>();
 		try {
-			listOfPlayers = fiba.searchPlayersLinearly(value, comparison);
+			listOfPlayers = fiba.searchPlayersABB(value, comparison);
 		} catch (NegativeValueException e) {
 			fail("No se esperaba esta excepcion");
 		}catch(NumberFormatException num) {
@@ -435,7 +453,7 @@ public class FibaTest {
 		String comparison = "POINTSEQUAL";
 		ArrayList<Player> listOfPlayers=new ArrayList<>();
 		try {
-			listOfPlayers = fiba.searchPlayersLinearly(value, comparison);
+			listOfPlayers = fiba.searchPlayersABB(value, comparison);
 		} catch (NegativeValueException e) {
 			fail("No se esperaba esta excepcion");
 		}catch(NumberFormatException num) {
@@ -455,7 +473,7 @@ public class FibaTest {
 		String comparison = "POINTSGREATER";
 		ArrayList<Player> listOfPlayers=new ArrayList<>();
 		try {
-			listOfPlayers = fiba.searchPlayersLinearly(value, comparison);
+			listOfPlayers = fiba.searchPlayersABB(value, comparison);
 		} catch (NegativeValueException e) {
 			fail("No se esperaba esta excepcion");
 		}catch(NumberFormatException num) {
@@ -475,7 +493,7 @@ public class FibaTest {
 		String comparison = "POINTSLESS";
 		ArrayList<Player> listOfPlayers=new ArrayList<>();
 		try {
-			listOfPlayers = fiba.searchPlayersLinearly(value, comparison);
+			listOfPlayers = fiba.searchPlayersABB(value, comparison);
 		} catch (NegativeValueException e) {
 			fail("No se esperaba esta excepcion");
 		}catch(NumberFormatException num) {
@@ -495,7 +513,7 @@ public class FibaTest {
 		String comparison = "POINTSEQUALGREATER";
 		ArrayList<Player> listOfPlayers=new ArrayList<>();
 		try {
-			listOfPlayers = fiba.searchPlayersLinearly(value, comparison);
+			listOfPlayers = fiba.searchPlayersABB(value, comparison);
 		} catch (NegativeValueException e) {
 			fail("No se esperaba esta excepcion");
 		}catch(NumberFormatException num) {
@@ -510,13 +528,14 @@ public class FibaTest {
 		assertEquals(listOfPlayers.get(2).getPoints(), 20.0);
 	}
 	
+	@Test
 	public void testSearchPlayersABB6() {
 		setupScenary2();
 		String value = "17";
 		String comparison = "POINTSLESS";
 		ArrayList<Player> listOfPlayers=new ArrayList<>();
 		try {
-			listOfPlayers = fiba.searchPlayersLinearly(value, comparison);
+			listOfPlayers = fiba.searchPlayersABB(value, comparison);
 		} catch (NegativeValueException e) {
 			fail("No se esperaba esta excepcion");
 		}catch(NumberFormatException num) {
@@ -531,6 +550,7 @@ public class FibaTest {
 		assertEquals(listOfPlayers.get(2).getBounces(), 17.0);
 	}
 	
+	@Test
 	public void testSearchPlayersABB7() {
 		setupScenary2();
 		String value = "-17";
@@ -538,7 +558,7 @@ public class FibaTest {
 		ArrayList<Player> listOfPlayers=new ArrayList<>();
 		boolean exception = false;
 		try {
-			listOfPlayers = fiba.searchPlayersLinearly(value, comparison);
+			listOfPlayers = fiba.searchPlayersABB(value, comparison);
 		} catch (NegativeValueException e) {
 			exception = true;
 		}catch(NumberFormatException num) {
@@ -548,6 +568,7 @@ public class FibaTest {
 		assertTrue(exception);
 	}
 	
+	@Test
 	public void testSearchPlayersABB8() {
 		setupScenary2();
 		String value = "diecisiete";
@@ -555,7 +576,7 @@ public class FibaTest {
 		ArrayList<Player> listOfPlayers=new ArrayList<>();
 		boolean exception = false;
 		try {
-			listOfPlayers = fiba.searchPlayersLinearly(value, comparison);
+			listOfPlayers = fiba.searchPlayersABB(value, comparison);
 		} catch (NegativeValueException e) {
 			fail("No se esperaba esta excepcion");
 		}catch(NumberFormatException num) {
@@ -564,4 +585,134 @@ public class FibaTest {
 		assertTrue(listOfPlayers.isEmpty());
 		assertTrue(exception);
 	}
+	
+	@Test
+	public void testSearchPlayersRedBlackTree1() {
+		setupScenary1();
+		String value = "10";
+		String comparison = "STEALSSLESS";
+		ArrayList<Player> listPlayers=new ArrayList<>();
+		
+		try {
+			listPlayers = fiba.searchPlayersRedBlackTree(value, comparison);
+		} catch (NegativeValueException e) {
+			fail("No se esperaba esta excepcion");
+		}catch(NumberFormatException num) {
+			fail("No se esperaba esta excepcion");
+		}
+		assertTrue(listPlayers.isEmpty());
+		
+	}
+	
+	@Test
+	public void testSearchPlayersRedBlackTree2() {
+		setupScenary2();
+		String value = "3";
+		String comparison = "STEALSEQUAL";
+		ArrayList<Player> listPlayers=new ArrayList<>();
+		
+		try {
+			listPlayers = fiba.searchPlayersRedBlackTree(value, comparison);
+		} catch (NegativeValueException e) {
+			fail("No se esperaba esta excepcion");
+		}catch(NumberFormatException num) {
+			fail("No se esperaba esta excepcion");
+		}
+		assertEquals(listPlayers.size(),1);
+		assertTrue(listPlayers.get(0).getSteals()==3);
+		
+	}
+	
+	@Test
+	public void testSearchPlayersRedBlackTree3() {
+		setupScenary2();
+		String value = "3";
+		String comparison = "STEALSGREATER";
+		ArrayList<Player> listPlayers=new ArrayList<>();
+		
+		try {
+			listPlayers = fiba.searchPlayersRedBlackTree(value, comparison);
+		} catch (NegativeValueException e) {
+			fail("No se esperaba esta excepcion");
+		}catch(NumberFormatException num) {
+			fail("No se esperaba esta excepcion");
+		}
+		assertEquals(listPlayers.size(),3);
+	
+		assertTrue(listPlayers.get(0).getSteals()==10);
+		assertTrue(listPlayers.get(1).getSteals()==13);
+		assertTrue(listPlayers.get(2).getSteals()==6);
+		
+	}
+	
+	@Test
+	public void testSearchPlayersRedBlackTree4() {
+		setupScenary2();
+		String value = "10";
+		String comparison = "STEALSLESS";
+		ArrayList<Player> listPlayers=new ArrayList<>();
+		
+		try {
+			listPlayers = fiba.searchPlayersRedBlackTree(value, comparison);
+		} catch (NegativeValueException e) {
+			fail("No se esperaba esta excepcion");
+		}catch(NumberFormatException num) {
+			fail("No se esperaba esta excepcion");
+		}
+		assertEquals(listPlayers.size(),3);
+	
+		assertTrue(listPlayers.get(0).getSteals()==2);
+		assertTrue(listPlayers.get(1).getSteals()==3);
+		assertTrue(listPlayers.get(2).getSteals()==6);
+		
+	}
+	
+	@Test
+	public void testSearchPlayersRedBlackTree5() {
+		setupScenary2();
+		String value = "3";
+		String comparison = "STEALSEQUALGREATER";
+		ArrayList<Player> listPlayers=new ArrayList<>();
+		
+		try {
+			listPlayers = fiba.searchPlayersRedBlackTree(value, comparison);
+		} catch (NegativeValueException e) {
+			fail("No se esperaba esta excepcion");
+		}catch(NumberFormatException num) {
+			fail("No se esperaba esta excepcion");
+		}
+		assertEquals(listPlayers.size(),4);
+	
+		assertTrue(listPlayers.get(0).getSteals()==10);
+		assertTrue(listPlayers.get(1).getSteals()==13);
+		assertTrue(listPlayers.get(2).getSteals()==3);
+		assertTrue(listPlayers.get(3).getSteals()==6);
+		
+	}
+	
+	@Test
+	public void testSearchPlayersRedBlackTree6() {
+		setupScenary2();
+		String value = "10";
+		String comparison = "STEALSEQUALLESS";
+		ArrayList<Player> listPlayers=new ArrayList<>();
+		
+		try {
+			listPlayers = fiba.searchPlayersRedBlackTree(value, comparison);
+		} catch (NegativeValueException e) {
+			fail("No se esperaba esta excepcion");
+		}catch(NumberFormatException num) {
+			fail("No se esperaba esta excepcion");
+		}
+		assertEquals(listPlayers.size(),4);
+	
+		assertTrue(listPlayers.get(0).getSteals()==2);
+		assertTrue(listPlayers.get(1).getSteals()==3);
+		assertTrue(listPlayers.get(2).getSteals()==6);
+		assertTrue(listPlayers.get(3).getSteals()==10);
+		
+	}
+	
+	
+	
 }

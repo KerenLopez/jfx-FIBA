@@ -562,9 +562,12 @@ public class Fiba implements Serializable {
 
 	}
 
-	public ArrayList<Player> searchPlayersRedBlackTree(String value, String comparison) {
+	public ArrayList<Player> searchPlayersRedBlackTree(String value, String comparison) throws NegativeValueException {
 		ArrayList<Player> list=new ArrayList<Player>();
 		Double v = Double.parseDouble(value);
+		if(v<0) {
+			throw new NegativeValueException(v);
+		}
 		NodeRBT<Double,Player> n= new NodeRBT<>(v,null);
 		switch(comparison) {
 		case "STEALSEQUAL":
@@ -643,7 +646,7 @@ public class Fiba implements Serializable {
 
 		while(node!=rbtSteals.getNil()) {
 			if( node.compareTo(nSearched)>0) {
-
+				
 				list.add(node.getValue());
 				for(int i=0;i<node.getSameKeyNodes().size();i++) {
 					list.add(node.getSameKeyNodes().get(i).getValue());
