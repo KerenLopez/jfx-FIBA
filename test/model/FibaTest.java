@@ -38,6 +38,11 @@ public class FibaTest {
 		fiba.getPlayersByBounces().add(player4);
 		fiba.getPlayersByBounces().add(player5);
 		fiba.sortPlayers();
+		fiba.getRbtSteals().insert(player1.getSteals(), player1);
+		fiba.getRbtSteals().insert(player2.getSteals(), player2);
+		fiba.getRbtSteals().insert(player3.getSteals(), player3);
+		fiba.getRbtSteals().insert(player4.getSteals(), player4);
+		fiba.getRbtSteals().insert(player5.getSteals(), player5);
 	}
 
 	@Test
@@ -152,31 +157,10 @@ public class FibaTest {
 		assertEquals(fiba.getPlayersByBounces().get(3).getName(), "Dave Bing");
 	}
 	
-	@Test
-	public void testUpdatePlayer1() {
-		setupScenary1();
-		Player player = new Player("Charles Barkley",31,"Miami Heat",9,12,18,3,7);
-		String name = "Charles Barkley";
-		String age = "32";
-		String team = "Miami Heat";
-	    String points = "12";
-		String bounces = "12";
-		String assists = "12";
-		String steals = "4";
-		String blocks = "7";
-		boolean updated = true;
-        try {
-			updated = fiba.updatePlayer(player,name,age,team,points,bounces,assists,steals,blocks);
-		} catch (NegativeValueException e) {
-			fail("No se esperaba esta excepcion");
-		} catch(NumberFormatException n) {
-			fail("No se esperaba esta excepcion");
-		}
-        assertFalse(updated);
-	}
+	
 	
 	@Test
-	public void testUpdatePlayer2() {
+	public void testUpdatePlayer1() {
 		setupScenary2();
 		Player player = new Player("Charles Barkley",31,"Miami Heat",9,12,18,3,7);
 		String name = "Charles Barkley";
@@ -211,7 +195,7 @@ public class FibaTest {
 	}
 	
 	@Test
-	public void testUpdatePlayer3() {
+	public void testUpdatePlayer2() {
 		setupScenary2();
 		Player player = new Player("Charles Barkley",31,"Miami Heat",9,12,18,3,7);
 		String name = "Charles Barkley";
@@ -234,7 +218,7 @@ public class FibaTest {
 	}
 	
 	@Test
-	public void testUpdatePlayer4() {
+	public void testUpdatePlayer3() {
 		setupScenary2();
 		Player player = new Player("Charles Barkley",31,"Miami Heat",9,12,18,3,7);
 		String name = "Charles Barkley";
