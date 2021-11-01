@@ -80,6 +80,9 @@ public class Fiba implements Serializable {
 			Player player = new Player(n, age, t, points, bounces, assists, steals, blocks);
 			ABBofPointsByGame.insertNode(player.getPoints(), player);
 			ABBofAssists.insertNode(player.getAssists(), player);
+                        AVLPointsByGame.insert(player.getPoints(), player);
+                        AVLAssists.insert(player.getAssists(), player);
+                        AVLBlocksByGame.insert(player.getBlocks(), player);
 			rbtSteals.insert(player.getSteals(), player);
 			playersByBounces.add(player);
 			sortPlayers();
@@ -92,6 +95,9 @@ public class Fiba implements Serializable {
 		deletePlayerABBOfPointsByGame(player);
 		deletePlayerABBOfAssists(player);
 		playersByBounces.remove(player);
+                deletePlayerAVLTreePoints(player);
+                deletePlayerAVLTreeAssists(player);
+                deletePlayerAVLTreeBlocks(player);
 		deletePlayerRedBlackTree(player);
 	}
 
@@ -128,10 +134,8 @@ public class Fiba implements Serializable {
 		}
 	}
 
-	private void deletePlayerAVLTree(Player player) {
+	private void deletePlayerAVLTreePoints(Player player) {
 		NodeAVL<Double,Player> foundedPP = AVLPointsByGame.search(player.getPoints());
-		NodeAVL<Double,Player> foundedPA = AVLAssists.search(player.getAssists());
-		NodeAVL<Double,Player> foundedPB = AVLBlocksByGame.search(player.getPoints());
 
 		if(foundedPP.getValue()==player) {
 			AVLPointsByGame.delete(player.getSteals());
@@ -145,33 +149,41 @@ public class Fiba implements Serializable {
 				}
 			}
 		}
-
-		if(foundedPA.getValue()==player) {
+	}
+        
+        private void deletePlayerAVLTreeAssists(Player player) {
+            NodeAVL<Double,Player> foundedPA = AVLAssists.search(player.getAssists());
+            
+            if(foundedPA.getValue()==player) {
 			AVLAssists.delete(player.getSteals());
 		}
-		else {
-			boolean exit=false;
-			for(int i=0;i<foundedPA.getSameKeyNodes().size() && !exit;i++) {
-				if(foundedPA.getSameKeyNodes().get(i).getValue()==player) {
-					foundedPA.getSameKeyNodes().remove(i);
-					exit=true;
-				}
-			}
-		}
-
-		if(foundedPB.getValue()==player) {
+            else {
+                    boolean exit=false;
+                    for(int i=0;i<foundedPA.getSameKeyNodes().size() && !exit;i++) {
+                            if(foundedPA.getSameKeyNodes().get(i).getValue()==player) {
+                                    foundedPA.getSameKeyNodes().remove(i);
+                                    exit=true;
+                            }
+                    }
+            }
+        }
+        
+        private void deletePlayerAVLTreeBlocks(Player player) {
+            NodeAVL<Double,Player> foundedPB = AVLBlocksByGame.search(player.getPoints());
+            
+            if(foundedPB.getValue()==player) {
 			AVLBlocksByGame.delete(player.getSteals());
 		}
-		else {
-			boolean exit=false;
-			for(int i=0;i<foundedPB.getSameKeyNodes().size() && !exit;i++) {
-				if(foundedPB.getSameKeyNodes().get(i).getValue()==player) {
-					foundedPB.getSameKeyNodes().remove(i);
-					exit=true;
-				}
-			}
-		}
-	}
+            else {
+                    boolean exit=false;
+                    for(int i=0;i<foundedPB.getSameKeyNodes().size() && !exit;i++) {
+                            if(foundedPB.getSameKeyNodes().get(i).getValue()==player) {
+                                    foundedPB.getSameKeyNodes().remove(i);
+                                    exit=true;
+                            }
+                    }
+            }
+        }
 
 	private void deletePlayerRedBlackTree(Player player) {
 		NodeRBT<Double,Player> nodeSteal=rbtSteals.search(rbtSteals.getRoot(), player.getSteals());
@@ -229,14 +241,18 @@ public class Fiba implements Serializable {
 
 			if(py.getAssists()!=assists) {
 				deletePlayerABBOfAssists(py);
+                                deletePlayerAVLTreeAssists(py);
 				py.setAssists(assists);
 				ABBofAssists.insertNode(py.getAssists(),py);
+                                AVLAssists.insert(py.getAssists(), py);
 			}
 
 			if(py.getPoints()!=points) {
 				deletePlayerABBOfPointsByGame(py); 
+                                deletePlayerAVLTreePoints(py);
 				py.setPoints(points);
 				ABBofPointsByGame.insertNode(py.getPoints(), py);
+                                AVLPointsByGame.insert(py.getAssists(), py);
 			}
 
 			if(py.getSteals()!=steals) {
@@ -249,7 +265,12 @@ public class Fiba implements Serializable {
 				py.setBounces(bounces);
 				sortPlayers();
 			}
-
+                        
+                        if(py.getBlocks()!=blocks) {
+				deletePlayerAVLTreeBlocks(py);				
+				py.setBlocks(blocks);
+				AVLBlocksByGame.insert(py.getBlocks(), py);
+			}
 			updated=true;	
 		}
 		return updated;
