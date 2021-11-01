@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
@@ -45,10 +46,28 @@ public class FibaTest {
 		fiba.getRbtSteals().insert(player3.getSteals(), player3);
 		fiba.getRbtSteals().insert(player4.getSteals(), player4);
 		fiba.getRbtSteals().insert(player5.getSteals(), player5);
+		
+		fiba.getAVLAssists().insert(player1.getAssists(), player1);
+		fiba.getAVLAssists().insert(player2.getAssists(), player2);
+		fiba.getAVLAssists().insert(player3.getAssists(), player3);
+		fiba.getAVLAssists().insert(player4.getAssists(), player4);
+		fiba.getAVLAssists().insert(player5.getAssists(), player5);
+		
+		fiba.getAVLPointsByGame().insert(player1.getPoints(), player1);
+		fiba.getAVLPointsByGame().insert(player2.getPoints(), player2);
+		fiba.getAVLPointsByGame().insert(player3.getPoints(), player3);
+		fiba.getAVLPointsByGame().insert(player4.getPoints(), player4);
+		fiba.getAVLPointsByGame().insert(player5.getPoints(), player5);
+		
+		fiba.getAVLBlocksByGame().insert(player1.getBlocks(), player1);
+		fiba.getAVLBlocksByGame().insert(player2.getBlocks(), player2);
+		fiba.getAVLBlocksByGame().insert(player3.getBlocks(), player3);
+		fiba.getAVLBlocksByGame().insert(player4.getBlocks(), player4);
+		fiba.getAVLBlocksByGame().insert(player5.getBlocks(), player5);
 	}
 
 	@Test
-	public void testAddPlayer1() {
+	public void testAddPlayer1() throws IOException {
 		setupScenary1();
 		String name = "Joe Harris";
 		String age = "27";
@@ -80,7 +99,7 @@ public class FibaTest {
 	}
 
 	@Test
-	public void testAddPlayer2() {
+	public void testAddPlayer2() throws IOException {
 		setupScenary2();
 		String name = "Joe Harris";
 		String age = "27";
@@ -116,7 +135,7 @@ public class FibaTest {
 	}
 
 	@Test
-	public void testAddPlayer3() {
+	public void testAddPlayer3() throws IOException {
 		setupScenary2();
 		String name = "Joe Harris";
 		String age = "27";
@@ -138,7 +157,7 @@ public class FibaTest {
 	}
 
 	@Test
-	public void testAddPlayer4() {
+	public void testAddPlayer4() throws IOException {
 		setupScenary2();
 		String name = "Joe Harris";
 		String age = "27";
@@ -160,7 +179,7 @@ public class FibaTest {
 	}
 	
 	@Test
-	public void testDeletePlayer() {
+	public void testDeletePlayer() throws IOException {
 		setupScenary2();
 		Player player = fiba.getABBofPointsByGame().searchNode(9.0).getSameKeyNodes().get(0).getValue();
 		fiba.deletePlayer(player);
@@ -181,7 +200,7 @@ public class FibaTest {
 	
 	
 	@Test
-	public void testUpdatePlayer1() {
+	public void testUpdatePlayer1() throws IOException {
 		setupScenary2();
 		Player player = fiba.getABBofPointsByGame().searchNode(9.0).getSameKeyNodes().get(0).getValue();
 		String name = "Charles Barkley";
@@ -223,7 +242,7 @@ public class FibaTest {
 	}
 	
 	@Test
-	public void testUpdatePlayer2() {
+	public void testUpdatePlayer2() throws IOException {
 		setupScenary2();
 		Player player = new Player("Charles Barkley",31,"Miami Heat",9,12,18,3,7);
 		String name = "Charles Barkley";
@@ -246,7 +265,7 @@ public class FibaTest {
 	}
 	
 	@Test
-	public void testUpdatePlayer3() {
+	public void testUpdatePlayer3() throws IOException {
 		setupScenary2();
 		Player player = new Player("Charles Barkley",31,"Miami Heat",9,12,18,3,7);
 		String name = "Charles Barkley";

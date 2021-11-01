@@ -18,6 +18,7 @@ public class Main extends Application{
 	
 	public Main() {
 		Fiba fibaData = new Fiba();
+		fiba=new Fiba();
 		
 		try {
 			fiba = fiba.loadDataFIBA(fibaData);

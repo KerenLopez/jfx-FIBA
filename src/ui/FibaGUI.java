@@ -148,6 +148,13 @@ public class FibaGUI {
 
 	@FXML
 	private Button btAddPlayer;
+	
+	@FXML
+    private Button btUpdatePlayer;
+
+
+    @FXML
+    private Button btDeletePlayer;
 
 
 	public FibaGUI(Fiba f) {
@@ -189,11 +196,13 @@ public class FibaGUI {
 			txtSteals.setText(""+selectedPlayer.getSteals());
 			txtBlocks.setText(""+selectedPlayer.getBlocks());
 			btAddPlayer.setDisable(true);
+			btUpdatePlayer.setDisable(false);
+			btDeletePlayer.setDisable(false);
 		}
 	}
 
 	@FXML
-	public void addPlayer(ActionEvent event) {
+	public void addPlayer(ActionEvent event) throws IOException {
 
 		if(!txtName.getText().equals("") && !txtAge.getText().equals("") && !txtTeam.getText().equals("") && !txtPoints.getText().equals("") && !txtBounces.getText().equals("") && !txtAssists.getText().equals("") && !txtSteals.getText().equals("") && !txtBlocks.getText().equals("")) {
 			Alert alert1 = new Alert(AlertType.INFORMATION);
@@ -226,7 +235,7 @@ public class FibaGUI {
 	}
 
 	@FXML
-	public void deletePlayer(ActionEvent event) {
+	public void deletePlayer(ActionEvent event) throws IOException {
 		Alert alert1 = new Alert(AlertType.CONFIRMATION);
 		alert1.setTitle("Confirmacion de proceso");
 		alert1.setHeaderText(null);
@@ -250,6 +259,8 @@ public class FibaGUI {
 			tvOfPlayers.getItems().clear();
 			initializeTableViewOfAddedPlayers();
 			btAddPlayer.setDisable(false);
+			btUpdatePlayer.setDisable(true);
+			btDeletePlayer.setDisable(true);
 		}
 	}
 
@@ -259,7 +270,7 @@ public class FibaGUI {
 	}
 
 	@FXML
-	public void updatePlayer(ActionEvent event) throws NegativeValueException {
+	public void updatePlayer(ActionEvent event) throws NegativeValueException, IOException {
 		boolean updated = false;
 		if(!txtName.getText().equals("") && !txtAge.getText().equals("") && !txtTeam.getText().equals("") && !txtPoints.getText().equals("") && !txtBounces.getText().equals("") && !txtAssists.getText().equals("") && !txtSteals.getText().equals("") && !txtBlocks.getText().equals("")) {
 			Alert alert1 = new Alert(AlertType.INFORMATION);
@@ -295,6 +306,8 @@ public class FibaGUI {
 			tvOfPlayers.getItems().clear();
 			initializeTableViewOfAddedPlayers();
 			btAddPlayer.setDisable(false);
+			btUpdatePlayer.setDisable(true);
+			btDeletePlayer.setDisable(true);
 		}else {
 			showValidationErrorAlert();
 		}
@@ -336,6 +349,7 @@ public class FibaGUI {
 		mainPane.setCenter(menuPane);
 		mainPane.setStyle("-fx-background-image: url(/ui/fondo.jpg)");
 		initializeTableViewOfAddedPlayers();
+		
 	}
 
 	@FXML
@@ -371,11 +385,11 @@ public class FibaGUI {
 			alert1.setHeaderText(null);
 
 			try {
+				ObservableList<Player> playersList;
 				if(getSearchCriteria().equals("POINTS")) {
 					long startABB= System.nanoTime();
-					ObservableList<Player> playersList;
+					
 					playersList = FXCollections.observableArrayList(fiba.searchPlayersABB(txtValue.getText(), getSearchCriteria()+getComparison()));
-					initializeTableViewSearchedPlayers(playersList);
 
 					long endABB = System.nanoTime();
 					long timeABB = endABB-startABB;
@@ -388,11 +402,8 @@ public class FibaGUI {
 					
 				}else if(getSearchCriteria().equals("ASSISTS")) {
 					long startABB= System.nanoTime();
-					ObservableList<Player> playersList;
-
 					playersList = FXCollections.observableArrayList(fiba.searchPlayersABB(txtValue.getText(), getSearchCriteria()+getComparison()));
-					initializeTableViewSearchedPlayers(playersList);
-
+					
 					long endABB = System.nanoTime();
 					long timeABB = endABB-startABB;
 					long startAVL= System.nanoTime();
@@ -403,19 +414,25 @@ public class FibaGUI {
 					alert1.showAndWait();
 					
 				}else if(getSearchCriteria().equals("STEALS")) {
+					
 
-					fiba.searchPlayersRedBlackTree(txtValue.getText(), getSearchCriteria()+getComparison());
-
+					playersList = FXCollections.observableArrayList( fiba.searchPlayersRedBlackTree(txtValue.getText(), getSearchCriteria()+getComparison()));
+					
 				}else if(getSearchCriteria().equals("BLOCKS")){
-					fiba.searchPlayersAVL(txtValue.getText(), getSearchCriteria()+getComparison());
-				
+					
+
+					playersList = FXCollections.observableArrayList(fiba.searchPlayersAVL(txtValue.getText(), getSearchCriteria()+getComparison()));
+					
 				}else {
-					ObservableList<Player> playersList;
+					
 
 					playersList = FXCollections.observableArrayList(fiba.searchPlayersLinearly(txtValue.getText(), getComparison()));
-					initializeTableViewSearchedPlayers(playersList);
+					
 
 				}
+				
+				initializeTableViewSearchedPlayers(playersList);
+				
 			} catch (NegativeValueException e) {
 				alert1.setContentText(e.getMessage());
 				alert1.showAndWait();

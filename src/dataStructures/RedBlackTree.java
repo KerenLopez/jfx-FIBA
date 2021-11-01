@@ -1,9 +1,11 @@
 package dataStructures;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,V> {
+public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,V> , Serializable {
 
+	private static final long serialVersionUID = 1;
 	private NodeRBT<K,V> root;
 	private NodeRBT<K,V> nil;
 

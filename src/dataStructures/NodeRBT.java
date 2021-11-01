@@ -1,8 +1,11 @@
 package dataStructures;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class NodeRBT<K extends Comparable<K>,V> implements Comparable<NodeRBT<K,V>> {
+public class NodeRBT<K extends Comparable<K>,V> implements Comparable<NodeRBT<K,V>> , Serializable {
+
+	private static final long serialVersionUID = 1;
 	 private K key;
 	 private V value;
      private NodeRBT<K,V> left;

@@ -1,9 +1,11 @@
 package dataStructures;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BSTtree <K extends Comparable<K>, V> implements BSTtreeI<K,V> {
+public class BSTtree <K extends Comparable<K>, V> implements BSTtreeI<K,V>, Serializable {
 
+	private static final long serialVersionUID = 1;
 	private BSTNode<K,V> root;
 	
 	//Create tree

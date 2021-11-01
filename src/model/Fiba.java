@@ -43,7 +43,7 @@ public class Fiba implements Serializable {
 		AVLBlocksByGame=new AVLTree<Double, Player>(); 
 	}
 
-	public boolean addPlayer(String n, String ag, String t, String p, String bo, String a, String st, String bl) throws NegativeValueException{
+	public boolean addPlayer(String n, String ag, String t, String p, String bo, String a, String st, String bl) throws NegativeValueException, IOException{
 		boolean added = false;
 		Integer age = Integer.parseInt(ag);
 		Double points = Double.parseDouble(p);
@@ -88,10 +88,11 @@ public class Fiba implements Serializable {
 			sortPlayers();
 			added=true;
 		}
+		saveDataFIBA();
 		return added;
 	}
 
-	public void deletePlayer(Player player) {
+	public void deletePlayer(Player player) throws IOException {
 		deletePlayerABBOfPointsByGame(player);
 		deletePlayerABBOfAssists(player);
 		playersByBounces.remove(player);
@@ -99,6 +100,7 @@ public class Fiba implements Serializable {
                 deletePlayerAVLTreeAssists(player);
                 deletePlayerAVLTreeBlocks(player);
 		deletePlayerRedBlackTree(player);
+		saveDataFIBA();
 	}
 
 
@@ -200,7 +202,7 @@ public class Fiba implements Serializable {
 		}
 	}
 
-	public boolean updatePlayer(Player py, String n, String ag, String t, String p, String bo, String a, String st, String bl) throws NegativeValueException {
+	public boolean updatePlayer(Player py, String n, String ag, String t, String p, String bo, String a, String st, String bl) throws NegativeValueException, IOException {
 		boolean updated=false;
 		Integer age = Integer.parseInt(ag);
 		Double points = Double.parseDouble(p);
@@ -273,6 +275,7 @@ public class Fiba implements Serializable {
 			}
 			updated=true;	
 		}
+		saveDataFIBA();
 		return updated;
 	}
 

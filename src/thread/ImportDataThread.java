@@ -33,9 +33,9 @@ public class ImportDataThread extends Thread{
 							String[] parts = line.split(";");
 			
 							//addPlayer(String n, String ag, String t, String p, String bo, String a, String st, String bl)
-				
+							if(!parts[0].equals("Tm")) {
 							fiba.addPlayer(parts[1],parts[2],parts[0],parts[3],parts[4],parts[5],parts[6],parts[7]);
-							
+							}
 							
 							line = br.readLine();
 							

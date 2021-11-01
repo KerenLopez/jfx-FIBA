@@ -1,9 +1,12 @@
 
 package dataStructures;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class NodeAVL <K extends Comparable<K>,V> implements Comparable<K>{
+public class NodeAVL <K extends Comparable<K>,V> implements Comparable<K>, Serializable {
+
+	private static final long serialVersionUID = 1;
     
     private K key;
     private V value;
@@ -20,7 +23,7 @@ public class NodeAVL <K extends Comparable<K>,V> implements Comparable<K>{
         right=null;
         parent=null;
         height=1;
-        sameKeyNodes=sameKeyNodes=new ArrayList<>();
+       sameKeyNodes=new ArrayList<>();
     }
 
     public ArrayList<NodeAVL<K, V>> getSameKeyNodes() {
