@@ -72,6 +72,9 @@ public class FibaTest {
         assertEquals(fiba.getABBofPointsByGame().getRoot().getKey(), 9.0);
         assertEquals(fiba.getPlayersByBounces().get(0).getBounces(), 10.0);
         assertEquals(fiba.getPlayersByBounces().size(), 1);
+        
+        assertTrue(fiba.getRbtSteals().getRoot()!=fiba.getRbtSteals().getNil());
+        assertEquals(fiba.getRbtSteals().getRoot().getKey(), 6.0);
 	}
 
 	@Test

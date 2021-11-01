@@ -393,6 +393,8 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 		if(node!=nil) {
 			inorderTraversal(node.getLeft(), nodes);
 			nodes.add(node);
+			nodes.addAll(node.getSameKeyNodes());
+			
 			inorderTraversal(node.getRight(), nodes);
 		}
 	}
