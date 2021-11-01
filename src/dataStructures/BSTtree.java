@@ -21,16 +21,23 @@ public class BSTtree <K extends Comparable<K>, V> implements BSTtreeI<K,V> {
 
 	@Override
 	public void insertNode(K key, V value) {
+		BSTNode<K,V> node = searchNode(key);
 		BSTNode<K,V> newNode = new BSTNode<K,V>(key,value);
 		if(root==null) {
 			root = newNode;
-		}else {
+		}else if(node!=null){
+			//modification of the structure, due to the requirements of the problem
+			newNode.setLeft(node.getLeft());
+			newNode.setRight(node.getRight());
+			newNode.setParent(node.getParent());
+			node.getSameKeyNodes().add(newNode);
+		}else {	
 			insertNodeRecursive(root, newNode);
 		}
 	}
 
 	private void insertNodeRecursive(BSTNode<K,V> node, BSTNode<K,V> newNode) {
-		if(newNode.compareTo(node.getKey())<=0){
+		if(newNode.compareTo(node.getKey())<0){
 			if(node.getLeft()==null){
 				node.setLeft(newNode);
 				newNode.setParent(node);
@@ -69,7 +76,26 @@ public class BSTtree <K extends Comparable<K>, V> implements BSTtreeI<K,V> {
 	public boolean deleteNode(K key){
 		Boolean deleted = false;
 		BSTNode<K,V> founded = searchNode(key);
-		if(founded!=null) {
+		if(founded!=null && !founded.getSameKeyNodes().isEmpty()) {
+			//modification of the structure, due to the requirements of the problem
+			BSTNode<K,V> newHead= founded.getSameKeyNodes().get(0);
+			if(founded.getParent()!=null ) {
+				if(founded.getParent().getLeft()==founded) {
+					founded.getParent().setLeft(newHead);
+				}else {
+					founded.getParent().setRight(newHead);
+				}
+			}
+			if(founded.getLeft()!=null) {
+				founded.getLeft().setParent(newHead);
+			}
+			if(founded.getRight()!=null) {
+				founded.getLeft().setParent(newHead);
+			}
+			founded.getSameKeyNodes().remove(0);
+			newHead.setSameKeyNodes(founded.getSameKeyNodes());
+			deleted = true;
+		}else if(founded!=null){
 			deleteNodeRecursive(founded);
 			deleted = true;
 		}
