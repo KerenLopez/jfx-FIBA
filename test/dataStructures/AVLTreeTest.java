@@ -1,10 +1,12 @@
 
 package dataStructures;
 
-import model.Player;
-import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
-import org.junit.jupiter.api.Test;
+import model.Player;
+import org.junit.Test;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 public class AVLTreeTest {
     
@@ -359,28 +361,28 @@ public class AVLTreeTest {
     
     
     @Test
-    public void testPreOrder1() {
+    public void testInorder1() {
         setupScenary1();
-        assertTrue(treeAVL.preOrder().isEmpty());
+        assertTrue(treeAVL.inorderTraversal().isEmpty());
     }
 
     @Test
-    public void testPreOrder2() {
+    public void testInorder2() {
         setupScenary2();
-        ArrayList<NodeAVL<Double, Player>> nodes =treeAVL.preOrder();
-        assertEquals(nodes.get(0).getKey(), 6.0);
-        assertEquals(nodes.get(1).getKey(), 4.0);
+        ArrayList<NodeAVL<Double, Player>> nodes =treeAVL.inorderTraversal();
+        assertEquals(nodes.get(0).getKey(), 4.0);
+        assertEquals(nodes.get(1).getKey(), 6.0);
         assertEquals(nodes.get(2).getKey(), 8.0);
         assertEquals(nodes.get(3).getKey(), 10.0);
     }
 
     @Test
-    public void testPreOrder3() {
+    public void testInorder3() {
         setupScenary3();
-        ArrayList<NodeAVL<Double, Player>> nodes =treeAVL.preOrder();
-        assertEquals(nodes.get(0).getKey(), 6.0);
+        ArrayList<NodeAVL<Double, Player>> nodes =treeAVL.inorderTraversal();
+        assertEquals(nodes.get(0).getKey(), 2.0);
         assertEquals(nodes.get(1).getKey(), 4.0);
-        assertEquals(nodes.get(2).getKey(), 2.0);
+        assertEquals(nodes.get(2).getKey(), 6.0);
         assertEquals(nodes.get(3).getKey(), 8.0);
     }
 }
