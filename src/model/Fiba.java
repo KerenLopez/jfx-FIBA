@@ -81,11 +81,18 @@ public class Fiba implements Serializable {
 	}
 
 	public void deletePlayer(Player player) {
-		BSTNode<Double,Player> foundedPP = ABBofPointsByGame.searchNode(player.getPoints());
-		BSTNode<Double,Player> foundedPA = ABBofAssists.searchNode(player.getAssists());
+		deletePlayerABBOfPointsByGame(player);
+		deletePlayerABBOfAssists(player);
+		playersByBounces.remove(player);
+		deletePlayerRedBlackTree(player);
+	}
+    
+	
+	private void deletePlayerABBOfPointsByGame(Player player) {
 		boolean deleted = false;
+		BSTNode<Double,Player> foundedPP = ABBofPointsByGame.searchNode(player.getPoints());
 		if(foundedPP.getValue()==player) {
-			rbtSteals.delete(player.getSteals());
+			ABBofPointsByGame.deleteNode(player.getPoints());
 			deleted = true;
 		}else {
 			for(int i=0;i<foundedPP.getSameKeyNodes().size() && !deleted;i++) {
@@ -95,9 +102,13 @@ public class Fiba implements Serializable {
 				}
 			}
 		}
-		deleted = false;
-		if(foundedPA.getValue()==player) {
-			rbtSteals.delete(player.getSteals());
+	}
+	
+    private void deletePlayerABBOfAssists(Player player) {
+    	boolean deleted = false;
+    	BSTNode<Double,Player> foundedPA = ABBofAssists.searchNode(player.getAssists());
+    	if(foundedPA.getValue()==player) {
+			 ABBofAssists.deleteNode(player.getAssists());
 			deleted = true;
 		}else {
 			for(int i=0;i<foundedPA.getSameKeyNodes().size() && !deleted;i++) {
@@ -107,13 +118,8 @@ public class Fiba implements Serializable {
 				}
 			}
 		}
-		ABBofPointsByGame.deleteNodeRecursive(foundedPP);
-		ABBofAssists.deleteNodeRecursive(foundedPA);
-		playersByBounces.remove(player);
-
-		deletePlayerRedBlackTree(player);
 	}
-
+	
 	private void deletePlayerRedBlackTree(Player player) {
 		NodeRBT<Double,Player> nodeSteal=rbtSteals.search(rbtSteals.getRoot(), player.getSteals());
 		if(nodeSteal.getValue()==player) {
@@ -169,29 +175,24 @@ public class Fiba implements Serializable {
 			py.setTeam(t);
 			
 			if(py.getAssists()!=assists) {
-				BSTNode<Double,Player> foundedPA = ABBofAssists.searchNode(py.getAssists());
+				deletePlayerABBOfAssists(py);
 				py.setAssists(assists);
-				ABBofAssists.deleteNodeRecursive(foundedPA);
 				ABBofAssists.insertNode(py.getAssists(),py);
 			}
 			
 			if(py.getPoints()!=points) {
-				BSTNode<Double,Player> foundedPP = ABBofPointsByGame.searchNode(py.getPoints());
+				deletePlayerABBOfPointsByGame(py); 
 				py.setPoints(points);
-				ABBofPointsByGame.deleteNodeRecursive(foundedPP);
 				ABBofPointsByGame.insertNode(py.getPoints(), py);
 			}
 			
 			if(py.getSteals()!=steals) {
-
 				deletePlayerRedBlackTree(py);				
 				py.setSteals(steals);
 				rbtSteals.insert(py.getSteals(), py);
-
 			}
 			
 			if(py.getBounces()!=bounces) {
-						
 				py.setBounces(bounces);
 				sortPlayers();
 			}
@@ -207,9 +208,9 @@ public class Fiba implements Serializable {
 		Collections.sort(playersByBounces, new Comparator<Player>(){
 			@Override
 			public int compare(Player player1, Player player2) {
-				if(player1.getBounces()>player2.getBounces()){
+				if(player2.getBounces()>player1.getBounces()){
 					return -1;
-				}else if(player1.getBounces()>player2.getBounces()){
+				}else if(player2.getBounces()==player1.getBounces()){
 					return 0;
 				}else{
 					return 1;
@@ -218,9 +219,12 @@ public class Fiba implements Serializable {
 		});
 	}
 
-	public ArrayList<Player> searchPlayersLinearly(String value, String comparison){
+	public ArrayList<Player> searchPlayersLinearly(String value, String comparison) throws NegativeValueException{
 		ArrayList<Player> listOfPlayers=new ArrayList<>();
 		Double v = Double.parseDouble(value);
+		if(v<0) {
+			throw new NegativeValueException(v);
+		}
 		switch(comparison) {
 		case "EQUAL":
 			for(int k=0;k<playersByBounces.size();k++) {
@@ -261,9 +265,12 @@ public class Fiba implements Serializable {
 		return listOfPlayers;
 	}
 
-	public ArrayList<Player> searchPlayersABB(String value, String criteria) {
+	public ArrayList<Player> searchPlayersABB(String value, String criteria) throws NegativeValueException {
 		ArrayList<Player> listOfPlayers=new ArrayList<Player>();
 		Double v = Double.parseDouble(value);
+		if(v<0) {
+			throw new NegativeValueException(v);
+		}
 		switch(criteria) {
 		case "POINTSEQUAL":
 			BSTNode<Double, Player> foundedPP = ABBofPointsByGame.searchNode(v);

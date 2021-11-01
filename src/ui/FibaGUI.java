@@ -371,10 +371,19 @@ public class FibaGUI {
 		    alert1.setHeaderText(null);
 			if(getSearchCriteria().equals("POINTS")) {
 				long startABB= System.nanoTime();
-				ObservableList<Player> playersList = FXCollections.observableArrayList(fiba.searchPlayersABB(txtValue.getText(), getSearchCriteria()+getComparison()));
+				ObservableList<Player> playersList;
+				try {
+					playersList = FXCollections.observableArrayList(fiba.searchPlayersABB(txtValue.getText(), getSearchCriteria()+getComparison()));
+					initializeTableViewSearchedPlayers(playersList);
+				} catch (NegativeValueException e) {
+					alert1.setContentText(e.getMessage());
+					alert1.showAndWait();
+				}catch(NumberFormatException num) {
+					alert1.setContentText("Debe ingresar un numero dentro de los campos presentados que asi lo requieran");
+					alert1.showAndWait();
+				}
 				long endABB = System.nanoTime();
 		    	long timeABB = endABB-startABB;
-		    	initializeTableViewSearchedPlayers(playersList);
 		    	long startAVL= System.nanoTime();
 				fiba.searchPlayersAVL(txtValue.getText(), getComparison());
 				long endAVL = System.nanoTime();
@@ -383,10 +392,19 @@ public class FibaGUI {
 			    alert1.showAndWait();
 			}else if(getSearchCriteria().equals("ASSISTS")) {
 				long startABB= System.nanoTime();
-				ObservableList<Player> playersList = FXCollections.observableArrayList(fiba.searchPlayersABB(txtValue.getText(), getSearchCriteria()+getComparison()));
+				ObservableList<Player> playersList;
+				try {
+					playersList = FXCollections.observableArrayList(fiba.searchPlayersABB(txtValue.getText(), getSearchCriteria()+getComparison()));
+					initializeTableViewSearchedPlayers(playersList);
+				} catch (NegativeValueException e) {
+					alert1.setContentText(e.getMessage());
+					alert1.showAndWait();
+				}catch(NumberFormatException num) {
+					alert1.setContentText("Debe ingresar un numero dentro de los campos presentados que asi lo requieran");
+					alert1.showAndWait();
+				}
 				long endABB = System.nanoTime();
 		    	long timeABB = endABB-startABB;
-		    	initializeTableViewSearchedPlayers(playersList);
 		    	long startAVL= System.nanoTime();
 				fiba.searchPlayersAVL(txtValue.getText(), getComparison());
 				long endAVL = System.nanoTime();
@@ -398,8 +416,17 @@ public class FibaGUI {
 			}else if(getSearchCriteria().equals("BLOCKS")){
 				fiba.searchPlayersAVL(txtValue.getText(), getSearchCriteria()+getComparison());
 			}else {
-				ObservableList<Player> playersList = FXCollections.observableArrayList(fiba.searchPlayersLinearly(txtValue.getText(), getComparison()));
-				initializeTableViewSearchedPlayers(playersList);
+				ObservableList<Player> playersList;
+				try {
+					playersList = FXCollections.observableArrayList(fiba.searchPlayersLinearly(txtValue.getText(), getComparison()));
+					initializeTableViewSearchedPlayers(playersList);
+				} catch (NegativeValueException e) {
+					alert1.setContentText(e.getMessage());
+					alert1.showAndWait();
+				}catch(NumberFormatException num) {
+					alert1.setContentText("Debe ingresar un numero dentro de los campos presentados que asi lo requieran");
+					alert1.showAndWait();
+				}
 			}
 		}else if(cbxGreater.isSelected() && cbxLess.isSelected()){
 			Alert alert = new Alert(AlertType.ERROR);
