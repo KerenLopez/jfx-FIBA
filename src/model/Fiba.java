@@ -83,24 +83,35 @@ public class Fiba implements Serializable {
 	public void deletePlayer(Player player) {
 		BSTNode<Double,Player> foundedPP = ABBofPointsByGame.searchNode(player.getPoints());
 		BSTNode<Double,Player> foundedPA = ABBofAssists.searchNode(player.getAssists());
-		boolean founded = false;
-		if(foundedPP.getValue()!=player && foundedPA.getValue()!=player) {
-			while(!founded) {
-				foundedPP = foundedPP.getLeft();
-				foundedPA = foundedPA.getLeft();
-				Player points = foundedPP.getValue();
-				Player assists = foundedPA.getValue();	
-				if(points==player && assists==player) {
-					founded = true;
+		boolean deleted = false;
+		if(foundedPP.getValue()==player) {
+			rbtSteals.delete(player.getSteals());
+			deleted = true;
+		}else {
+			for(int i=0;i<foundedPP.getSameKeyNodes().size() && !deleted;i++) {
+				if(foundedPP.getSameKeyNodes().get(i).getValue()==player) {
+					foundedPP.getSameKeyNodes().remove(i);
+					deleted=true;
 				}
-			}	
+			}
+		}
+		deleted = false;
+		if(foundedPA.getValue()==player) {
+			rbtSteals.delete(player.getSteals());
+			deleted = true;
+		}else {
+			for(int i=0;i<foundedPA.getSameKeyNodes().size() && !deleted;i++) {
+				if(foundedPA.getSameKeyNodes().get(i).getValue()==player) {
+					foundedPA.getSameKeyNodes().remove(i);
+					deleted=true;
+				}
+			}
 		}
 		ABBofPointsByGame.deleteNodeRecursive(foundedPP);
 		ABBofAssists.deleteNodeRecursive(foundedPA);
 		playersByBounces.remove(player);
 
 		deletePlayerRedBlackTree(player);
-
 	}
 
 	private void deletePlayerRedBlackTree(Player player) {

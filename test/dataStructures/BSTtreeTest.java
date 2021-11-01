@@ -96,16 +96,6 @@ public class BSTtreeTest {
 	}
 	
 	@Test
-	public void testInsertNode4() {
-		setupScenary2();
-		double key = 40.0;
-		Player player8 = new Player("Kobe Bryant", 32, "Houston Rockets", 40.0,10.0,15.0,6.0,8.0); 
-		pointsTree.insertNode(key, player8);
-		assertEquals(pointsTree.searchNode(40.0).getLeft().getKey(), key);
-		assertEquals(pointsTree.searchNode(40.0).getLeft().getValue().getName(), player8.getName());
-	}
-	
-	@Test
 	public void testSearchNode1() {
 		setupScenary1();
 		double key = 50.0;

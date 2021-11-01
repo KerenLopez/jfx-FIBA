@@ -1,15 +1,20 @@
 package dataStructures;
 
+import java.util.ArrayList;
+
 public class BSTNode <K extends Comparable<K>, V> implements Comparable<K>{
 	 private K key;
 	 private V value;
 	 private BSTNode<K,V> left;
 	 private BSTNode<K,V> right;
 	 private BSTNode<K,V> parent;
+	//modification of the structure, due to the requirements of the problem
+	 private ArrayList<BSTNode<K,V>> sameKeyNodes;
 	 
 	 public BSTNode(K key, V value) {
 		 this.key = key;
 		 this.value = value; 
+		 sameKeyNodes = new ArrayList<>();
 	 }
 
 	public BSTNode<K,V> getLeft() {
@@ -60,4 +65,13 @@ public class BSTNode <K extends Comparable<K>, V> implements Comparable<K>{
 	public String toString() {
 		return value.toString();
 	}
+
+	public ArrayList<BSTNode<K, V>> getSameKeyNodes() {
+		return sameKeyNodes;
+	}
+
+	public void setSameKeyNodes(ArrayList<BSTNode<K, V>> sameKeyNodes) {
+		this.sameKeyNodes = sameKeyNodes;
+	}
+	
 }
