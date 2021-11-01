@@ -1,6 +1,8 @@
 
 package dataStructures;
 
+import java.util.ArrayList;
+
 public class NodeAVL <K extends Comparable<K>,V> implements Comparable<K>{
     
     private K key;
@@ -9,6 +11,7 @@ public class NodeAVL <K extends Comparable<K>,V> implements Comparable<K>{
     private NodeAVL<K,V> left;
     private NodeAVL<K,V> right;
     private NodeAVL<K,V> parent;
+    private ArrayList<NodeAVL<K,V>> sameKeyNodes;
     
     public NodeAVL(K key, V value) {
         this.key = key;
@@ -17,6 +20,15 @@ public class NodeAVL <K extends Comparable<K>,V> implements Comparable<K>{
         right=null;
         parent=null;
         height=1;
+        sameKeyNodes=sameKeyNodes=new ArrayList<>();
+    }
+
+    public ArrayList<NodeAVL<K, V>> getSameKeyNodes() {
+        return sameKeyNodes;
+    }
+
+    public void setSameKeyNodes(ArrayList<NodeAVL<K, V>> sameKeyNodes) {
+        this.sameKeyNodes = sameKeyNodes;
     }
     
     public K getKey() {

@@ -21,71 +21,107 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
 
 	@Override
 	public NodeAVL<K,V> search(K key) {
-		NodeAVL<K,V> founded=privateSearch(root,key);
-		return founded;
+            NodeAVL<K,V> founded=privateSearch(root,key);
+            return founded;
 	}
 
 	private NodeAVL<K,V> privateSearch(NodeAVL<K,V> node, K key) {
-		if(node==null) {
-			return null;
-		}
-		else if(node.compareTo(key)==0){
-			return node;
-		}
-		else {
-			if(node.compareTo(key)>=0) {
-				return privateSearch(node.getLeft(),key);
-			}
-			else{
-				return privateSearch(node.getRight(),key);
-			}
-		}
+            if(node==null) {
+                return null;
+            }
+            else if(node.compareTo(key)==0){
+                return node;
+            }
+            else {
+                if(node.compareTo(key)>=0) {
+                    return privateSearch(node.getLeft(),key);
+                }
+                else{
+                    return privateSearch(node.getRight(),key);
+                }
+            }
 	}
 
 	@Override
 	public boolean insert(K key, V value) {
-		NodeAVL<K,V> newNode = new NodeAVL<>(key,value);
-		boolean inserted = false;
-		if(root==null) {
-			root = newNode;
-		}
-		else {
-			privateInsert(root,key,value);
-			inserted = true;
-		}
-		return inserted;
+            NodeAVL<K,V> newNode = new NodeAVL<>(key,value);
+            boolean inserted = false;
+            NodeAVL<K,V> searchNode=search(key);
+            
+            if(root==null) {
+                root = newNode;
+            }
+            
+            else if(searchNode!=null){
+                newNode.setLeft(searchNode.getLeft());
+                newNode.setRight(searchNode.getRight());
+                newNode.setParent(searchNode.getParent());
+                searchNode.getSameKeyNodes().add(newNode);
+            }
+            
+            else{
+                privateInsert(root,key,value);
+                inserted = true;
+            }
+            return inserted;
 	}
 
 	private void privateInsert(NodeAVL<K,V> currentNode, K key, V value) {
-		if(key.compareTo(currentNode.getKey())<0 && currentNode.getLeft()==null){
-			NodeAVL<K,V> newNode = new NodeAVL<>(key, value);
-			currentNode.setLeft(newNode);
-			newNode.setParent(currentNode);
-			reBalance(newNode, newNode);
-		}
-		else if(key.compareTo(currentNode.getKey())<0 && currentNode.getLeft()!=null){
-			privateInsert(currentNode.getLeft(),key,value);
-		}
-		else if(key.compareTo(currentNode.getKey())>0 && currentNode.getRight()==null){
-			NodeAVL<K,V> newNode = new NodeAVL<>(key, value);
-			currentNode.setRight(newNode);
-			newNode.setParent(currentNode);
-			reBalance(newNode, newNode);
-		}
-		else if (key.compareTo(currentNode.getKey())>0 && currentNode.getRight()!=null) {
-			privateInsert(currentNode.getRight(),key,value);
-		}
+            if(key.compareTo(currentNode.getKey())<0 && currentNode.getLeft()==null){
+            NodeAVL<K,V> newNode = new NodeAVL<>(key, value);
+            currentNode.setLeft(newNode);
+            newNode.setParent(currentNode);
+            reBalance(newNode, newNode);
+            }
+            else if(key.compareTo(currentNode.getKey())<0 && currentNode.getLeft()!=null){
+                privateInsert(currentNode.getLeft(),key,value);
+            }
+            else if(key.compareTo(currentNode.getKey())>0 && currentNode.getRight()==null){
+                NodeAVL<K,V> newNode = new NodeAVL<>(key, value);
+                currentNode.setRight(newNode);
+                newNode.setParent(currentNode);
+                reBalance(newNode, newNode);
+            }
+            else if (key.compareTo(currentNode.getKey())>0 && currentNode.getRight()!=null) {
+                privateInsert(currentNode.getRight(),key,value);
+            }
 	}
 
 	@Override
 	public boolean delete(K key) {
-		Boolean delete = false;
-		NodeAVL<K,V> founded = search(key);
-		if(founded!=null) {
-			deletePrivate(root,key);
-			delete = true;
-		}
-		return delete;
+            Boolean delete = false;
+            NodeAVL<K,V> founded = search(key);
+            
+            if(founded!=null && !founded.getSameKeyNodes().isEmpty()){
+
+                NodeAVL<K,V> newHead=founded.getSameKeyNodes().get(0);
+                if(founded.getParent()!=null ) {
+                    if(founded.getParent().getLeft()==founded) {
+                        founded.getParent().setLeft(newHead);
+                    }
+                    else {
+                        founded.getParent().setRight(newHead);
+                    }
+                }
+
+                if(founded.getLeft()!=null) {
+                    founded.getLeft().setParent(newHead);
+                }
+
+                if(founded.getRight()!=null) {
+                    founded.getLeft().setParent(newHead);
+                }
+
+                founded.getSameKeyNodes().remove(0);
+                newHead.setSameKeyNodes(founded.getSameKeyNodes());
+            }
+            
+            else if(founded!=null){
+                deletePrivate(root,key);
+                delete = true;
+                
+            }
+            return delete;
 	}
 
 	private NodeAVL<K, V> deletePrivate(NodeAVL<K,V> currentNode, K key){
@@ -275,19 +311,19 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>{
 	}
 
 	@Override
-	public ArrayList<NodeAVL<K, V>> preOrder() {
+	public ArrayList<NodeAVL<K, V>> inorderTraversal() {
 		ArrayList<NodeAVL<K,V>> nodes = new ArrayList<>();
 		if(root!=null) {
-			preOrder(root, nodes);
+			inorderTraversal(root, nodes);
 		}
 		return nodes;
 	}
 
-	private void preOrder(NodeAVL<K,V> node, ArrayList<NodeAVL<K,V>> nodes) {
+	private void inorderTraversal(NodeAVL<K,V> node, ArrayList<NodeAVL<K,V>> nodes) {
 		if (node!=null) {
-			nodes.add(node);
-			preOrder(node.getLeft(), nodes);
-			preOrder(node.getRight(),nodes);
+			inorderTraversal(node.getLeft(), nodes);
+                        nodes.add(node);
+			inorderTraversal(node.getRight(),nodes);
 		}
 	}
 

@@ -13,6 +13,8 @@ import java.util.Comparator;
 
 import dataStructures.BSTNode;
 import dataStructures.BSTtree;
+import dataStructures.NodeAVL;
+import dataStructures.AVLTree;
 import dataStructures.NodeRBT;
 import dataStructures.RedBlackTree;
 import exceptions.NegativeValueException;
@@ -25,6 +27,9 @@ public class Fiba implements Serializable {
 	private BSTtree<Double, Player> ABBofAssists;
 	private ArrayList<Player> playersByBounces;
 	private RedBlackTree<Double, Player> rbtSteals;
+	private AVLTree<Double, Player> AVLPointsByGame;
+	private AVLTree<Double, Player> AVLAssists;
+	private AVLTree<Double, Player> AVLBlocksByGame;
 
 	public final static String FIBA_SAVE_PATH_FILE="data/fiba.ackldo";
 
@@ -33,6 +38,9 @@ public class Fiba implements Serializable {
 		ABBofAssists = new BSTtree<Double, Player>();
 		playersByBounces = new ArrayList<Player>();
 		rbtSteals = new RedBlackTree<Double, Player>();
+		AVLPointsByGame=new AVLTree<Double, Player>(); 
+		AVLAssists =new AVLTree<Double, Player>(); 
+		AVLBlocksByGame=new AVLTree<Double, Player>(); 
 	}
 
 	public boolean addPlayer(String n, String ag, String t, String p, String bo, String a, String st, String bl) throws NegativeValueException{
@@ -86,8 +94,8 @@ public class Fiba implements Serializable {
 		playersByBounces.remove(player);
 		deletePlayerRedBlackTree(player);
 	}
-    
-	
+
+
 	private void deletePlayerABBOfPointsByGame(Player player) {
 		boolean deleted = false;
 		BSTNode<Double,Player> foundedPP = ABBofPointsByGame.searchNode(player.getPoints());
@@ -103,12 +111,12 @@ public class Fiba implements Serializable {
 			}
 		}
 	}
-	
-    private void deletePlayerABBOfAssists(Player player) {
-    	boolean deleted = false;
-    	BSTNode<Double,Player> foundedPA = ABBofAssists.searchNode(player.getAssists());
-    	if(foundedPA.getValue()==player) {
-			 ABBofAssists.deleteNode(player.getAssists());
+
+	private void deletePlayerABBOfAssists(Player player) {
+		boolean deleted = false;
+		BSTNode<Double,Player> foundedPA = ABBofAssists.searchNode(player.getAssists());
+		if(foundedPA.getValue()==player) {
+			ABBofAssists.deleteNode(player.getAssists());
 			deleted = true;
 		}else {
 			for(int i=0;i<foundedPA.getSameKeyNodes().size() && !deleted;i++) {
@@ -119,7 +127,52 @@ public class Fiba implements Serializable {
 			}
 		}
 	}
-	
+
+	private void deletePlayerAVLTree(Player player) {
+		NodeAVL<Double,Player> foundedPP = AVLPointsByGame.search(player.getPoints());
+		NodeAVL<Double,Player> foundedPA = AVLAssists.search(player.getAssists());
+		NodeAVL<Double,Player> foundedPB = AVLBlocksByGame.search(player.getPoints());
+
+		if(foundedPP.getValue()==player) {
+			AVLPointsByGame.delete(player.getSteals());
+		}
+		else {
+			boolean exit=false;
+			for(int i=0;i<foundedPP.getSameKeyNodes().size() && !exit;i++) {
+				if(foundedPP.getSameKeyNodes().get(i).getValue()==player) {
+					foundedPP.getSameKeyNodes().remove(i);
+					exit=true;
+				}
+			}
+		}
+
+		if(foundedPA.getValue()==player) {
+			AVLAssists.delete(player.getSteals());
+		}
+		else {
+			boolean exit=false;
+			for(int i=0;i<foundedPA.getSameKeyNodes().size() && !exit;i++) {
+				if(foundedPA.getSameKeyNodes().get(i).getValue()==player) {
+					foundedPA.getSameKeyNodes().remove(i);
+					exit=true;
+				}
+			}
+		}
+
+		if(foundedPB.getValue()==player) {
+			AVLBlocksByGame.delete(player.getSteals());
+		}
+		else {
+			boolean exit=false;
+			for(int i=0;i<foundedPB.getSameKeyNodes().size() && !exit;i++) {
+				if(foundedPB.getSameKeyNodes().get(i).getValue()==player) {
+					foundedPB.getSameKeyNodes().remove(i);
+					exit=true;
+				}
+			}
+		}
+	}
+
 	private void deletePlayerRedBlackTree(Player player) {
 		NodeRBT<Double,Player> nodeSteal=rbtSteals.search(rbtSteals.getRoot(), player.getSteals());
 		if(nodeSteal.getValue()==player) {
@@ -173,30 +226,30 @@ public class Fiba implements Serializable {
 			py.setAge(age);
 			py.setBlocks(blocks);
 			py.setTeam(t);
-			
+
 			if(py.getAssists()!=assists) {
 				deletePlayerABBOfAssists(py);
 				py.setAssists(assists);
 				ABBofAssists.insertNode(py.getAssists(),py);
 			}
-			
+
 			if(py.getPoints()!=points) {
 				deletePlayerABBOfPointsByGame(py); 
 				py.setPoints(points);
 				ABBofPointsByGame.insertNode(py.getPoints(), py);
 			}
-			
+
 			if(py.getSteals()!=steals) {
 				deletePlayerRedBlackTree(py);				
 				py.setSteals(steals);
 				rbtSteals.insert(py.getSteals(), py);
 			}
-			
+
 			if(py.getBounces()!=bounces) {
 				py.setBounces(bounces);
 				sortPlayers();
 			}
-			
+
 			updated=true;	
 		}
 		return updated;
@@ -355,11 +408,6 @@ public class Fiba implements Serializable {
 		}
 	}
 
-	public void searchPlayersAVL(String value, String comparison) {
-		// TODO Auto-generated method stub
-
-	}
-
 	public void saveDataFIBA() throws IOException{
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FIBA_SAVE_PATH_FILE));
 		oos.writeObject(this);
@@ -374,6 +422,144 @@ public class Fiba implements Serializable {
 			ois.close();
 		}
 		return fiba;
+	}
+
+	public ArrayList<Player> searchPlayersAVL(String value, String comparison) {
+		ArrayList<Player> list=new ArrayList<>();
+		Double v = Double.parseDouble(value);
+		NodeAVL<Double,Player> n= new NodeAVL<>(v,null);
+		switch(comparison) {
+		case "POINTSEQUAL":
+			NodeAVL<Double, Player> foundedPP = AVLPointsByGame.search(v);
+			searchEqualAVL(list, foundedPP);
+			break;
+		case "POINTSGREATER":
+			searchGreaterAVL(list, AVLPointsByGame.getRoot(), n);
+			break;
+		case "POINTSLESS":
+			searchLessAVL(list, AVLPointsByGame.getRoot(), n);
+			break;
+		case "POINTSEQUALGREATER":
+			searchEqualGreaterAVL(list, AVLPointsByGame.getRoot(), n);
+			break;
+		case "POINTSEQUALLESS":
+			searchEqualLessAVL(list, AVLPointsByGame.getRoot(), n);
+			break;
+		case "ASSISTSEQUAL":
+			NodeAVL<Double, Player> foundedA = AVLAssists.search(v);
+			searchEqualAVL(list, foundedA);
+			break;
+		case "ASSISTSGREATER":
+			searchGreaterAVL(list, AVLAssists.getRoot(), n);
+			break;
+		case "ASSISTSLESS":
+			searchLessAVL(list, AVLAssists.getRoot(), n);
+			break;
+		case "ASSISTSEQUALGREATER":
+			searchEqualGreaterAVL(list, AVLAssists.getRoot(), n);
+			break;
+		case "ASSISTSEQUALLESS":
+			searchEqualLessAVL(list, AVLAssists.getRoot(), n);
+			break;	
+		case "BLOCKSEQUAL":
+			NodeAVL<Double, Player> foundedB = AVLBlocksByGame.search(v);
+			searchEqualAVL(list, foundedB);
+			break;
+		case "BLOCKSGREATER":
+			searchGreaterAVL(list, AVLBlocksByGame.getRoot(), n);
+			break;
+		case "BLOCKSLESS":
+			searchLessAVL(list, AVLBlocksByGame.getRoot(), n);
+			break;
+		case "BLOCKSEQUALGREATER":
+			searchEqualGreaterAVL(list, AVLBlocksByGame.getRoot(), n);
+			break;
+		case "BLOCKSEQUALLESS":
+			searchEqualLessAVL(list, AVLBlocksByGame.getRoot(), n);
+			break;
+		}
+		return list;
+	}
+
+	private void searchEqualAVL(ArrayList<Player> list, NodeAVL<Double,Player> founded) {
+		list.add(founded.getValue());
+		for(int i=0;i<founded.getSameKeyNodes().size();i++) {
+			list.add(founded.getSameKeyNodes().get(i).getValue());
+		}
+	}
+
+	private void searchLessAVL(ArrayList<Player> list, NodeAVL<Double,Player> node, NodeAVL<Double,Player> nSearched) {
+		while(node.getKey()!=null) {
+			if(node.getKey().compareTo(nSearched.getKey())<0) {
+				inOrderAVLTree(node.getLeft(), list);
+				list.add(node.getValue());
+				for(int i=0;i<node.getSameKeyNodes().size();i++) {
+					list.add(node.getSameKeyNodes().get(i).getValue());
+				}
+				node=node.getRight();
+			}
+			else {
+				node=node.getLeft();
+			}
+		}
+	}
+
+	private void searchEqualLessAVL(ArrayList<Player> list, NodeAVL<Double,Player> node, NodeAVL<Double,Player> nSearched) {
+
+		while(node.getKey()!=null) {
+			if( node.getKey().compareTo(nSearched.getKey())<=0) {
+
+				inOrderAVLTree(node.getLeft(), list);
+
+				list.add(node.getValue());
+				for(int i=0;i<node.getSameKeyNodes().size();i++) {
+					list.add(node.getSameKeyNodes().get(i).getValue());
+				}
+
+				node=node.getRight();
+			}else {
+				node=node.getLeft();
+			}
+		}
+
+	}
+
+	private void searchGreaterAVL(ArrayList<Player> list, NodeAVL<Double,Player> node, NodeAVL<Double,Player> nSearched) {
+
+		while(node.getKey()!=null) {
+			if( node.getKey().compareTo(nSearched.getKey())>0) {
+
+				list.add(node.getValue());
+				for(int i=0;i<node.getSameKeyNodes().size();i++) {
+					list.add(node.getSameKeyNodes().get(i).getValue());
+				}
+				inOrderAVLTree(node.getRight(), list);
+
+				node=node.getLeft();
+			}else {
+				node=node.getRight();
+			}
+		}
+
+	}
+
+	private void searchEqualGreaterAVL(ArrayList<Player> list, NodeAVL<Double,Player> node, NodeAVL<Double,Player> nSearched) {
+
+		while(node.getKey()!=null) {
+			if(node.getKey().compareTo(nSearched.getKey())>=0 ) {
+				list.add(node.getValue());
+				for(int i=0;i<node.getSameKeyNodes().size();i++) {
+					list.add(node.getSameKeyNodes().get(i).getValue());
+				}
+
+				inOrderAVLTree(node.getRight(), list);
+
+				node=node.getLeft();
+			}else {
+				node=node.getRight();
+			}
+		}
+
 	}
 
 	public ArrayList<Player> searchPlayersRedBlackTree(String value, String comparison) {
@@ -502,6 +688,28 @@ public class Fiba implements Serializable {
 		}
 	}
 
+	private void inOrderAVLTree(NodeAVL<Double,Player> node, ArrayList<Player> players) {
+		if(node!=null) {
+			inOrderAVLTree(node.getLeft(), players);
+			players.add(node.getValue());
+			for(int i=0;i<node.getSameKeyNodes().size();i++) {
+				players.add(node.getSameKeyNodes().get(i).getValue());
+			}
+			inOrderAVLTree(node.getRight(), players);
+		}
+	}
+
+	public AVLTree<Double, Player> getAVLPointsByGame() {
+		return AVLPointsByGame;
+	}
+
+	public AVLTree<Double, Player> getAVLAssists() {
+		return AVLAssists;
+	}
+
+	public AVLTree<Double, Player> getAVLBlocksByGame() {
+		return AVLBlocksByGame;
+	}
 
 	public RedBlackTree<Double, Player> getRbtSteals() {
 		return rbtSteals;
