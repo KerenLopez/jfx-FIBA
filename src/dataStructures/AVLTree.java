@@ -116,6 +116,7 @@ public class AVLTree<K extends Comparable<K>,V> implements IAVLTree<K,V>, Serial
 
                 founded.getSameKeyNodes().remove(0);
                 newHead.setSameKeyNodes(founded.getSameKeyNodes());
+                newHead.setHeight(founded.getHeight());
             }
             
             else if(founded!=null){
