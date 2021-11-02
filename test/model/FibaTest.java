@@ -2,14 +2,10 @@ package model;
 
 
 import java.io.IOException;
-import org.junit.Test;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import exceptions.NegativeValueException;
 import java.util.ArrayList;
-import static junit.framework.TestCase.fail;
 
 public class FibaTest {
 
