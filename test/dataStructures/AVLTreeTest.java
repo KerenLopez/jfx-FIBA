@@ -1,12 +1,13 @@
 
 package dataStructures;
 
-import java.util.ArrayList;
 import model.Player;
-import org.junit.Test;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
+
+import org.junit.jupiter.api.Test;
+
 
 public class AVLTreeTest {
     
