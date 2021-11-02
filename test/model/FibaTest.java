@@ -2,11 +2,14 @@ package model;
 
 
 import java.io.IOException;
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.ArrayList;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 import exceptions.NegativeValueException;
+import java.util.ArrayList;
+import static junit.framework.TestCase.fail;
 
 public class FibaTest {
 
@@ -89,16 +92,12 @@ public class FibaTest {
         assertEquals(fiba.getABBofPointsByGame().getRoot().getKey(), 9.0);
         assertEquals(fiba.getPlayersByBounces().get(0).getBounces(), 10.0);
         assertEquals(fiba.getPlayersByBounces().size(), 1);
-        
         assertTrue(fiba.getRbtSteals().getRoot()!=fiba.getRbtSteals().getNil());
         assertEquals(fiba.getRbtSteals().getRoot().getKey(), 6.0);
-        
         assertTrue(fiba.getAVLPointsByGame().getRoot()!=null);
         assertEquals(fiba.getAVLPointsByGame().getRoot().getKey(), 9.0);
-        
         assertTrue(fiba.getAVLAssists().getRoot()!=null);
         assertEquals(fiba.getAVLAssists().getRoot().getKey(), 18.0);
-        
         assertTrue(fiba.getAVLBlocksByGame().getRoot()!=null);
         assertEquals(fiba.getAVLBlocksByGame().getRoot().getKey(), 8.0);
 	}
@@ -129,22 +128,16 @@ public class FibaTest {
         assertEquals(fiba.getABBofAssists().searchNode(18.0).getValue().getName(), "Paul Arizin");
         assertEquals(fiba.getABBofAssists().searchNode(18.0).getSameKeyNodes().get(1).getKey(),18.0);
         assertEquals(fiba.getABBofAssists().searchNode(18.0).getSameKeyNodes().get(1).getValue().getName(),"Joe Harris");
-        assertEquals(fiba.getPlayersByBounces().get(3).getBounces(), 10);
+        assertEquals(fiba.getPlayersByBounces().get(3).getBounces(), 10.0);
         assertEquals(fiba.getPlayersByBounces().size(), 6);
-	
-       
         assertEquals(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),6.0).getValue().getName(), "Devin Booker");
         assertEquals(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),6.0).getSameKeyNodes().get(0).getValue().getName(),"Joe Harris");
-
         assertEquals(fiba.getAVLPointsByGame().search(9.0).getValue().getName(), "Ray Allen");
         assertEquals(fiba.getAVLPointsByGame().search(9.0).getSameKeyNodes().get(1).getValue().getName(),"Joe Harris");
-        
-        assertEquals(fiba.search(fiba.getRbtSteals().getRoot(),6.0).getValue().getName(), "Devin Booker");
-        assertEquals(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),6.0).getSameKeyNodes().get(0).getValue().getName(),"Joe Harris");
-        
-        /*assertEquals(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),6.0).getValue().getName(), "Devin Booker");
-        assertEquals(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),6.0).getSameKeyNodes().get(0).getValue().getName(),"Joe Harris");
-        */
+        assertEquals(fiba.getAVLAssists().search(18.0).getValue().getName(), "Paul Arizin");
+        assertEquals(fiba.getAVLAssists().search(18.0).getSameKeyNodes().get(1).getValue().getName(),"Joe Harris");
+        assertEquals(fiba.getAVLBlocksByGame().search(8.0).getValue().getName(), "Devin Booker");
+        assertEquals(fiba.getAVLBlocksByGame().search(8.0).getSameKeyNodes().get(0).getValue().getName(),"Joe Harris");
 	}
 
 	@Test
@@ -202,12 +195,16 @@ public class FibaTest {
 		assertTrue(fiba.getABBofAssists().searchNode(18.0).getSameKeyNodes().isEmpty());
 		assertTrue(fiba.getPlayersByBounces().size()==4);
 		assertEquals(fiba.getPlayersByBounces().get(3).getName(), "Dave Bing");
-	
-	
 		assertTrue(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),3.0)==null);
 		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getKey()==6.0);
 		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getColor()=='B');
 		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getLeft().getKey()==2.0);
+                assertEquals(fiba.getAVLPointsByGame().search(9.0).getValue().getName(), "Ray Allen");
+                assertTrue(fiba.getAVLPointsByGame().search(9.0).getSameKeyNodes().isEmpty());
+                assertEquals(fiba.getAVLAssists().search(18.0).getValue().getName(), "Paul Arizin");
+                assertTrue(fiba.getAVLAssists().search(18.0).getSameKeyNodes().isEmpty());
+                assertEquals(fiba.getAVLBlocksByGame().search(8.0).getValue().getName(), "Devin Booker");
+                assertTrue(fiba.getAVLBlocksByGame().search(8.0).getSameKeyNodes().isEmpty());
 	}
 	
 	
@@ -223,7 +220,7 @@ public class FibaTest {
 		String bounces = "5";
 		String assists = "5";
 		String steals = "7";
-		String blocks = "7";
+		String blocks = "4";
 		boolean updated = false;
 		try {
 			updated = fiba.updatePlayer(player,name,age,team,points,bounces,assists,steals,blocks);
@@ -233,14 +230,17 @@ public class FibaTest {
 			fail("No se esperaba esta excepcion");
 		}
                 assertTrue(updated);
+                
                 assertEquals(fiba.getABBofPointsByGame().searchNode(9.0).getValue().getName(), "Ray Allen");
                 assertTrue(fiba.getABBofPointsByGame().searchNode(9.0).getSameKeyNodes().isEmpty());
                 assertEquals(fiba.getABBofPointsByGame().searchNode(20.0).getRight().getValue(), player);
                 assertEquals(fiba.getABBofPointsByGame().searchNode(20.0).getRight().getKey(), 21.0);
+                
                 assertEquals(fiba.getABBofAssists().searchNode(18.0).getValue().getName(), "Paul Arizin");
                 assertTrue(fiba.getABBofAssists().searchNode(18.0).getSameKeyNodes().isEmpty());
                 assertEquals(fiba.getABBofAssists().searchNode(5.0).getSameKeyNodes().get(0).getValue(), player);
                 assertEquals(fiba.getABBofAssists().searchNode(5.0).getSameKeyNodes().get(0).getValue().getName(), "Charles Barkley");
+                
                 assertEquals(fiba.getPlayersByBounces().get(0).getBounces(),4.0);
                 assertEquals(fiba.getPlayersByBounces().get(1).getBounces(),5.0);
                 assertEquals(fiba.getPlayersByBounces().get(2).getBounces(),6.0);
@@ -251,6 +251,17 @@ public class FibaTest {
 		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getKey()==6.0);
 		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getColor()=='B');
 		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getRight().getKey()==7.0);
+                
+                assertEquals(fiba.getAVLPointsByGame().search(9.0).getValue().getName(), "Ray Allen");
+                assertTrue(fiba.getAVLPointsByGame().search(9.0).getSameKeyNodes().isEmpty());
+                assertEquals(fiba.getAVLPointsByGame().search(20.0).getLeft().getValue(), player);
+                assertEquals(fiba.getAVLPointsByGame().search(20.0).getRight().getKey(), 21.0);
+                
+                /*assertEquals(fiba.getAVLAssists().search(18.0).getValue().getName(), "Paul Arizin");
+                assertTrue(fiba.getAVLAssists().search(18.0).getSameKeyNodes().isEmpty());
+                
+                assertEquals(fiba.getAVLBlocksByGame().search(8.0).getValue().getName(), "Devin Booker");
+                assertTrue(fiba.getAVLBlocksByGame().search(8.0).getSameKeyNodes().isEmpty());*/
 	
 	}
 	
