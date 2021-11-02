@@ -1,8 +1,5 @@
 package ui;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -29,7 +26,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import model.Fiba;
 import model.Player;
-import thread.ImportDataThread;
+
 
 public class FibaGUI {
 
@@ -324,18 +321,14 @@ public class FibaGUI {
 		if(f!=null) {
 			alert.setTitle("Importar jugadores");
 			try {
-				ImportDataThread importDataThread = new ImportDataThread(fiba,  new BufferedReader(new FileReader(f.getAbsolutePath())));
-
-				importDataThread.start();
-
-				importDataThread.join();
+				fiba.importData(f.getAbsolutePath());
 
 
 				alert.setContentText("Los jugadores fueron importados exitosamente");
 				alert.showAndWait();
 				
 				fiba.saveDataFIBA();
-			}catch(IOException | InterruptedException e){
+			}catch(IOException e){
 				alert.setContentText("Los jugadores no se importaron.");
 				alert.showAndWait();
 			}

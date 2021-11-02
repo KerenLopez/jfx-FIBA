@@ -1,8 +1,10 @@
 package model;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -42,7 +44,7 @@ public class Fiba implements Serializable {
 		if(num==TEST) {
 			FIBA_SAVE_PATH_FILE ="data/fibaTest.ackldo";
 		}
-		
+
 		ABBofPointsByGame = new BSTtree<Double, Player>(); 
 		ABBofAssists = new BSTtree<Double, Player>();
 		playersByBounces = new ArrayList<Player>();
@@ -50,6 +52,38 @@ public class Fiba implements Serializable {
 		AVLPointsByGame=new AVLTree<Double, Player>(); 
 		AVLAssists =new AVLTree<Double, Player>(); 
 		AVLBlocksByGame=new AVLTree<Double, Player>(); 
+	}
+
+	public ArrayList<Player> getPlayersByBounces() {
+		return playersByBounces;
+	}
+
+	public BSTtree<Double, Player> getABBofPointsByGame() {
+		return ABBofPointsByGame;
+	}
+
+	public BSTtree<Double, Player> getABBofAssists() {
+		return ABBofAssists;
+	}
+
+	public AVLTree<Double, Player> getAVLPointsByGame() {
+		return AVLPointsByGame;
+	}
+
+	public AVLTree<Double, Player> getAVLAssists() {
+		return AVLAssists;
+	}
+
+	public AVLTree<Double, Player> getAVLBlocksByGame() {
+		return AVLBlocksByGame;
+	}
+
+	public RedBlackTree<Double, Player> getRbtSteals() {
+		return rbtSteals;
+	}
+
+	public void setRbtSteals(RedBlackTree<Double, Player> rbtSteals) {
+		this.rbtSteals = rbtSteals;
 	}
 
 	public boolean addPlayer(String n, String ag, String t, String p, String bo, String a, String st, String bl) throws NegativeValueException, IOException{
@@ -89,9 +123,9 @@ public class Fiba implements Serializable {
 			Player player = new Player(n, age, t, points, bounces, assists, steals, blocks);
 			ABBofPointsByGame.insertNode(player.getPoints(), player);
 			ABBofAssists.insertNode(player.getAssists(), player);
-            AVLPointsByGame.insert(player.getPoints(), player);
-            AVLAssists.insert(player.getAssists(), player);
-            AVLBlocksByGame.insert(player.getBlocks(), player);
+			AVLPointsByGame.insert(player.getPoints(), player);
+			AVLAssists.insert(player.getAssists(), player);
+			AVLBlocksByGame.insert(player.getBlocks(), player);
 			rbtSteals.insert(player.getSteals(), player);
 			playersByBounces.add(player);
 			sortPlayers();
@@ -105,9 +139,9 @@ public class Fiba implements Serializable {
 		deletePlayerABBOfPointsByGame(player);
 		deletePlayerABBOfAssists(player);
 		playersByBounces.remove(player);
-                deletePlayerAVLTreePoints(player);
-                deletePlayerAVLTreeAssists(player);
-                deletePlayerAVLTreeBlocks(player);
+		deletePlayerAVLTreePoints(player);
+		deletePlayerAVLTreeAssists(player);
+		deletePlayerAVLTreeBlocks(player);
 		deletePlayerRedBlackTree(player);
 		saveDataFIBA();
 	}
@@ -161,40 +195,40 @@ public class Fiba implements Serializable {
 			}
 		}
 	}
-        
-        private void deletePlayerAVLTreeAssists(Player player) {
-            NodeAVL<Double,Player> foundedPA = AVLAssists.search(player.getAssists());
-            
-            if(foundedPA.getValue()==player) {
+
+	private void deletePlayerAVLTreeAssists(Player player) {
+		NodeAVL<Double,Player> foundedPA = AVLAssists.search(player.getAssists());
+
+		if(foundedPA.getValue()==player) {
 			AVLAssists.delete(player.getSteals());
 		}
-            else {
-                    boolean exit=false;
-                    for(int i=0;i<foundedPA.getSameKeyNodes().size() && !exit;i++) {
-                            if(foundedPA.getSameKeyNodes().get(i).getValue()==player) {
-                                    foundedPA.getSameKeyNodes().remove(i);
-                                    exit=true;
-                            }
-                    }
-            }
-        }
-        
-        private void deletePlayerAVLTreeBlocks(Player player) {
-            NodeAVL<Double,Player> foundedPB = AVLBlocksByGame.search(player.getPoints());
-            
-            if(foundedPB.getValue()==player) {
+		else {
+			boolean exit=false;
+			for(int i=0;i<foundedPA.getSameKeyNodes().size() && !exit;i++) {
+				if(foundedPA.getSameKeyNodes().get(i).getValue()==player) {
+					foundedPA.getSameKeyNodes().remove(i);
+					exit=true;
+				}
+			}
+		}
+	}
+
+	private void deletePlayerAVLTreeBlocks(Player player) {
+		NodeAVL<Double,Player> foundedPB = AVLBlocksByGame.search(player.getPoints());
+
+		if(foundedPB.getValue()==player) {
 			AVLBlocksByGame.delete(player.getSteals());
 		}
-            else {
-                    boolean exit=false;
-                    for(int i=0;i<foundedPB.getSameKeyNodes().size() && !exit;i++) {
-                            if(foundedPB.getSameKeyNodes().get(i).getValue()==player) {
-                                    foundedPB.getSameKeyNodes().remove(i);
-                                    exit=true;
-                            }
-                    }
-            }
-        }
+		else {
+			boolean exit=false;
+			for(int i=0;i<foundedPB.getSameKeyNodes().size() && !exit;i++) {
+				if(foundedPB.getSameKeyNodes().get(i).getValue()==player) {
+					foundedPB.getSameKeyNodes().remove(i);
+					exit=true;
+				}
+			}
+		}
+	}
 
 	private void deletePlayerRedBlackTree(Player player) {
 		NodeRBT<Double,Player> nodeSteal=rbtSteals.search(rbtSteals.getRoot(), player.getSteals());
@@ -252,18 +286,18 @@ public class Fiba implements Serializable {
 
 			if(py.getAssists()!=assists) {
 				deletePlayerABBOfAssists(py);
-                                deletePlayerAVLTreeAssists(py);
+				deletePlayerAVLTreeAssists(py);
 				py.setAssists(assists);
 				ABBofAssists.insertNode(py.getAssists(),py);
-                                AVLAssists.insert(py.getAssists(), py);
+				AVLAssists.insert(py.getAssists(), py);
 			}
 
 			if(py.getPoints()!=points) {
 				deletePlayerABBOfPointsByGame(py); 
-                                deletePlayerAVLTreePoints(py);
+				deletePlayerAVLTreePoints(py);
 				py.setPoints(points);
 				ABBofPointsByGame.insertNode(py.getPoints(), py);
-                                AVLPointsByGame.insert(py.getAssists(), py);
+				AVLPointsByGame.insert(py.getAssists(), py);
 			}
 
 			if(py.getSteals()!=steals) {
@@ -276,8 +310,8 @@ public class Fiba implements Serializable {
 				py.setBounces(bounces);
 				sortPlayers();
 			}
-                        
-                        if(py.getBlocks()!=blocks) {
+
+			if(py.getBlocks()!=blocks) {
 				deletePlayerAVLTreeBlocks(py);				
 				py.setBlocks(blocks);
 				AVLBlocksByGame.insert(py.getBlocks(), py);
@@ -369,11 +403,11 @@ public class Fiba implements Serializable {
 			searchLessNodes(listOfPlayers, ABBofPointsByGame.getRoot(), v);
 			break;
 		case "POINTSEQUALGREATER":
-			
+
 			searchEqualGreaterNodes(listOfPlayers, ABBofPointsByGame.getRoot(), v);
 			break;
 		case "POINTSEQUALLESS":
-			
+
 			searchEqualLessNodes(listOfPlayers, ABBofPointsByGame.getRoot(), v);
 			break;
 		case "ASSISTSEQUAL":
@@ -387,17 +421,17 @@ public class Fiba implements Serializable {
 			searchLessNodes(listOfPlayers, ABBofAssists.getRoot(), v);
 			break;
 		case "ASSISTSEQUALGREATER":
-			
+
 			searchEqualGreaterNodes(listOfPlayers, ABBofAssists.getRoot(), v);
 			break;
 		case "ASSISTSEQUALLESS":
-			
+
 			searchEqualLessNodes(listOfPlayers, ABBofAssists.getRoot(), v);
 			break;	
 		}
 		return listOfPlayers;
 	}
-	
+
 	private ArrayList<Player> searchEqualLessNodes(ArrayList<Player> list, BSTNode<Double,Player> node, double key) {
 		while(node!=null) {
 			if( node.compareTo(key)<=0) {
@@ -414,11 +448,11 @@ public class Fiba implements Serializable {
 				node=node.getLeft();
 			}
 		}
-		
+
 		return list;
 
 	}
-	
+
 	private ArrayList<Player> searchEqualGreaterNodes(ArrayList<Player> list, BSTNode<Double,Player> node, double key) {
 		while(node!=null) {
 			if(node.compareTo(key)>=0 ) {
@@ -445,14 +479,14 @@ public class Fiba implements Serializable {
 				list.add(node.getSameKeyNodes().get(i).getValue());
 			}
 		}
-		
+
 		return list;
 	}
 
 	private ArrayList<Player> searchGreaterNodes(ArrayList<Player> list, BSTNode<Double,Player> node, double key) {
 		while(node!=null) {
 			if( node.compareTo(key)>0) {
-				
+
 				list.add(node.getValue());
 				for(int i=0;i<node.getSameKeyNodes().size();i++) {
 					list.add(node.getSameKeyNodes().get(i).getValue());
@@ -466,7 +500,7 @@ public class Fiba implements Serializable {
 		}
 		return list;
 	}
-	
+
 	private void inorderBST(BSTNode<Double,Player> node, ArrayList<Player> players) {
 		if(node!=null) {
 			inorderBST(node.getLeft(), players);
@@ -494,25 +528,11 @@ public class Fiba implements Serializable {
 				node=node.getLeft();
 			}
 		}
-		
+
 		return list;
 	}
 
-	public void saveDataFIBA() throws IOException{
-		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FIBA_SAVE_PATH_FILE));
-		oos.writeObject(this);
-		oos.close();
-	}
 
-	public Fiba loadDataFIBA(Fiba fiba) throws IOException, ClassNotFoundException{
-		File f = new File(FIBA_SAVE_PATH_FILE);
-		if(f.exists()){
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
-			fiba = (Fiba)ois.readObject();
-			ois.close();
-		}
-		return fiba;
-	}
 
 	public ArrayList<Player> searchPlayersAVL(String value, String comparison) {
 		ArrayList<Player> list=new ArrayList<>();
@@ -652,6 +672,17 @@ public class Fiba implements Serializable {
 
 	}
 
+	private void inOrderAVLTree(NodeAVL<Double,Player> node, ArrayList<Player> players) {
+		if(node!=null) {
+			inOrderAVLTree(node.getLeft(), players);
+			players.add(node.getValue());
+			for(int i=0;i<node.getSameKeyNodes().size();i++) {
+				players.add(node.getSameKeyNodes().get(i).getValue());
+			}
+			inOrderAVLTree(node.getRight(), players);
+		}
+	}
+
 	public ArrayList<Player> searchPlayersRedBlackTree(String value, String comparison) throws NegativeValueException {
 		ArrayList<Player> list=new ArrayList<Player>();
 		Double v = Double.parseDouble(value);
@@ -736,7 +767,7 @@ public class Fiba implements Serializable {
 
 		while(node!=rbtSteals.getNil()) {
 			if( node.compareTo(nSearched)>0) {
-				
+
 				list.add(node.getValue());
 				for(int i=0;i<node.getSameKeyNodes().size();i++) {
 					list.add(node.getSameKeyNodes().get(i).getValue());
@@ -781,47 +812,71 @@ public class Fiba implements Serializable {
 		}
 	}
 
-	private void inOrderAVLTree(NodeAVL<Double,Player> node, ArrayList<Player> players) {
-		if(node!=null) {
-			inOrderAVLTree(node.getLeft(), players);
-			players.add(node.getValue());
-			for(int i=0;i<node.getSameKeyNodes().size();i++) {
-				players.add(node.getSameKeyNodes().get(i).getValue());
-			}
-			inOrderAVLTree(node.getRight(), players);
+
+
+
+	public void saveDataFIBA() throws IOException{
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FIBA_SAVE_PATH_FILE));
+		oos.writeObject(this);
+		oos.close();
+	}
+
+	public Fiba loadDataFIBA(Fiba fiba) throws IOException, ClassNotFoundException{
+		File f = new File(FIBA_SAVE_PATH_FILE);
+		if(f.exists()){
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
+			fiba = (Fiba)ois.readObject();
+			ois.close();
 		}
+		return fiba;
 	}
+	
+	public void importData(String fileName) throws IOException{
+		BufferedReader br = new BufferedReader(new FileReader(fileName));
+		
+		String line = "";
+		try {
+			line = br.readLine();
 
-	public AVLTree<Double, Player> getAVLPointsByGame() {
-		return AVLPointsByGame;
-	}
+			while(line != null) {
 
-	public AVLTree<Double, Player> getAVLAssists() {
-		return AVLAssists;
-	}
+				try {
+					String[] parts = line.split(";");
 
-	public AVLTree<Double, Player> getAVLBlocksByGame() {
-		return AVLBlocksByGame;
-	}
+					//addPlayer(String n, String ag, String t, String p, String bo, String a, String st, String bl)
+					if(!parts[0].equals("Tm")) {
+						Integer age = Integer.parseInt(parts[2]);
+						Double points = Double.parseDouble(parts[3]);
+						Double bounces = Double.parseDouble(parts[4]);
+						Double assists = Double.parseDouble(parts[5]);
+						Double steals = Double.parseDouble(parts[6]);
+						Double blocks = Double.parseDouble(parts[7]);
 
-	public RedBlackTree<Double, Player> getRbtSteals() {
-		return rbtSteals;
-	}
+						Player player = new Player(parts[1],age,parts[0], points, bounces, assists, steals, blocks);
+						ABBofPointsByGame.insertNode(player.getPoints(), player);
+						ABBofAssists.insertNode(player.getAssists(), player);
+						AVLPointsByGame.insert(player.getPoints(), player);
+						AVLAssists.insert(player.getAssists(), player);
+						AVLBlocksByGame.insert(player.getBlocks(), player);
+						rbtSteals.insert(player.getSteals(), player);
+						playersByBounces.add(player);
+						sortPlayers();
+					}
 
-	public void setRbtSteals(RedBlackTree<Double, Player> rbtSteals) {
-		this.rbtSteals = rbtSteals;
-	}
+					line = br.readLine();
 
-	public ArrayList<Player> getPlayersByBounces() {
-		return playersByBounces;
-	}
+				} catch (NumberFormatException e) {
+					line = br.readLine();
+				}
+			}
 
-	public BSTtree<Double, Player> getABBofPointsByGame() {
-		return ABBofPointsByGame;
-	}
-
-	public BSTtree<Double, Player> getABBofAssists() {
-		return ABBofAssists;
+		}catch (IOException e) {
+		}
+		try {
+			br.close();
+		} catch (IOException e) {
+		}
+	
 	}
 
 }
