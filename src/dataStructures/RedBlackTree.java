@@ -235,6 +235,7 @@ public class RedBlackTree<K extends Comparable<K>,V> implements IRedBlackTree<K,
 			
 			node.getSameKeyNodes().remove(0);
 			newHead.setSameKeyNodes(node.getSameKeyNodes());
+			newHead.setColor(node.getColor());
 			
 			
 		}else {

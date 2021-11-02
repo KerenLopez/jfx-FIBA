@@ -214,7 +214,7 @@ public class Fiba implements Serializable {
 	}
 
 	private void deletePlayerAVLTreeBlocks(Player player) {
-		NodeAVL<Double,Player> foundedPB = AVLBlocksByGame.search(player.getPoints());
+		NodeAVL<Double,Player> foundedPB = AVLBlocksByGame.search(player.getBlocks());
 
 		if(foundedPB.getValue()==player) {
 			AVLBlocksByGame.delete(player.getSteals());
@@ -281,7 +281,6 @@ public class Fiba implements Serializable {
 		if(correct) {
 			py.setName(n);
 			py.setAge(age);
-			py.setBlocks(blocks);
 			py.setTeam(t);
 
 			if(py.getAssists()!=assists) {
@@ -297,7 +296,7 @@ public class Fiba implements Serializable {
 				deletePlayerAVLTreePoints(py);
 				py.setPoints(points);
 				ABBofPointsByGame.insertNode(py.getPoints(), py);
-				AVLPointsByGame.insert(py.getAssists(), py);
+				AVLPointsByGame.insert(py.getPoints(), py);
 			}
 
 			if(py.getSteals()!=steals) {
