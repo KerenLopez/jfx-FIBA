@@ -392,8 +392,11 @@ public class FibaGUI {
 					fiba.searchPlayersAVL(txtValue.getText(), getComparison());
 					long endAVL = System.nanoTime();
 					long timeAVL = endAVL-startAVL;
+					
+					if(!playersList.isEmpty()) {
 					alert1.setContentText("Tiempo que tardó la búsqueda en ABB: "+timeABB+" nanosegundos\n Tiempo que tardó la búsqueda en AVL: "+timeAVL+" nanosegundos");
 					alert1.showAndWait();
+					}
 					
 				}else if(getSearchCriteria().equals("ASSISTS")) {
 					long startABB= System.nanoTime();
@@ -405,8 +408,10 @@ public class FibaGUI {
 					fiba.searchPlayersAVL(txtValue.getText(), getComparison());
 					long endAVL = System.nanoTime();
 					long timeAVL = endAVL-startAVL;
+					if(!playersList.isEmpty()) {
 					alert1.setContentText("Tiempo que tardó la búsqueda en ABB: "+timeABB+" nanosegundos\n"+"Tiempo que tardó la búsqueda en AVL: "+timeAVL+" nanosegundos");
 					alert1.showAndWait();
+					}
 					
 				}else if(getSearchCriteria().equals("STEALS")) {
 					
@@ -424,6 +429,12 @@ public class FibaGUI {
 					playersList = FXCollections.observableArrayList(fiba.searchPlayersLinearly(txtValue.getText(), getComparison()));
 					
 
+				}
+				
+				if(playersList.isEmpty()) {
+					alert1.setTitle("Jugador(es) no encontrado(s)");
+					alert1.setContentText("No se encontraron jugadores con el valor y el criterio escogido");
+					alert1.showAndWait();
 				}
 				
 				initializeTableViewSearchedPlayers(playersList);

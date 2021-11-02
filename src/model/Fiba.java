@@ -394,7 +394,9 @@ public class Fiba implements Serializable {
 		switch(criteria) {
 		case "POINTSEQUAL":
 			BSTNode<Double, Player> foundedPP = ABBofPointsByGame.searchNode(v);
-			searchEqualNodes(listOfPlayers, foundedPP, v);
+			if(foundedPP!=null) {
+				searchEqualNodes(listOfPlayers, foundedPP, v);
+			}
 			break;
 		case "POINTSGREATER":
 			searchGreaterNodes(listOfPlayers, ABBofPointsByGame.getRoot(), v);
@@ -412,7 +414,9 @@ public class Fiba implements Serializable {
 			break;
 		case "ASSISTSEQUAL":
 			BSTNode<Double, Player> foundedPA = ABBofAssists.searchNode(v);
-			searchEqualNodes(listOfPlayers, foundedPA, v);
+			if(foundedPA!=null) {
+				searchEqualNodes(listOfPlayers, foundedPA, v);
+			}
 			break;
 		case "ASSISTSGREATER":
 			searchGreaterNodes(listOfPlayers, ABBofAssists.getRoot(), v);
@@ -537,14 +541,16 @@ public class Fiba implements Serializable {
 	public ArrayList<Player> searchPlayersAVL(String value, String comparison) throws NegativeValueException {
 		ArrayList<Player> list=new ArrayList<>();
 		Double v = Double.parseDouble(value);
-                if(v<0) {
-                    throw new NegativeValueException(v);
+		if(v<0) {
+			throw new NegativeValueException(v);
 		}
 		NodeAVL<Double,Player> n= new NodeAVL<>(v,null);
 		switch(comparison) {
 		case "POINTSEQUAL":
 			NodeAVL<Double, Player> foundedPP = AVLPointsByGame.search(v);
-			searchEqualAVL(list, foundedPP);
+			if(foundedPP!=null) {
+				searchEqualAVL(list, foundedPP);
+			}
 			break;
 		case "POINTSGREATER":
 			searchGreaterAVL(list, AVLPointsByGame.getRoot(), n);
@@ -560,7 +566,9 @@ public class Fiba implements Serializable {
 			break;
 		case "ASSISTSEQUAL":
 			NodeAVL<Double, Player> foundedA = AVLAssists.search(v);
-			searchEqualAVL(list, foundedA);
+			if(foundedA!=null) {
+				searchEqualAVL(list, foundedA);
+			}
 			break;
 		case "ASSISTSGREATER":
 			searchGreaterAVL(list, AVLAssists.getRoot(), n);
@@ -576,7 +584,9 @@ public class Fiba implements Serializable {
 			break;	
 		case "BLOCKSEQUAL":
 			NodeAVL<Double, Player> foundedB = AVLBlocksByGame.search(v);
-			searchEqualAVL(list, foundedB);
+			if(foundedB!=null) {
+				searchEqualAVL(list, foundedB);
+			}
 			break;
 		case "BLOCKSGREATER":
 			searchGreaterAVL(list, AVLBlocksByGame.getRoot(), n);
@@ -696,7 +706,9 @@ public class Fiba implements Serializable {
 		switch(comparison) {
 		case "STEALSEQUAL":
 			NodeRBT<Double, Player> founded = rbtSteals.search(rbtSteals.getRoot(),v);
-			searchEqualSteals(list, founded);
+			if(founded!=null) {
+				searchEqualSteals(list, founded);
+			}
 			break;
 		case "STEALSGREATER":
 			searchGreaterSteals(list, rbtSteals.getRoot(),n);
@@ -833,10 +845,10 @@ public class Fiba implements Serializable {
 		}
 		return fiba;
 	}
-	
+
 	public void importData(String fileName) throws IOException{
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
-		
+
 		String line = "";
 		try {
 			line = br.readLine();
@@ -879,7 +891,7 @@ public class Fiba implements Serializable {
 			br.close();
 		} catch (IOException e) {
 		}
-	
+
 	}
 
 }
