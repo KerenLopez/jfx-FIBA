@@ -1,10 +1,9 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
-
 import org.junit.jupiter.api.Test;
 
 import exceptions.NegativeValueException;
@@ -46,19 +45,16 @@ public class FibaTest {
 		fiba.getRbtSteals().insert(player3.getSteals(), player3);
 		fiba.getRbtSteals().insert(player4.getSteals(), player4);
 		fiba.getRbtSteals().insert(player5.getSteals(), player5);
-		
 		fiba.getAVLAssists().insert(player1.getAssists(), player1);
 		fiba.getAVLAssists().insert(player2.getAssists(), player2);
 		fiba.getAVLAssists().insert(player3.getAssists(), player3);
 		fiba.getAVLAssists().insert(player4.getAssists(), player4);
 		fiba.getAVLAssists().insert(player5.getAssists(), player5);
-		
 		fiba.getAVLPointsByGame().insert(player1.getPoints(), player1);
 		fiba.getAVLPointsByGame().insert(player2.getPoints(), player2);
 		fiba.getAVLPointsByGame().insert(player3.getPoints(), player3);
 		fiba.getAVLPointsByGame().insert(player4.getPoints(), player4);
 		fiba.getAVLPointsByGame().insert(player5.getPoints(), player5);
-		
 		fiba.getAVLBlocksByGame().insert(player1.getBlocks(), player1);
 		fiba.getAVLBlocksByGame().insert(player2.getBlocks(), player2);
 		fiba.getAVLBlocksByGame().insert(player3.getBlocks(), player3);
@@ -96,6 +92,15 @@ public class FibaTest {
         
         assertTrue(fiba.getRbtSteals().getRoot()!=fiba.getRbtSteals().getNil());
         assertEquals(fiba.getRbtSteals().getRoot().getKey(), 6.0);
+        
+        assertTrue(fiba.getAVLPointsByGame().getRoot()!=null);
+        assertEquals(fiba.getAVLPointsByGame().getRoot().getKey(), 9.0);
+        
+        assertTrue(fiba.getAVLAssists().getRoot()!=null);
+        assertEquals(fiba.getAVLAssists().getRoot().getKey(), 18.0);
+        
+        assertTrue(fiba.getAVLBlocksByGame().getRoot()!=null);
+        assertEquals(fiba.getAVLBlocksByGame().getRoot().getKey(), 8.0);
 	}
 
 	@Test
@@ -131,7 +136,15 @@ public class FibaTest {
         assertEquals(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),6.0).getValue().getName(), "Devin Booker");
         assertEquals(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),6.0).getSameKeyNodes().get(0).getValue().getName(),"Joe Harris");
 
+        assertEquals(fiba.getAVLPointsByGame().search(9.0).getValue().getName(), "Ray Allen");
+        assertEquals(fiba.getAVLPointsByGame().search(9.0).getSameKeyNodes().get(1).getValue().getName(),"Joe Harris");
         
+        assertEquals(fiba.search(fiba.getRbtSteals().getRoot(),6.0).getValue().getName(), "Devin Booker");
+        assertEquals(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),6.0).getSameKeyNodes().get(0).getValue().getName(),"Joe Harris");
+        
+        /*assertEquals(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),6.0).getValue().getName(), "Devin Booker");
+        assertEquals(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),6.0).getSameKeyNodes().get(0).getValue().getName(),"Joe Harris");
+        */
 	}
 
 	@Test
@@ -219,22 +232,22 @@ public class FibaTest {
 		} catch(NumberFormatException n) {
 			fail("No se esperaba esta excepcion");
 		}
-        assertTrue(updated);
-        assertEquals(fiba.getABBofPointsByGame().searchNode(9.0).getValue().getName(), "Ray Allen");
-        assertTrue(fiba.getABBofPointsByGame().searchNode(9.0).getSameKeyNodes().isEmpty());
-        assertEquals(fiba.getABBofPointsByGame().searchNode(20.0).getRight().getValue(), player);
-        assertEquals(fiba.getABBofPointsByGame().searchNode(20.0).getRight().getKey(), 21.0);
-        assertEquals(fiba.getABBofAssists().searchNode(18.0).getValue().getName(), "Paul Arizin");
-        assertTrue(fiba.getABBofAssists().searchNode(18.0).getSameKeyNodes().isEmpty());
-        assertEquals(fiba.getABBofAssists().searchNode(5.0).getSameKeyNodes().get(0).getValue(), player);
-        assertEquals(fiba.getABBofAssists().searchNode(5.0).getSameKeyNodes().get(0).getValue().getName(), "Charles Barkley");
-        assertEquals(fiba.getPlayersByBounces().get(0).getBounces(),4.0);
-        assertEquals(fiba.getPlayersByBounces().get(1).getBounces(),5.0);
-        assertEquals(fiba.getPlayersByBounces().get(2).getBounces(),6.0);
-        assertEquals(fiba.getPlayersByBounces().get(3).getBounces(),10.0);
-        assertEquals(fiba.getPlayersByBounces().get(4).getBounces(),15.0);
-	
-        assertTrue(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),7.0).getValue()==player);
+                assertTrue(updated);
+                assertEquals(fiba.getABBofPointsByGame().searchNode(9.0).getValue().getName(), "Ray Allen");
+                assertTrue(fiba.getABBofPointsByGame().searchNode(9.0).getSameKeyNodes().isEmpty());
+                assertEquals(fiba.getABBofPointsByGame().searchNode(20.0).getRight().getValue(), player);
+                assertEquals(fiba.getABBofPointsByGame().searchNode(20.0).getRight().getKey(), 21.0);
+                assertEquals(fiba.getABBofAssists().searchNode(18.0).getValue().getName(), "Paul Arizin");
+                assertTrue(fiba.getABBofAssists().searchNode(18.0).getSameKeyNodes().isEmpty());
+                assertEquals(fiba.getABBofAssists().searchNode(5.0).getSameKeyNodes().get(0).getValue(), player);
+                assertEquals(fiba.getABBofAssists().searchNode(5.0).getSameKeyNodes().get(0).getValue().getName(), "Charles Barkley");
+                assertEquals(fiba.getPlayersByBounces().get(0).getBounces(),4.0);
+                assertEquals(fiba.getPlayersByBounces().get(1).getBounces(),5.0);
+                assertEquals(fiba.getPlayersByBounces().get(2).getBounces(),6.0);
+                assertEquals(fiba.getPlayersByBounces().get(3).getBounces(),10.0);
+                assertEquals(fiba.getPlayersByBounces().get(4).getBounces(),15.0);
+
+                assertTrue(fiba.getRbtSteals().search(fiba.getRbtSteals().getRoot(),7.0).getValue()==player);
 		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getKey()==6.0);
 		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getColor()=='B');
 		assertTrue(fiba.getRbtSteals().getRoot().getLeft().getRight().getKey()==7.0);
@@ -733,6 +746,126 @@ public class FibaTest {
 		
 	}
 	
+        @Test
+	public void testSearchPlayersAVLTree1() {
+		setupScenary1();
+		String value = "13";
+		String comparison = "POINTSLESS";
+		ArrayList<Player> listPlayers=new ArrayList<>();
+		
+		try {
+			listPlayers = fiba.searchPlayersAVL(value, comparison);
+		} catch (NegativeValueException e) {
+			fail("No se esperaba esta excepcion");
+		}catch(NumberFormatException num) {
+			fail("No se esperaba esta excepcion");
+		}
+		assertTrue(listPlayers.isEmpty());
+	}
 	
+        @Test
+	public void testSearchPlayersAVLTree2() {
+		setupScenary2();
+		String value = "20";
+		String comparison = "POINTSEQUAL";
+		ArrayList<Player> listPlayers=new ArrayList<>();
+		
+		try {
+			listPlayers = fiba.searchPlayersAVL(value, comparison);
+		} catch (NegativeValueException e) {
+			fail("No se esperaba esta excepcion");
+		}catch(NumberFormatException num) {
+			fail("No se esperaba esta excepcion");
+		}
+		assertEquals(listPlayers.size(),1);
+		assertTrue(listPlayers.get(0).getPoints()==20);
+	}
+	
+	@Test
+	public void testSearchPlayersAVLTree3() {
+		setupScenary2();
+		String value = "5";
+		String comparison = "ASSISTSGREATER";
+		ArrayList<Player> listPlayers=new ArrayList<>();
+		
+		try {
+			listPlayers = fiba.searchPlayersAVL(value, comparison);
+		} catch (NegativeValueException e) {
+			fail("No se esperaba esta excepcion");
+		}catch(NumberFormatException num) {
+			fail("No se esperaba esta excepcion");
+		}
+		assertEquals(listPlayers.size(),3);
+	
+		assertTrue(listPlayers.get(0).getAssists()==18);
+		assertTrue(listPlayers.get(1).getAssists()==18);
+		assertTrue(listPlayers.get(2).getAssists()==40);
+		
+	}
+	
+	@Test
+	public void testSearchPlayersAVLTree4() {
+		setupScenary2();
+		String value = "18";
+		String comparison = "ASSISTSLESS";
+		ArrayList<Player> listPlayers=new ArrayList<>();
+		
+		try {
+			listPlayers = fiba.searchPlayersAVL(value, comparison);
+		} catch (NegativeValueException e) {
+			fail("No se esperaba esta excepcion");
+		}catch(NumberFormatException num) {
+			fail("No se esperaba esta excepcion");
+		}
+		assertEquals(listPlayers.size(),2);
+	
+		assertTrue(listPlayers.get(0).getAssists()==4);
+		assertTrue(listPlayers.get(1).getAssists()==5);
+	}
+	
+	@Test
+	public void testSearchPlayersAVLTree5() {
+		setupScenary2();
+		String value = "5";
+		String comparison = "BLOCKSEQUALGREATER";
+		ArrayList<Player> listPlayers=new ArrayList<>();
+		
+		try {
+			listPlayers = fiba.searchPlayersAVL(value, comparison);
+		} catch (NegativeValueException e) {
+			fail("No se esperaba esta excepcion");
+		}catch(NumberFormatException num) {
+			fail("No se esperaba esta excepcion");
+		}
+		assertEquals(listPlayers.size(),4);
+	
+		assertTrue(listPlayers.get(0).getBlocks()==8);
+		assertTrue(listPlayers.get(1).getBlocks()==9);
+		assertTrue(listPlayers.get(2).getBlocks()==5);
+		assertTrue(listPlayers.get(3).getBlocks()==7);
+		
+	}
+	
+	@Test
+	public void testSearchPlayersAVLTree6() {
+		setupScenary2();
+		String value = "8";
+		String comparison = "BLOCKSEQUALLESS";
+		ArrayList<Player> listPlayers=new ArrayList<>();
+		
+		try {
+			listPlayers = fiba.searchPlayersAVL(value, comparison);
+		} catch (NegativeValueException e) {
+			fail("No se esperaba esta excepcion");
+		}catch(NumberFormatException num) {
+			fail("No se esperaba esta excepcion");
+		}
+		assertEquals(listPlayers.size(),4);
+	
+		assertTrue(listPlayers.get(0).getBlocks()==1);
+		assertTrue(listPlayers.get(1).getBlocks()==5);
+		assertTrue(listPlayers.get(2).getBlocks()==7);
+		assertTrue(listPlayers.get(3).getBlocks()==8);
+	}
 	
 }
