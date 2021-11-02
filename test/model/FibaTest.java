@@ -15,11 +15,11 @@ public class FibaTest {
 
 
 	public void setupScenary1() {
-		fiba = new Fiba();
+		fiba = new Fiba(Fiba.TEST);
 	}
 
 	public void setupScenary2() {
-		fiba = new Fiba();
+		fiba = new Fiba(Fiba.TEST);
 		Player player1 = new Player("Devin Booker",24,"Phoenix Suns",17,10,5,6,8);
 		Player player2 = new Player("Ray Allen",30, "Conferencia Este",9,6,4,10,5);
 		Player player3 = new Player("Paul Arizin",28,"Toronto Raptors",20,4,18,13,9);
@@ -482,7 +482,7 @@ public class FibaTest {
 		assertEquals(listOfPlayers.get(0).getName(), "Ray Allen");
 		assertEquals(listOfPlayers.get(0).getPoints(), 9.0);
 		assertEquals(listOfPlayers.get(1).getName(), "Charles Barkley");
-		assertEquals(listOfPlayers.get(1).getBounces(), 9.0);
+		assertEquals(listOfPlayers.get(1).getPoints(), 9.0);
 	}
 	
 	@Test
@@ -499,10 +499,11 @@ public class FibaTest {
 			fail("No se esperaba esta excepcion");
 		}
 		assertEquals(listOfPlayers.size(), 2);
-		assertEquals(listOfPlayers.get(0).getName(), "Dave Bing");
-		assertEquals(listOfPlayers.get(0).getBounces(), 18.0);
-		assertEquals(listOfPlayers.get(1).getName(), "Paul Arizin");
-		assertEquals(listOfPlayers.get(1).getPoints(), 20.0);
+		
+		assertEquals(listOfPlayers.get(0).getName(), "Paul Arizin");
+		assertEquals(listOfPlayers.get(0).getPoints(), 20.0);
+		assertEquals(listOfPlayers.get(1).getName(), "Dave Bing");
+		assertEquals(listOfPlayers.get(1).getPoints(), 18.0);
 	}
 	
 	@Test
@@ -522,7 +523,7 @@ public class FibaTest {
 		assertEquals(listOfPlayers.get(0).getName(), "Ray Allen");
 		assertEquals(listOfPlayers.get(0).getPoints(), 9.0);
 		assertEquals(listOfPlayers.get(1).getName(), "Charles Barkley");
-		assertEquals(listOfPlayers.get(1).getBounces(), 9.0);
+		assertEquals(listOfPlayers.get(1).getPoints(), 9.0);
 	}
 	
 	@Test
@@ -540,9 +541,9 @@ public class FibaTest {
 		}
 		assertEquals(listOfPlayers.size(), 3);
 		assertEquals(listOfPlayers.get(0).getName(), "Devin Booker");
-		assertEquals(listOfPlayers.get(0).getBounces(), 17.0);
+		assertEquals(listOfPlayers.get(0).getPoints(), 17.0);
 		assertEquals(listOfPlayers.get(1).getName(), "Dave Bing");
-		assertEquals(listOfPlayers.get(1).getBounces(), 18.0);
+		assertEquals(listOfPlayers.get(1).getPoints(), 18.0);
 		assertEquals(listOfPlayers.get(2).getName(), "Paul Arizin");
 		assertEquals(listOfPlayers.get(2).getPoints(), 20.0);
 	}
@@ -551,7 +552,7 @@ public class FibaTest {
 	public void testSearchPlayersABB6() {
 		setupScenary2();
 		String value = "17";
-		String comparison = "POINTSLESS";
+		String comparison = "POINTSEQUALLESS";
 		ArrayList<Player> listOfPlayers=new ArrayList<>();
 		try {
 			listOfPlayers = fiba.searchPlayersABB(value, comparison);
@@ -564,9 +565,9 @@ public class FibaTest {
 		assertEquals(listOfPlayers.get(0).getName(), "Ray Allen");
 		assertEquals(listOfPlayers.get(0).getPoints(), 9.0);
 		assertEquals(listOfPlayers.get(1).getName(), "Charles Barkley");
-		assertEquals(listOfPlayers.get(1).getBounces(), 9.0);
+		assertEquals(listOfPlayers.get(1).getPoints(), 9.0);
 		assertEquals(listOfPlayers.get(2).getName(), "Devin Booker");
-		assertEquals(listOfPlayers.get(2).getBounces(), 17.0);
+		assertEquals(listOfPlayers.get(2).getPoints(), 17.0);
 	}
 	
 	@Test

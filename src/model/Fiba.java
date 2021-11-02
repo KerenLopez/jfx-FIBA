@@ -31,9 +31,18 @@ public class Fiba implements Serializable {
 	private AVLTree<Double, Player> AVLAssists;
 	private AVLTree<Double, Player> AVLBlocksByGame;
 
-	public final static String FIBA_SAVE_PATH_FILE="data/fiba.ackldo";
+	public  static String FIBA_SAVE_PATH_FILE="data/fiba.ackldo";
+	public final static int PROGRAM=0;
+	public final static int TEST=1;
 
-	public Fiba() {
+	public Fiba(int num) {
+		if(num==PROGRAM) {
+			FIBA_SAVE_PATH_FILE = "data/fiba.ackldo";
+		}
+		if(num==TEST) {
+			FIBA_SAVE_PATH_FILE ="data/fibaTest.ackldo";
+		}
+		
 		ABBofPointsByGame = new BSTtree<Double, Player>(); 
 		ABBofAssists = new BSTtree<Double, Player>();
 		playersByBounces = new ArrayList<Player>();
@@ -80,9 +89,9 @@ public class Fiba implements Serializable {
 			Player player = new Player(n, age, t, points, bounces, assists, steals, blocks);
 			ABBofPointsByGame.insertNode(player.getPoints(), player);
 			ABBofAssists.insertNode(player.getAssists(), player);
-                        AVLPointsByGame.insert(player.getPoints(), player);
-                        AVLAssists.insert(player.getAssists(), player);
-                        AVLBlocksByGame.insert(player.getBlocks(), player);
+            AVLPointsByGame.insert(player.getPoints(), player);
+            AVLAssists.insert(player.getAssists(), player);
+            AVLBlocksByGame.insert(player.getBlocks(), player);
 			rbtSteals.insert(player.getSteals(), player);
 			playersByBounces.add(player);
 			sortPlayers();
@@ -360,14 +369,12 @@ public class Fiba implements Serializable {
 			searchLessNodes(listOfPlayers, ABBofPointsByGame.getRoot(), v);
 			break;
 		case "POINTSEQUALGREATER":
-			BSTNode<Double, Player> foundedPP1 = ABBofPointsByGame.searchNode(v);
-			searchEqualNodes(listOfPlayers, foundedPP1, v);
-			searchGreaterNodes(listOfPlayers, ABBofPointsByGame.getRoot(), v);
+			
+			searchEqualGreaterNodes(listOfPlayers, ABBofPointsByGame.getRoot(), v);
 			break;
 		case "POINTSEQUALLESS":
-			BSTNode<Double, Player> foundedPP2 = ABBofPointsByGame.searchNode(v);
-			searchEqualNodes(listOfPlayers, foundedPP2, v);
-			searchLessNodes(listOfPlayers, ABBofPointsByGame.getRoot(), v);
+			
+			searchEqualLessNodes(listOfPlayers, ABBofPointsByGame.getRoot(), v);
 			break;
 		case "ASSISTSEQUAL":
 			BSTNode<Double, Player> foundedPA = ABBofAssists.searchNode(v);
@@ -380,56 +387,115 @@ public class Fiba implements Serializable {
 			searchLessNodes(listOfPlayers, ABBofAssists.getRoot(), v);
 			break;
 		case "ASSISTSEQUALGREATER":
-			BSTNode<Double, Player> foundedPA1 = ABBofAssists.searchNode(v);
-			searchEqualNodes(listOfPlayers, foundedPA1, v);
-			searchGreaterNodes(listOfPlayers, ABBofAssists.getRoot(), v);
+			
+			searchEqualGreaterNodes(listOfPlayers, ABBofAssists.getRoot(), v);
 			break;
 		case "ASSISTSEQUALLESS":
-			BSTNode<Double, Player> foundedPA2 = ABBofAssists.searchNode(v);
-			searchEqualNodes(listOfPlayers, foundedPA2, v);
-			searchLessNodes(listOfPlayers, ABBofAssists.getRoot(), v);
+			
+			searchEqualLessNodes(listOfPlayers, ABBofAssists.getRoot(), v);
 			break;	
 		}
 		return listOfPlayers;
+	}
+	
+	private ArrayList<Player> searchEqualLessNodes(ArrayList<Player> list, BSTNode<Double,Player> node, double key) {
+		while(node!=null) {
+			if( node.compareTo(key)<=0) {
+
+				inorderBST(node.getLeft(), list);
+
+				list.add(node.getValue());
+				for(int i=0;i<node.getSameKeyNodes().size();i++) {
+					list.add(node.getSameKeyNodes().get(i).getValue());
+				}
+
+				node=node.getRight();
+			}else {
+				node=node.getLeft();
+			}
+		}
+		
+		return list;
+
+	}
+	
+	private ArrayList<Player> searchEqualGreaterNodes(ArrayList<Player> list, BSTNode<Double,Player> node, double key) {
+		while(node!=null) {
+			if(node.compareTo(key)>=0 ) {
+				list.add(node.getValue());
+				for(int i=0;i<node.getSameKeyNodes().size();i++) {
+					list.add(node.getSameKeyNodes().get(i).getValue());
+				}
+
+				inorderBST(node.getRight(), list);
+
+				node=node.getLeft();
+			}else {
+				node=node.getRight();
+			}
+		}
+		return list;
+
 	}
 
 	private ArrayList<Player> searchEqualNodes(ArrayList<Player> list, BSTNode<Double, Player> node, double v) {
 		if(node!=null) {
 			list.add(node.getValue());
-			while(node.getLeft().getKey()==v) {
-				list.add(node.getValue());
-				node = node.getLeft();
-			}	
+			for(int i=0;i<node.getSameKeyNodes().size();i++) {
+				list.add(node.getSameKeyNodes().get(i).getValue());
+			}
 		}
+		
 		return list;
 	}
 
 	private ArrayList<Player> searchGreaterNodes(ArrayList<Player> list, BSTNode<Double,Player> node, double key) {
-		if(node==null) {
-			return list;
-		}else if(node.compareTo(key)<0){
-			list.add(node.getValue());
-			return list;
-		}else if(node.getLeft()!=null && node.getLeft().compareTo(key)<0){
-			list.add(node.getLeft().getValue());
-			return list;
-		}else {
-			return searchGreaterNodes(list, node.getRight(), key);
+		while(node!=null) {
+			if( node.compareTo(key)>0) {
+				
+				list.add(node.getValue());
+				for(int i=0;i<node.getSameKeyNodes().size();i++) {
+					list.add(node.getSameKeyNodes().get(i).getValue());
+				}
+				inorderBST(node.getRight(), list);
+
+				node=node.getLeft();
+			}else {
+				node=node.getRight();
+			}
+		}
+		return list;
+	}
+	
+	private void inorderBST(BSTNode<Double,Player> node, ArrayList<Player> players) {
+		if(node!=null) {
+			inorderBST(node.getLeft(), players);
+			players.add(node.getValue());
+			for(int i=0;i<node.getSameKeyNodes().size();i++) {
+				players.add(node.getSameKeyNodes().get(i).getValue());
+			}
+			inorderBST(node.getRight(), players);
 		}
 	}
 
 	private ArrayList<Player> searchLessNodes(ArrayList<Player> list, BSTNode<Double,Player> node, double key) {
-		if(node==null) {
-			return list;
-		}else if(node.compareTo(key)>0){
-			list.add(node.getValue());
-			return list;
-		}else if(node.getRight()!=null && node.getRight().compareTo(key)>0){
-			list.add(node.getRight().getValue());
-			return list;
-		}else {
-			return searchGreaterNodes(list, node.getLeft(), key);
+		while(node!=null) {
+			if( node.compareTo(key)<0) {
+
+				inorderBST(node.getLeft(), list);
+
+				list.add(node.getValue());
+				for(int i=0;i<node.getSameKeyNodes().size();i++) {
+					list.add(node.getSameKeyNodes().get(i).getValue());
+				}
+
+				node=node.getRight();
+			}else {
+				node=node.getLeft();
+			}
 		}
+		
+		return list;
 	}
 
 	public void saveDataFIBA() throws IOException{

@@ -333,6 +333,8 @@ public class FibaGUI {
 
 				alert.setContentText("Los jugadores fueron importados exitosamente");
 				alert.showAndWait();
+				
+				fiba.saveDataFIBA();
 			}catch(IOException | InterruptedException e){
 				alert.setContentText("Los jugadores no se importaron.");
 				alert.showAndWait();
