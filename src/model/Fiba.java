@@ -448,9 +448,12 @@ public class Fiba implements Serializable {
 		return fiba;
 	}
 
-	public ArrayList<Player> searchPlayersAVL(String value, String comparison) {
+	public ArrayList<Player> searchPlayersAVL(String value, String comparison) throws NegativeValueException {
 		ArrayList<Player> list=new ArrayList<>();
 		Double v = Double.parseDouble(value);
+                if(v<0) {
+                    throw new NegativeValueException(v);
+		}
 		NodeAVL<Double,Player> n= new NodeAVL<>(v,null);
 		switch(comparison) {
 		case "POINTSEQUAL":
@@ -513,7 +516,7 @@ public class Fiba implements Serializable {
 	}
 
 	private void searchLessAVL(ArrayList<Player> list, NodeAVL<Double,Player> node, NodeAVL<Double,Player> nSearched) {
-		while(node.getKey()!=null) {
+		while(node!=null) {
 			if(node.getKey().compareTo(nSearched.getKey())<0) {
 				inOrderAVLTree(node.getLeft(), list);
 				list.add(node.getValue());
@@ -530,7 +533,7 @@ public class Fiba implements Serializable {
 
 	private void searchEqualLessAVL(ArrayList<Player> list, NodeAVL<Double,Player> node, NodeAVL<Double,Player> nSearched) {
 
-		while(node.getKey()!=null) {
+		while(node!=null) {
 			if( node.getKey().compareTo(nSearched.getKey())<=0) {
 
 				inOrderAVLTree(node.getLeft(), list);
@@ -550,7 +553,7 @@ public class Fiba implements Serializable {
 
 	private void searchGreaterAVL(ArrayList<Player> list, NodeAVL<Double,Player> node, NodeAVL<Double,Player> nSearched) {
 
-		while(node.getKey()!=null) {
+		while(node!=null) {
 			if( node.getKey().compareTo(nSearched.getKey())>0) {
 
 				list.add(node.getValue());
@@ -569,7 +572,7 @@ public class Fiba implements Serializable {
 
 	private void searchEqualGreaterAVL(ArrayList<Player> list, NodeAVL<Double,Player> node, NodeAVL<Double,Player> nSearched) {
 
-		while(node.getKey()!=null) {
+		while(node!=null) {
 			if(node.getKey().compareTo(nSearched.getKey())>=0 ) {
 				list.add(node.getValue());
 				for(int i=0;i<node.getSameKeyNodes().size();i++) {
