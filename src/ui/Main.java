@@ -17,8 +17,8 @@ public class Main extends Application{
 	private FibaGUI fibaGUI;
 	
 	public Main() {
-		Fiba fibaData = new Fiba();
-		fiba=new Fiba();
+		Fiba fibaData = new Fiba(Fiba.PROGRAM);
+		fiba=new Fiba(Fiba.PROGRAM);
 		
 		try {
 			fiba = fiba.loadDataFIBA(fibaData);
